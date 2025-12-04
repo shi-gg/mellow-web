@@ -18,6 +18,13 @@ interface Props {
 
 export const revalidate = 3_600; // 1 hour
 
+const fonts = {
+    regular: await readFile(new URL("../../../../assets/Poppins-Regular.ttf", import.meta.url)),
+    medium: await readFile(new URL("../../../../assets/Poppins-Medium.ttf", import.meta.url)),
+    semiBold: await readFile(new URL("../../../../assets/Poppins-SemiBold.ttf", import.meta.url)),
+    extraBold: await readFile(new URL("../../../../assets/Poppins-ExtraBold.ttf", import.meta.url))
+};
+
 export async function GET(request: NextRequest, { params }: Props) {
     const { guildId } = await params;
 
@@ -92,25 +99,25 @@ export async function GET(request: NextRequest, { params }: Props) {
             fonts: [
                 {
                     name: "Poppins",
-                    data: await readFile(process.cwd() + "/assets/Poppins-Regular.ttf"),
+                    data: fonts.regular,
                     style: "normal",
                     weight: 400
                 },
                 {
                     name: "Poppins",
-                    data: await readFile(process.cwd() + "/assets/Poppins-Medium.ttf"),
+                    data: fonts.medium,
                     style: "normal",
                     weight: 500
                 },
                 {
                     name: "Poppins",
-                    data: await readFile(process.cwd() + "/assets/Poppins-SemiBold.ttf"),
+                    data: fonts.semiBold,
                     style: "normal",
                     weight: 600
                 },
                 {
                     name: "Poppins",
-                    data: await readFile(process.cwd() + "/assets/Poppins-ExtraBold.ttf"),
+                    data: fonts.extraBold,
                     style: "normal",
                     weight: 800
                 }
