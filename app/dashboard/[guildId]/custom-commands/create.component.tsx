@@ -2,6 +2,7 @@
 
 import DumbTextInput from "@/components/inputs/dumb-text-input";
 import Modal from "@/components/modal";
+import Notice from "@/components/notice";
 import { Button } from "@/components/ui/button";
 import type { ApiV1GuildsModulesTagsGetResponse } from "@/typings";
 import { useState } from "react";
@@ -64,6 +65,8 @@ export function CreateTag({ guildId, style, addTag, setTagId }: Props) {
             }}
             isDisabled={!name}
         >
+            <Notice message="Start the name with a '/' to create a slash command" />
+
             <DumbTextInput
                 name="Name"
                 placeholder="new-tag"

@@ -5,8 +5,10 @@ Wamellow's custom command feature is a great way to address repetitive questions
 2. Head to the dashboard by going to [wamellow.com/dashboard](https://wamellow.com/dashboard?to=custom-commands).
 3. Select your server from the dashboard.
 4. Navigate to the **Custom Commands** tab.
-5. Click **Create** and enter a name for that command.
+5. Click **Create** and enter a name* for that command.
 7. Click **Submit** and done!
+
+*The name must be unique and must only contain letters, numbers, underscores, or hyphens. If a name is prefixed with a slash (`/`), wamellow will create a slash command.
 
 ### ✏️ Custom message & embed
 You can create a tag with a **fully customizable message and embed for free**, making it easy to design custom messages and commands.

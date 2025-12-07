@@ -178,6 +178,7 @@ export default function Home() {
                         description="The name of the custom command."
                         defaultState={tag.name}
                         resetState={tag.name}
+                        disabled={Boolean(tag.applicationCommandId)}
                         onSave={(value) => editTag("name", value)}
                     />
                 </div>
