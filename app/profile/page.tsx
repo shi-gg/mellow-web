@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGuildsGetResponse } from "@/typings";
 import { cn } from "@/utils/cn";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";

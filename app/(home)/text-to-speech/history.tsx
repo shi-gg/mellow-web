@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDateString, getTimeAgo } from "@/utils/time";
 import { actor, getVoices } from "@/utils/tts";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import {
     HiDownload,

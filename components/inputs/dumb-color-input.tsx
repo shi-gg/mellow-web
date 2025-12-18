@@ -1,5 +1,5 @@
 import { cn } from "@/utils/cn";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import React, { useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 
