@@ -11,7 +11,7 @@ export const Permissions = [
     "Stream",
     "ViewChannel",
     "SendMessages",
-    "SendTtsMessages",
+    "SendTTSMessages",
     "ManageMessages",
     "EmbedLinks",
     "AttachFiles",
@@ -24,7 +24,7 @@ export const Permissions = [
     "MuteMembers",
     "DeafenMembers",
     "MoveMembers",
-    "UseVad",
+    "UseVAD",
     "ChangeNickname",
     "ManageNicknames",
     "ManageRoles",
@@ -42,6 +42,13 @@ export const Permissions = [
     "ModerateMembers",
     "ViewCreatorMonetizationAnalytics",
     "UseSoundboard",
+    "CreateGuildExpressions",
+    "CreateEvents",
     "UseExternalSounds",
-    "SendVoiceMessages"
+    "SendVoiceMessages",
+    "SendPolls",
+    "UseExternalApps",
+    "PinMessages",
+    "BypassSlowmode",
+    "ManageEmojisAndStickers"
 ] as string[];
