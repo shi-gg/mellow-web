@@ -20,14 +20,14 @@ export async function GET(
     }
 
     const verifier = `login-code-verifier-${social}`;
-    const { searchParams } = new URL(request.url);
+    const { searchParams, host } = new URL(request.url);
     const jar = await cookies();
 
     const logout = searchParams.get("logout");
     const session = jar.get("session");
 
     if (!session?.value) {
-        redirect("/login?callback=" + encodeURIComponent(`/login/${social}${logout === "true" ? "?logout=true" : ""}`));
+        redirect("/login?callback=" + encodeURIComponent(request.url.split(host)[1]));
     }
 
     if (logout) {
