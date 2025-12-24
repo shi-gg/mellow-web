@@ -60,13 +60,14 @@ export default function FollowUpdates() {
             onSuccess={() => {
                 guildStore.setState((g) => {
                     if (!g) return g;
-
-                    g.follownewsChannel = {
-                        name: g.channels!.find((c) => c.id === channelId)!.name,
-                        id: channelId!
+                    const channel = g.channels?.find((c) => c.id === channelId);
+                    return {
+                        ...g,
+                        follownewsChannel: {
+                            name: channel?.name ?? "",
+                            id: channelId!
+                        }
                     };
-
-                    return g;
                 });
             }}
             isDisabled={!channelId}
