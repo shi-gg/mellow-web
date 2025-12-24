@@ -64,16 +64,17 @@ export default async function Home({ searchParams, params }: Props) {
     return (<>
         {members
             .sort((a, b) => (b.activity[type] ?? 0) - (a.activity[type] ?? 0))
-            .map((member, i) =>
+            .map((member, i) => (
                 <Member
-                    key={member.id}
+                    key={`member-${member.id}-${type}`}
                     member={member}
                     index={i + (page * 20) - 19}
                     type={type}
                     pagination={pagination}
                     members={members}
                 />
-            )}
+            ))
+        }
 
         <Pagination
             key={type}
