@@ -138,13 +138,17 @@ function Dropdown({ user }: { user: User; }) {
                         asChild
                         className="text-red-400"
                     >
-                        <Link href="/login?logout=true" prefetch={false}>
-                            <HiLogout />
+                        <button
+                            onClick={() => {
+                                window.location.href = "/login?logout=true";
+                            }}
+                        >
+                            < HiLogout />
                             Logout
-                        </Link>
+                        </button>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
             </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu >
     );
 }
