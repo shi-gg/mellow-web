@@ -56,7 +56,7 @@ export function CreateTag({ guildId, style, addTag, setTagId }: Props) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ name: name || "new-tag" })
+                    body: JSON.stringify({ name: name.trim() || "new-tag" })
                 });
             }}
             onSuccess={(tag) => {
@@ -71,7 +71,7 @@ export function CreateTag({ guildId, style, addTag, setTagId }: Props) {
                 name="Name"
                 placeholder="new-tag"
                 value={name}
-                setValue={setName}
+                setValue={(val) => setName((val || "").toLowerCase())}
                 max={32}
             />
         </Modal>
