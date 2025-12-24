@@ -36,7 +36,7 @@ const reviews = {
 
 export const viewport: Viewport = {
     themeColor: "#8957ff",
-    initialScale: 1
+    initialScale: 0.85
 };
 
 export const generateMetadata = (): Metadata => {
