@@ -18,6 +18,7 @@ import { BsQuestionLg } from "react-icons/bs";
 import { HiArrowRight, HiLightningBolt, HiOutlineCheck, HiOutlineInformationCircle, HiUser, HiUserGroup, HiX } from "react-icons/hi";
 import { IoMdInfinite } from "react-icons/io";
 
+import { GiftBanner } from "./gfit-banner";
 import { Subscribe } from "./subscribe.component";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
@@ -91,6 +92,8 @@ export default function Home() {
                     (˶˃ ᵕ ˂˶)
                 </span>
             </div>
+
+            <GiftBanner />
 
             <div className="dark:bg-wamellow bg-wamellow-100 dark:text-neutral-300 text-neutral-700 mt-2 w-full rounded-xl overflow-hidden">
 

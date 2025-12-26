@@ -6,10 +6,13 @@ import { InputBase, InputBaseAdornment, InputBaseAdornmentButton, InputBaseContr
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { type HTMLProps, useState } from "react";
 import { HiArrowDown, HiArrowUp, HiLightningBolt, HiOutlineInformationCircle } from "react-icons/hi";
 
 export function Subscribe({ header }: { header?: boolean; }) {
+    const search = useSearchParams();
+
     const premium = userStore((u) => u?.premium || false);
     const [donation, setDonation] = useState(0);
 
@@ -52,7 +55,7 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 >
                     <Link
                         prefetch={false}
-                        href={`/premium/checkout?donation=${donation}`}
+                        href={`/premium/checkout?${new URLSearchParams({ donation: donation.toString(), gift: search.get("gift") || "" }).toString()}`}
                     >
                         <HiLightningBolt />
                         Subscribe
