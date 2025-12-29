@@ -21,7 +21,7 @@ import { getSpeech } from "./api";
 import { History } from "./history";
 import { useHistory } from "./use-history";
 
-const MAX_TEXT_LENGTH = 800;
+const MAX_TEXT_LENGTH = 6_000;
 
 export default function Home() {
     const fallbackVoice = voices[0] ?? "";
