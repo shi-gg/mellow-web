@@ -17,7 +17,7 @@ You can set up to 30 dailyposts per server. The same image type can be used mult
 ### 📸 Image types
 The following types of images are available:
 - `Anime` will get a random waifu.
-- `Blåhaj` will get a random Blåhaj. (uses [Luna-devv/transgirl](https://github.com/Luna-devv/transgirl))
+- `Blåhaj` will get a random Blåhaj. (uses [shi-gg/transgirl](https://github.com/shi-gg/transgirl))
 - `Nekos.best` will get a random neko. (uses [Nekos.best](https://nekos.best))
 <br />
 ... and more to come!

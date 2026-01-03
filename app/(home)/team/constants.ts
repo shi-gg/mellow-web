@@ -1,11 +1,13 @@
 export const repos = [
-    "Luna-devv/mellow-bot",
-    "Luna-devv/mellow-web",
-    "Luna-devv/mellow-a7s",
-    "Luna-devv/transgirl",
-    "Luna-devv/lunify.js",
-    "Luna-devv/dlist.js",
-    "Luna-devv/githook"
+    "shi-gg/mellow-bot",
+    "shi-gg/mellow-tts",
+    "shi-gg/mellow-web",
+    "shi-gg/mellow-a7s",
+    "shi-gg/transgirl",
+    "shi-gg/lunify.js",
+    "shi-gg/dlist.js",
+    "shi-gg/githook",
+    "shi-gg/bluesky-media-worker"
 ] as const;
 
 export enum TeamType {

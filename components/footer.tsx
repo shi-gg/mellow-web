@@ -98,7 +98,7 @@ function Socials() {
             <Link href="https://bsky.app/profile/shi.gg" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow on Twitter (X.com)">
                 <FaBluesky className="p-0.5" />
             </Link>
-            <Link href="https://github.com/Luna-devv" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow's developers on GitHub">
+            <Link href="https://github.com/shi-gg" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow's developers on GitHub">
                 <BiLogoGithub />
             </Link>
             <Link href="https://reddit.com/r/wamellow" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow on Reddit">

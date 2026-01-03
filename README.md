@@ -1,5 +1,5 @@
 ![Discord](https://img.shields.io/discord/828676951023550495?color=5865F2&logo=discord&logoColor=white)
-![GitHub repo size](https://img.shields.io/github/repo-size/Luna-devv/mellow-web?maxAge=3600)
+![GitHub repo size](https://img.shields.io/github/repo-size/shi-gg/mellow-web?maxAge=3600)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I3I6AFVAP)
 
@@ -23,7 +23,7 @@ To get started with this project, you'll need to have the following installed:
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/Luna-devv/mellow-web
+git clone https://github.com/shi-gg/mellow-web
 ```
 
 2.  **Install the dependencies:**
