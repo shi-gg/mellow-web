@@ -37,27 +37,33 @@ export function Subscribe({ header }: { header?: boolean; }) {
 
     const basePrice = period === "year" ? 40 : 4;
     const currentPrice = basePrice + donation;
-    const prices = period === "year" ? [40, 80, 120, 180, 250] : [4, 8, 12, 18, 25];
+    const prices = period === "year" ? [40, 50, 60, 80, 100] : [4, 8, 12, 18, 25];
 
     return (
         <div className="w-full">
             <div className="flex items-center justify-center gap-3 mb-4">
-                 <span className={cn("text-sm font-medium transition-colors cursor-pointer", period === "month" ? "text-neutral-200" : "text-muted-foreground")} onClick={() => setPeriod("month")}>
+                <button
+                    className={cn("text-sm font-medium transition-colors cursor-pointer", period === "month" ? "text-neutral-200" : "text-muted-foreground")}
+                    onClick={() => setPeriod("month")}
+                >
                     Monthly
-                </span>
+                </button>
                 <Switch
                     checked={period === "year"}
                     onCheckedChange={(checked) => {
                         setPeriod(checked ? "year" : "month");
-                        setDonation(0);
+                        setDonation(checked ? donation * 10 : Math.round(donation / 10));
                     }}
                 />
-                <span className={cn("text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer", period === "year" ? "text-neutral-200" : "text-muted-foreground")} onClick={() => setPeriod("year")}>
+                <button
+                    className={cn("text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer", period === "year" ? "text-neutral-200" : "text-muted-foreground")}
+                    onClick={() => setPeriod("year")}
+                >
                     Yearly
                     <Badge variant="flat" size="xs" className="text-green-400 bg-green-400/10">
                         -17%
                     </Badge>
-                </span>
+                </button>
             </div>
 
             {header && (
@@ -80,8 +86,8 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 >
                     <Link
                         prefetch={false}
-                        href={`/premium/checkout?${new URLSearchParams({ 
-                            donation: donation.toString(), 
+                        href={`/premium/checkout?${new URLSearchParams({
+                            donation: donation.toString(),
                             gift: search.get("gift") || "",
                             period
                         }).toString()}`}
