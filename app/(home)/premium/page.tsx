@@ -29,8 +29,8 @@ const items = [
     { title: "Price", free: 0, premium: 4, unit: "€/month" },
 
     { title: "Your Benefits", icon: <HiUser /> },
-    { title: "Text to Speech", free: Infinity, premium: Infinity, unit: "chars /month" },
-    { title: "TTS Translations", free: 10_000, premium: 100_000, unit: "chars /month" },
+    { title: "Text to Speech", free: Infinity, premium: Infinity, unit: "chars" },
+    { title: "TTS Translations", free: 10_000, premium: 100_000, unit: "chars" },
     { title: "Bypass voting", free: false, premium: true, tooltip: <OtherBotsTooltip /> },
     { title: "Bypass passport", free: false, premium: true },
     { title: "Premium role", free: false, premium: true, url: "/support" },

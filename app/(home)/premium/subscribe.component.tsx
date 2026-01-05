@@ -3,13 +3,16 @@ import { userStore } from "@/common/user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InputBase, InputBaseAdornment, InputBaseAdornmentButton, InputBaseControl, InputBaseInput } from "@/components/ui/input-base";
-import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { type HTMLProps, useState } from "react";
 import { HiArrowDown, HiArrowUp, HiLightningBolt, HiOutlineInformationCircle } from "react-icons/hi";
+
+export const MONTHLY_PRICES = [4, 8, 12, 18, 25] as const;
+export const YEARLY_PRICES = [40, 50, 60, 80, 100] as const;
+const PERIODS = ["month", "year"] as const;
 
 export function Subscribe({ header }: { header?: boolean; }) {
     const search = useSearchParams();
@@ -35,39 +38,14 @@ export function Subscribe({ header }: { header?: boolean; }) {
         );
     }
 
-    const basePrice = period === "year" ? 40 : 4;
+    const basePrice = period === "year" ? YEARLY_PRICES[0] : MONTHLY_PRICES[0];
+    const prices = period === "year" ? YEARLY_PRICES : MONTHLY_PRICES;
     const currentPrice = basePrice + donation;
-    const prices = period === "year" ? [40, 50, 60, 80, 100] : [4, 8, 12, 18, 25];
 
     return (
-        <div className="w-full">
-            <div className="flex items-center justify-center gap-3 mb-4">
-                <button
-                    className={cn("text-sm font-medium transition-colors cursor-pointer", period === "month" ? "text-neutral-200" : "text-muted-foreground")}
-                    onClick={() => setPeriod("month")}
-                >
-                    Monthly
-                </button>
-                <Switch
-                    checked={period === "year"}
-                    onCheckedChange={(checked) => {
-                        setPeriod(checked ? "year" : "month");
-                        setDonation(checked ? donation * 10 : Math.round(donation / 10));
-                    }}
-                />
-                <button
-                    className={cn("text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer", period === "year" ? "text-neutral-200" : "text-muted-foreground")}
-                    onClick={() => setPeriod("year")}
-                >
-                    Yearly
-                    <Badge variant="flat" size="xs" className="text-green-400 bg-green-400/10">
-                        -17%
-                    </Badge>
-                </button>
-            </div>
-
+        <div className="w-full space-y-2">
             {header && (
-                <div className="flex gap-2 justify-center mb-2">
+                <div className="flex gap-2 justify-center">
                     <span className="dark:text-neutral-200 text-neutral-800 font-medium text-sm">Upgrade your experience further!</span>
                     <Badge
                         variant="flat"
@@ -98,8 +76,49 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 </Button>
             </div>
 
-            <div className="w-full flex justify-center my-2">
+            <div className="w-full flex justify-center">
                 <span className="text-muted-foreground font-medium text-xs uppercase">choose what to pay</span>
+            </div>
+
+            <div className="flex gap-1 w-full">
+                {PERIODS.map((p) => (
+                    <Button
+                        key={p}
+                        className={cn("h-7 w-1/2", p === period && "bg-violet-400/20 hover:bg-violet-400/40")}
+                        onClick={() => {
+                            setPeriod(p);
+
+                            const currentTotal = basePrice + donation;
+                            const targetPrices = p === "year" ? YEARLY_PRICES : MONTHLY_PRICES;
+                            const targetBase = p === "year" ? YEARLY_PRICES[0] : MONTHLY_PRICES[0];
+
+                            const projectedTotal = p === "year" ? currentTotal * 10 : currentTotal / 10;
+
+                            const nearest = targetPrices.reduce((prev, curr) => {
+                                const prevDiff = Math.abs(prev - projectedTotal);
+                                const currDiff = Math.abs(curr - projectedTotal);
+
+                                if (currDiff < prevDiff) return curr;
+                                if (currDiff === prevDiff) return curr > prev ? curr : prev;
+                                return prev;
+                            });
+
+                            setDonation(nearest - targetBase);
+                        }}
+                    >
+                        {p.replace(/^\w/, (char) => char.toUpperCase())}ly
+                        {p === "year" && (
+                            <Badge
+                                variant="flat"
+                                radius="rounded"
+                                size="sm"
+                                className={period === "month" ? "text-green-400 bg-green-400/10" : "text-violet-400 bg-violet-400/10"}
+                            >
+                                Save {Math.round((1 - YEARLY_PRICES[0] / (MONTHLY_PRICES[0] * 12)) * 100)}%
+                            </Badge>
+                        )}
+                    </Button>
+                ))}
             </div>
 
             <div className="flex gap-1 w-full">
