@@ -3,6 +3,7 @@ import { userStore } from "@/common/user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InputBase, InputBaseAdornment, InputBaseAdornmentButton, InputBaseControl, InputBaseInput } from "@/components/ui/input-base";
+import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
@@ -15,6 +16,7 @@ export function Subscribe({ header }: { header?: boolean; }) {
 
     const premium = userStore((u) => u?.premium || false);
     const [donation, setDonation] = useState(0);
+    const [period, setPeriod] = useState<"month" | "year">("month");
 
     if (premium) {
         return (
@@ -33,8 +35,31 @@ export function Subscribe({ header }: { header?: boolean; }) {
         );
     }
 
+    const basePrice = period === "year" ? 40 : 4;
+    const currentPrice = basePrice + donation;
+    const prices = period === "year" ? [40, 80, 120, 180, 250] : [4, 8, 12, 18, 25];
+
     return (
         <div className="w-full">
+            <div className="flex items-center justify-center gap-3 mb-4">
+                 <span className={cn("text-sm font-medium transition-colors cursor-pointer", period === "month" ? "text-neutral-200" : "text-muted-foreground")} onClick={() => setPeriod("month")}>
+                    Monthly
+                </span>
+                <Switch
+                    checked={period === "year"}
+                    onCheckedChange={(checked) => {
+                        setPeriod(checked ? "year" : "month");
+                        setDonation(0);
+                    }}
+                />
+                <span className={cn("text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer", period === "year" ? "text-neutral-200" : "text-muted-foreground")} onClick={() => setPeriod("year")}>
+                    Yearly
+                    <Badge variant="flat" size="xs" className="text-green-400 bg-green-400/10">
+                        -17%
+                    </Badge>
+                </span>
+            </div>
+
             {header && (
                 <div className="flex gap-2 justify-center mb-2">
                     <span className="dark:text-neutral-200 text-neutral-800 font-medium text-sm">Upgrade your experience further!</span>
@@ -42,7 +67,7 @@ export function Subscribe({ header }: { header?: boolean; }) {
                         variant="flat"
                         radius="rounded"
                     >
-                        €{donation + 4} /month
+                        €{currentPrice} /{period}
                     </Badge>
                 </div>
             )}
@@ -55,7 +80,11 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 >
                     <Link
                         prefetch={false}
-                        href={`/premium/checkout?${new URLSearchParams({ donation: donation.toString(), gift: search.get("gift") || "" }).toString()}`}
+                        href={`/premium/checkout?${new URLSearchParams({ 
+                            donation: donation.toString(), 
+                            gift: search.get("gift") || "",
+                            period
+                        }).toString()}`}
                     >
                         <HiLightningBolt />
                         Subscribe
@@ -68,11 +97,11 @@ export function Subscribe({ header }: { header?: boolean; }) {
             </div>
 
             <div className="flex gap-1 w-full">
-                {[4, 8, 12, 18, 25].map((amount) => (
+                {prices.map((amount) => (
                     <Button
                         key={amount}
-                        className={cn("h-7 w-1/5", amount === (donation + 4) && "bg-violet-400/20 hover:bg-violet-400/40")}
-                        onClick={() => setDonation(amount - 4)}
+                        className={cn("h-7 w-1/5", amount === currentPrice && "bg-violet-400/20 hover:bg-violet-400/40")}
+                        onClick={() => setDonation(amount - basePrice)}
                     >
                         {amount}€
                     </Button>
