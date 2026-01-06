@@ -1,6 +1,6 @@
 "use client";
 
-import { DonationSelect } from "@/app/(home)/premium/subscribe.component";
+import { DonationSelect, MONTHLY_PRICES, YEARLY_PRICES } from "@/app/(home)/premium/subscribe.component";
 import { userStore } from "@/common/user";
 import Box from "@/components/box";
 import ImageReduceMotion from "@/components/image-reduce-motion";
@@ -17,137 +17,126 @@ import { type ApiEdit, useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeBillingGetResponse, ApiV1UsersMeGuildsGetResponse } from "@/typings";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { GrAmex } from "react-icons/gr";
 import { HiCreditCard, HiLightningBolt } from "react-icons/hi";
 import { SiDinersclub, SiDiscover, SiJcb, SiMastercard, SiPaypal, SiStripe, SiVisa } from "react-icons/si";
 
-function isActive(status: ApiV1UsersMeBillingGetResponse["status"]): status is "active" | "trialing" | "past_due" {
-    return status === "active" || status === "trialing" || status === "past_due";
-}
-
 export default function Home() {
     const user = userStore((u) => u);
-    const [changeDonationModalOpen, setChangeDonationModalOpen] = useState(false);
+    const [changeDonationModalOpen, setChangeDonationModalOpen] = useState(
+        () => typeof window !== "undefined" && window.location.hash === "#donation"
+    );
 
     const { data, isLoading, error, edit } = useApi<ApiV1UsersMeBillingGetResponse>("/users/@me/billing");
     const [nowInSeconds] = useState(() => Date.now() / 1_000);
 
+    const period = useMemo(() => data?.priceId.startsWith("monthly_") ? "month" : "year", [data?.priceId]);
+    const basePrice = useMemo(() => period === "year" ? YEARLY_PRICES[0] : MONTHLY_PRICES[0], [period]);
+
     if ((isLoading && !user?.premium) || (!isLoading && !data) || (data && !isActive(data.status))) {
-        return (<>
-            {(error && error !== "Not Found") && <Notice message={error} />}
+        return (
+            <div className="space-y-4">
+                {error && error !== "Not Found" && <Notice message={error} />}
 
-            <OverviewLink
-                title="Upgrade to Premium"
-                message="Get access to premium features, higher limits, and more — such as supporting the project!"
-                url="/premium"
-                icon={<HiLightningBolt />}
-            />
+                <OverviewLink
+                    title="Upgrade to Premium"
+                    message="Get access to premium features, higher limits, and more — such as supporting the project!"
+                    url="/premium"
+                    icon={<HiLightningBolt />}
+                />
 
-            {data?.status && (
-                <Button asChild>
-                    <Link
-                        href={data?.portalUrl}
-                        target="_blank"
-                    >
-                        Billing Portal
-                    </Link>
-                </Button>
-            )}
-        </>);
+                {data?.status && (
+                    <Button asChild>
+                        <Link href={data.portalUrl} target="_blank">
+                            Billing Portal
+                        </Link>
+                    </Button>
+                )}
+            </div>
+        );
     }
 
-    const periodEndsInDays = Math.floor(((data?.currentPeriodEnd || 0) - nowInSeconds) / (60 * 60 * 24));
-    const periodEndsInStr = `${periodEndsInDays > 1 ? "in " : ""}${periodEndsInDays === 0 ? "Today" : periodEndsInDays === 1 ? "Tomorrow" : periodEndsInDays} ${periodEndsInDays > 1 ? "days" : ""}`;
+    const periodEndsIn = data ? getPeriodEndsIn(data.currentPeriodEnd, nowInSeconds) : "...";
+    const totalAmount = data ? (basePrice + (data.donationQuantity || 0)).toFixed(2) : "0.00";
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-4">
             {data?.status === "past_due" && (
-                <Notice message={`Your renew is over due! Please check your emails to renew your subscription or contact support. Your subscription will be canceled ${periodEndsInStr}.`} />
+                <Notice message={`Your renewal is overdue! Please check your emails to renew your subscription or contact support. Your subscription will be canceled ${periodEndsIn}.`} />
             )}
 
-            <Box
-                className="md:flex justify-between"
-                small
-            >
+            <Box className="md:flex justify-between items-center" small>
                 <div className="flex flex-col">
                     <h2 className="font-bold text-3xl bg-linear-to-r bg-clip-text text-transparent from-violet-400/80 to-indigo-400/80">
                         Wamellow Premium
                         {data?.status === "trialing" && (
-                            <Badge
-                                className="relative bottom-1 ml-2"
-                            >
-                                trial — Ends {periodEndsInStr}
+                            <Badge className="relative bottom-1 ml-2">
+                                Trial — Ends {periodEndsIn}
                             </Badge>
                         )}
                     </h2>
-                    <p className="text-muted-foreground">You have all premium features for <span className="font-semibold text-neutral-300">EUR {(4 + (data?.donationQuantity || 0)).toFixed(2)} / {data?.priceId.startsWith("monthly_") ? "Month" : "Year"}</span>!</p>
+                    <p className="text-muted-foreground">
+                        You have all premium features for <span className="font-semibold text-neutral-300">EUR {totalAmount} / {period.replace(/^\w/, (c) => c.toUpperCase())}</span>!
+                    </p>
                 </div>
                 <div className="flex gap-1 mt-4 md:mt-0">
-                    {isLoading
-                        ? <Skeleton className="h-10 w-full md:w-20" />
-                        : <PortalButton data={data!} />
-                    }
+                    {isLoading || !data ? (
+                        <Skeleton className="h-10 w-full md:w-20" />
+                    ) : (
+                        <PortalButton data={data} />
+                    )}
                 </div>
             </Box>
 
-            <div className="flex-col lg:flex-row flex gap-4 pt-1">
-                <Box
-                    className="lg:w-1/2 text-sm"
-                    small
-                >
-                    <h2 className="font-semibold text-xl text-neutral-300 mb-2 lg:mb-0 lg:relative lg:bottom-2">Billing Cycle</h2>
-                    {isLoading
-                        ? <Skeleton className="h-12 w-full" />
-                        : (data?.cancelAtPeriodEnd
-                            ? <p>
-                                Your subscription will expire on <span className="font-semibold text-neutral-300">{new Date(data.currentPeriodEnd * 1_000).toLocaleDateString()}</span> and you will not be charged again.
-                            </p>
-                            : <p>
-                                Your subscription will renew on <span className="font-semibold text-neutral-300">{new Date(data!.currentPeriodEnd * 1_000).toLocaleDateString()}</span>, for a total of <span className="font-semibold text-neutral-300">EUR {(4 + (data!.donationQuantity || 0)).toFixed(2)}</span>.
-
-                                You{"'"}re paying <span className="font-semibold text-neutral-300">EUR {(4).toFixed(2)} Premium</span> and <span className="font-semibold text-neutral-300">EUR {(data!.donationQuantity || 0).toFixed(2)} Donation{data!.donationQuantity ? "s" : ""}</span>
-                                {" "}
-                                (<Button
-                                    className="text-sm p-0 m-0 h-3 text-violet-400"
-                                    onClick={() => setChangeDonationModalOpen(true)}
-                                    variant="link"
-                                    size="sm"
-                                >
-                                    change
-                                </Button>).
-                            </p>
-                        )
-                    }
-                </Box>
-                <Box
-                    className="lg:w-1/2"
-                    small
-                >
-                    <h2 className="font-semibold text-xl text-neutral-300 mb-2 lg:mb-0  lg:relative lg:bottom-2">Payment Method</h2>
-                    {isLoading
-                        ? <Skeleton className="h-12 w-full" />
-                        : <div className="flex gap-2 items-center bg-wamellow-100 px-4 py-1 rounded-lg">
-                            <PaymentMethodIcon method={data!.paymentMethod} />
-                            {getPaymentMethodInfo(data!.paymentMethod)}
-
-                            <Button
-                                asChild
-                                className="ml-auto"
+            <div className="flex flex-col lg:flex-row gap-4">
+                <Box className="lg:w-1/2 text-sm" small>
+                    <h2 className="font-semibold text-xl text-neutral-300 mb-2">Billing Cycle</h2>
+                    {isLoading || !data ? (
+                        <Skeleton className="h-12 w-full" />
+                    ) : data.cancelAtPeriodEnd ? (
+                        <p>
+                            The subscription will expire on <span className="font-semibold text-neutral-300">{formatDate(data.currentPeriodEnd)}</span> and you will not be charged again.
+                        </p>
+                    ) : (
+                        <p>
+                            The subscription will renew on <span className="font-semibold text-neutral-300">{formatDate(data.currentPeriodEnd)}</span>, for a total of <span className="font-semibold text-neutral-300">EUR {totalAmount}</span>.
+                            <br />
+                            You{"'"}re paying <span className="font-semibold text-neutral-300">EUR {basePrice} Premium</span> and <span className="font-semibold text-neutral-300">EUR {(data.donationQuantity || 0).toFixed(2)} Donation{(data.donationQuantity || 0) === 1 ? "" : "s"}</span>
+                            {" "}
+                            (<Button
+                                className="text-sm p-0 m-0 h-3 text-violet-400"
+                                onClick={() => setChangeDonationModalOpen(true)}
                                 variant="link"
+                                size="sm"
                             >
-                                <Link href={data!.portalUrl}>
+                                change
+                            </Button>).
+                        </p>
+                    )}
+                </Box>
+                <Box className="lg:w-1/2" small>
+                    <h2 className="font-semibold text-xl text-neutral-300 mb-2">Payment Method</h2>
+                    {isLoading || !data ? (
+                        <Skeleton className="h-12 w-full" />
+                    ) : (
+                        <div className="flex gap-2 items-center bg-wamellow-100 px-4 py-2 rounded-lg">
+                            <PaymentMethodIcon method={data.paymentMethod} />
+                            <span className="text-neutral-200">{getPaymentMethodInfo(data.paymentMethod)}</span>
+
+                            <Button asChild className="ml-auto" variant="link">
+                                <Link href={data.portalUrl}>
                                     Change
                                 </Link>
                             </Button>
                         </div>
-                    }
+                    )}
                 </Box>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-2">
                 <PremiumGuildSelect
-                    isParentLoading={isLoading}
+                    isParentLoading={isLoading || !data}
                     guildIds={data?.guildIds || []}
                 />
             </div>
@@ -156,8 +145,10 @@ export default function Home() {
                 <ChangeDonationAmountModal
                     open={changeDonationModalOpen}
                     setOpen={setChangeDonationModalOpen}
-                    donationQuantity={data?.donationQuantity || 0}
+                    donationQuantity={data.donationQuantity || 0}
                     trialing={data.status === "trialing"}
+                    basePrice={basePrice}
+                    period={period}
                     edit={edit}
                 />
             )}
@@ -165,24 +156,37 @@ export default function Home() {
     );
 }
 
+function formatDate(seconds: number) {
+    return new Date(seconds * 1_000).toLocaleDateString();
+}
+
+function getPeriodEndsIn(endsAt: number, nowInSeconds: number) {
+    const days = Math.floor((endsAt - nowInSeconds) / (60 * 60 * 24));
+    if (days <= 0) return "Today";
+    if (days === 1) return "Tomorrow";
+    return `in ${days} days`;
+}
+
+function isActive(status: ApiV1UsersMeBillingGetResponse["status"]): status is "active" | "trialing" | "past_due" {
+    return status === "active" || status === "trialing" || status === "past_due";
+}
+
 function PortalButton({ data }: { data: ApiV1UsersMeBillingGetResponse; }) {
     const path = getPortalPath(data);
+    const label = path?.split("/").pop()?.replace(/^\w/, (c) => c.toUpperCase()) || "Manage";
 
     return (
-        <Button
-            asChild
-            className="w-full md:w-auto"
-        >
-            <Link href={data.portalUrl + "/" + path}>
-                {path?.split("/").pop()?.replace(/^\w/, (char) => char.toUpperCase()) || "Manage"}
+        <Button asChild className="w-full md:w-auto">
+            <Link href={`${data.portalUrl}/${path}`}>
+                {label}
             </Link>
         </Button>
     );
 }
 
 function getPortalPath(data: ApiV1UsersMeBillingGetResponse) {
-    if (data.cancelAtPeriodEnd) return "subscriptions/" + data.subscriptionId + "/reactivate";
-    return "subscriptions/" + data.subscriptionId + "/cancel";
+    if (data.cancelAtPeriodEnd) return `subscriptions/${data.subscriptionId}/reactivate`;
+    return `subscriptions/${data.subscriptionId}/cancel`;
 }
 
 function PaymentMethodIcon({ method }: { method?: ApiV1UsersMeBillingGetResponse["paymentMethod"]; }) {
@@ -221,17 +225,15 @@ function PremiumGuildSelect({
 
     if (isLoading || isParentLoading) {
         return (
-            <div className="w-full md:w-1/3 flex flex-col">
-                <Skeleton className="w-32 h-5 rounded-lg mt-1.5" />
-                <Skeleton className="w-full h-12 mt-1.5" />
-                <Skeleton className="w-96 h-5 rounded-lg mt-1.5" />
+            <div className="w-full md:w-1/2 lg:w-1/3 flex flex-col gap-2 mt-2">
+                <Skeleton className="w-32 h-5 rounded-lg" />
+                <Skeleton className="w-full h-12" />
+                <Skeleton className="w-full h-5 rounded-lg" />
             </div>
         );
     }
 
-    if (error) {
-        return <Notice message={error} />;
-    }
+    if (error) return <Notice message={error} />;
 
     return (
         <MultiSelectMenu
@@ -265,12 +267,16 @@ function ChangeDonationAmountModal({
     setOpen,
     donationQuantity: defaultDonationQuantity,
     trialing,
+    basePrice,
+    period,
     edit
 }: {
     open: boolean;
     setOpen: (open: boolean) => void;
     donationQuantity: number;
     trialing: boolean;
+    basePrice: number;
+    period: "month" | "year";
     edit: ApiEdit<ApiV1UsersMeBillingGetResponse>;
 }) {
     const [donation, setDonation] = useState(defaultDonationQuantity);
@@ -306,8 +312,8 @@ function ChangeDonationAmountModal({
             }}
             isDisabled={donation === defaultDonationQuantity || !terms}
         >
-            <p className="text-sm mb-4">
-                Change how much you want to donate on top of the monthly premium subscription.
+            <p className="text-sm mb-6">
+                Change how much you want to donate on top of your {period}ly premium subscription.
                 Please do not feel pressured to donate more than you can afford.
                 I appreciate any additional support you can provide 💜
             </p>
@@ -318,11 +324,11 @@ function ChangeDonationAmountModal({
                 setDonation={setDonation}
             />
 
-            <p className="text-sm mt-8 mb-6">
-                <Separator className="my-4" />
+            <div className="mt-8 space-y-4">
+                <Separator />
 
                 {dueToday > 0 && (
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex justify-between items-center">
                         <div>
                             <h2 className="text-lg font-medium text-neutral-100">Due Today</h2>
                             <p className="text-sm text-neutral-500">
@@ -332,34 +338,36 @@ function ChangeDonationAmountModal({
                                 }
                             </p>
                         </div>
-
-                        <span className="text-xl font-medium text-neutral-100">€{trialing ? 0 : dueToday.toFixed(2)}</span>
+                        <span className="text-xl font-medium text-neutral-100">€{trialing ? "0.00" : dueToday.toFixed(2)}</span>
                     </div>
                 )}
 
                 <div className="flex justify-between items-center">
                     <div>
-                        <h2 className="text-lg font-medium text-neutral-100">Monthly Total</h2>
-                        <p className="text-sm text-neutral-500">The total amount you will be charged monthly.</p>
+                        <h2 className="text-lg font-medium text-neutral-100">
+                            {period.replace(/^\w/, (c) => c.toUpperCase())}ly Total
+                        </h2>
+                        <p className="text-sm text-neutral-500">The total amount you will be charged {period}ly.</p>
                     </div>
-
-                    <span className="text-xl font-medium text-neutral-100">€{(donation + 4).toFixed(2)}</span>
+                    <span className="text-xl font-medium text-neutral-100">€{(donation + basePrice).toFixed(2)}</span>
                 </div>
-            </p>
 
-            <Separator className="my-4" />
+                <Separator />
+            </div>
 
-            <InputSwitch
-                label="I agree to the terms and conditions"
-                description="I waive my right of withdrawal."
-                link="/terms"
-                defaultState={terms}
-                onSave={setTerms}
-                isTickbox
-            />
+            <div className="mt-6">
+                <InputSwitch
+                    label="I agree to the terms and conditions"
+                    description="I waive my right of withdrawal."
+                    link="/terms"
+                    defaultState={terms}
+                    onSave={setTerms}
+                    isTickbox
+                />
+            </div>
 
             <Turnstile
-                className="mt-10"
+                className="mt-8"
                 siteKey={process.env.NEXT_PUBLIC_TURNSTILE_KEY!}
                 options={{
                     size: "flexible",

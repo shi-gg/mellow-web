@@ -19,7 +19,8 @@ export async function GET(request: Request) {
         {
             donationQuantity: Number.parseInt(searchParams.get("donation") || "0", 10),
             giftId: searchParams.get("gift"),
-            referer: request.headers.get("referer")
+            referer: request.headers.get("referer"),
+            period: searchParams.get("period") === "year" ? "year" : "month"
         }
     )
         .catch((error) => error);

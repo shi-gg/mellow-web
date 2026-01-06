@@ -10,11 +10,16 @@ import { useSearchParams } from "next/navigation";
 import { type HTMLProps, useState } from "react";
 import { HiArrowDown, HiArrowUp, HiLightningBolt, HiOutlineInformationCircle } from "react-icons/hi";
 
+export const MONTHLY_PRICES = [4, 8, 12, 18, 25] as const;
+export const YEARLY_PRICES = [40, 50, 60, 80, 100] as const;
+const PERIODS = ["month", "year"] as const;
+
 export function Subscribe({ header }: { header?: boolean; }) {
     const search = useSearchParams();
 
     const premium = userStore((u) => u?.premium || false);
     const [donation, setDonation] = useState(0);
+    const [period, setPeriod] = useState<"month" | "year">("month");
 
     if (premium) {
         return (
@@ -33,16 +38,20 @@ export function Subscribe({ header }: { header?: boolean; }) {
         );
     }
 
+    const basePrice = period === "year" ? YEARLY_PRICES[0] : MONTHLY_PRICES[0];
+    const prices = period === "year" ? YEARLY_PRICES : MONTHLY_PRICES;
+    const currentPrice = basePrice + donation;
+
     return (
-        <div className="w-full">
+        <div className="w-full space-y-2">
             {header && (
-                <div className="flex gap-2 justify-center mb-2">
+                <div className="flex gap-2 justify-center">
                     <span className="dark:text-neutral-200 text-neutral-800 font-medium text-sm">Upgrade your experience further!</span>
                     <Badge
                         variant="flat"
                         radius="rounded"
                     >
-                        €{donation + 4} /month
+                        €{currentPrice} /{period}
                     </Badge>
                 </div>
             )}
@@ -55,7 +64,11 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 >
                     <Link
                         prefetch={false}
-                        href={`/premium/checkout?${new URLSearchParams({ donation: donation.toString(), gift: search.get("gift") || "" }).toString()}`}
+                        href={`/premium/checkout?${new URLSearchParams({
+                            donation: donation.toString(),
+                            gift: search.get("gift") || "",
+                            period
+                        }).toString()}`}
                     >
                         <HiLightningBolt />
                         Subscribe
@@ -63,16 +76,57 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 </Button>
             </div>
 
-            <div className="w-full flex justify-center my-2">
+            <div className="w-full flex justify-center">
                 <span className="text-muted-foreground font-medium text-xs uppercase">choose what to pay</span>
             </div>
 
             <div className="flex gap-1 w-full">
-                {[4, 8, 12, 18, 25].map((amount) => (
+                {PERIODS.map((p) => (
+                    <Button
+                        key={p}
+                        className={cn("h-7 w-1/2", p === period && "bg-violet-400/20 hover:bg-violet-400/40")}
+                        onClick={() => {
+                            setPeriod(p);
+
+                            const currentTotal = basePrice + donation;
+                            const targetPrices = p === "year" ? YEARLY_PRICES : MONTHLY_PRICES;
+                            const targetBase = p === "year" ? YEARLY_PRICES[0] : MONTHLY_PRICES[0];
+
+                            const projectedTotal = p === "year" ? currentTotal * 10 : currentTotal / 10;
+
+                            const nearest = targetPrices.reduce((prev, curr) => {
+                                const prevDiff = Math.abs(prev - projectedTotal);
+                                const currDiff = Math.abs(curr - projectedTotal);
+
+                                if (currDiff < prevDiff) return curr;
+                                if (currDiff === prevDiff) return curr > prev ? curr : prev;
+                                return prev;
+                            });
+
+                            setDonation(nearest - targetBase);
+                        }}
+                    >
+                        {p.replace(/^\w/, (char) => char.toUpperCase())}ly
+                        {p === "year" && (
+                            <Badge
+                                variant="flat"
+                                radius="rounded"
+                                size="sm"
+                                className={period === "month" ? "text-green-400 bg-green-400/10" : "text-violet-400 bg-violet-400/10"}
+                            >
+                                Save {Math.round((1 - YEARLY_PRICES[0] / (MONTHLY_PRICES[0] * 12)) * 100)}%
+                            </Badge>
+                        )}
+                    </Button>
+                ))}
+            </div>
+
+            <div className="flex gap-1 w-full">
+                {prices.map((amount) => (
                     <Button
                         key={amount}
-                        className={cn("h-7 w-1/5", amount === (donation + 4) && "bg-violet-400/20 hover:bg-violet-400/40")}
-                        onClick={() => setDonation(amount - 4)}
+                        className={cn("h-7 w-1/5", amount === currentPrice && "bg-violet-400/20 hover:bg-violet-400/40")}
+                        onClick={() => setDonation(amount - basePrice)}
                     >
                         {amount}€
                     </Button>

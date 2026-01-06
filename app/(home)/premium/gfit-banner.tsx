@@ -27,7 +27,9 @@ async function InnerGiftBanner({ giftId }: { giftId: string; }) {
     const gift = await getGift(giftId);
 
     if (!gift || "message" in gift) {
-        return <div>Gift not found</div>;
+        return (
+            <Notice message={gift?.message || "Gift not found"} />
+        );
     }
 
     return (

@@ -10,6 +10,7 @@ export async function createCheckout(
         donationQuantity: number;
         giftId: string | null;
         referer: string | null;
+        period: "month" | "year";
     }
 ) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API}/billing/subscriptions`, {
