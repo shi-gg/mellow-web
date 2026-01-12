@@ -12,10 +12,8 @@ import { Button } from "@/components/ui/button";
 import { InputBase, InputBaseTextarea } from "@/components/ui/input-base";
 import { cn } from "@/utils/cn";
 import { actor, getVoices, voices } from "@/utils/tts";
-import { getBaseUrl, getCanonicalUrl } from "@/utils/urls";
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { Turnstile } from "@marsidev/react-turnstile";
-import type { Metadata } from "next";
 import { useRef, useState } from "react";
 import { HiDownload } from "react-icons/hi";
 
@@ -24,35 +22,6 @@ import { History } from "./history";
 import { useHistory } from "./use-history";
 
 const MAX_TEXT_LENGTH = 6_000;
-
-export const generateMetadata = (): Metadata => {
-
-    const title = "Generate TikTok Text-to-Speech";
-    const description = "Convert Text to TikTok-like Speech for free online or in Discord.";
-    const url = getCanonicalUrl("text-to-speech");
-
-    return {
-        title,
-        description,
-        alternates: {
-            canonical: url
-        },
-        openGraph: {
-            title,
-            description,
-            type: "website",
-            url,
-            images: `${getBaseUrl()}/waya-v3.webp`
-        },
-        twitter: {
-            card: "summary",
-            site: "wamellow.com",
-            title,
-            description,
-            images: `${getBaseUrl()}/waya-v3.webp`
-        }
-    };
-};
 
 export default function Home() {
     const fallbackVoice = voices[0] ?? "";

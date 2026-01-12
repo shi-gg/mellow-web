@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const generateMetadata = (): Metadata => {
     const title = "Generate TikTok-Like Text-to-Speech";
-    const description = "Use 97+ voices in 10+ languages to create TikTok-like text-to-speech for free.";
+    const description = "Use 97+ voices in 10+ languages to create TikTok-like text-to-speech for free online and in discord.";
     const url = getCanonicalUrl("text-to-speech");
 
     return {
