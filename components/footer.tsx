@@ -125,6 +125,7 @@ function Links() {
                 <Link
                     className="text-primary/75 hover:text-primary/65 duration-200 flex items-center gap-2"
                     href="/terms"
+                    target="_blank"
                 >
                     <HiLibrary />
                     Terms of Service
@@ -132,6 +133,7 @@ function Links() {
                 <Link
                     className="text-primary/75 hover:text-primary/65 duration-200 flex items-center gap-2"
                     href="/privacy"
+                    target="_blank"
                 >
                     <HiHand />
                     Privacy Policy
@@ -139,16 +141,25 @@ function Links() {
                 <Link
                     className="text-primary/75 hover:text-primary/65 duration-200 flex items-center gap-2"
                     href="/impressum"
+                    target="_blank"
                 >
                     <HiGlobe />
                     Impressum
                 </Link>
             </div>
             <div>
-                <div className="font-medium dark:text-neutral-200 text-neutral-800 mb-1">Links</div>
+                <div className="font-medium dark:text-neutral-200 text-neutral-800 mb-1">Resources</div>
+                <Link
+                    className="text-primary/75 hover:text-primary/65 duration-200 flex items-center gap-2"
+                    href="/text-to-speech"
+                >
+                    <HiCloud />
+                    Text to Speech
+                </Link>
                 <Link
                     className="text-primary/75 hover:text-primary/65 duration-200 flex items-center gap-2"
                     href="/support"
+                    target="_blank"
                 >
                     <BsDiscord />
                     Support
