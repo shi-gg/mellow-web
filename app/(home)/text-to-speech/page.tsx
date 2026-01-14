@@ -6,7 +6,8 @@ import {
     AudioPlayerDuration,
     AudioPlayerProgress,
     AudioPlayerProvider,
-    AudioPlayerTime
+    AudioPlayerTime,
+    AutoPlay
 } from "@/components/ui/audio-player";
 import { Button } from "@/components/ui/button";
 import { InputBase, InputBaseTextarea } from "@/components/ui/input-base";
@@ -128,6 +129,7 @@ export default function Home() {
                 {audioUrl && (
                     <div className="rounded-xl bg-linear-to-br from-violet-300/8 to-violet-200/5 p-5 mt-4">
                         <AudioPlayerProvider>
+                            <AutoPlay url={audioUrl} />
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-2">
                                     <Button asChild>

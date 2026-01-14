@@ -89,6 +89,23 @@ export function useAudioPlayer<TData = unknown>(): AudioPlayerApi<TData> {
     return api;
 }
 
+export function AutoPlay({ url }: { url: string; }) {
+    const player = useAudioPlayer();
+    const lastUrl = useRef<string | null>(null);
+
+    useEffect(() => {
+        if (lastUrl.current === url) return;
+
+        lastUrl.current = url;
+        void player.play({
+            id: url,
+            src: url
+        });
+    }, [url]);
+
+    return null;
+}
+
 const AudioPlayerTimeContext = createContext<number | null>(null);
 
 export const useAudioPlayerTime = () => {
