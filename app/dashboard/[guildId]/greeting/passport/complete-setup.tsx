@@ -23,33 +23,33 @@ export default function CompleteSetup({
     data,
     edit
 }: Props) {
-    const [modal, setModal] = useState<ModalType>(ModalType.None);
+    const [dismissed, setDismissed] = useState<ModalType>(ModalType.None);
     const [roleId, setRoleId] = useState<string | null>(null);
 
-    const enabled = (guild!.flags & GuildFlags.PassportEnabled) !== 0;
+    const enabled = guild ? (guild.flags & GuildFlags.PassportEnabled) !== 0 : false;
 
-    const [prevData, setPrevData] = useState(data);
-    if (
-        data.successRoleId !== prevData.successRoleId ||
-        data.punishmentRoleId !== prevData.punishmentRoleId ||
-        data.punishment !== prevData.punishment
-    ) {
-        setPrevData(data);
-        if (enabled) {
-            if (!data.successRoleId) {
-                setModal(ModalType.VerifiedRole);
-            } else if (data.punishment === 2 && !data.punishmentRoleId) {
-                setModal(ModalType.PunishmentRole);
-            }
+    let activeModal = ModalType.None;
+    if (enabled) {
+        if (!data.successRoleId) {
+            activeModal = ModalType.VerifiedRole;
+        } else if (data.punishment === 2 && !data.punishmentRoleId) {
+            activeModal = ModalType.PunishmentRole;
         }
     }
+
+    if (activeModal === ModalType.None && dismissed !== ModalType.None) {
+        setDismissed(ModalType.None);
+    }
+
+    const showVerified = activeModal === ModalType.VerifiedRole && dismissed !== ModalType.VerifiedRole;
+    const showPunishment = activeModal === ModalType.PunishmentRole && dismissed !== ModalType.PunishmentRole;
 
     return (<>
         <Modal
             title="Verified role"
             className="overflow-visible!"
-            isOpen={Boolean(guild) && modal === ModalType.VerifiedRole}
-            onClose={() => setModal(ModalType.None)}
+            isOpen={Boolean(guild) && showVerified}
+            onClose={() => setDismissed(ModalType.VerifiedRole)}
             onSubmit={() => {
                 return fetch(`${process.env.NEXT_PUBLIC_API}/guilds/${guild?.id}/modules/passport`, {
                     method: "PATCH",
@@ -77,8 +77,8 @@ export default function CompleteSetup({
         <Modal
             title="Punishment role"
             className="overflow-visible!"
-            isOpen={Boolean(guild) && modal === ModalType.PunishmentRole}
-            onClose={() => setModal(ModalType.None)}
+            isOpen={Boolean(guild) && showPunishment}
+            onClose={() => setDismissed(ModalType.PunishmentRole)}
             onSubmit={() => {
                 return fetch(`${process.env.NEXT_PUBLIC_API}/guilds/${guild?.id}/modules/passport`, {
                     method: "PATCH",
