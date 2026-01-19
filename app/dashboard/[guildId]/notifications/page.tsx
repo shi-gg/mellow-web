@@ -16,7 +16,7 @@ import { AvatarBadge } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cacheOptions } from "@/lib/api";
 import { type ApiV1GuildsModulesNotificationsGetResponse, BlueskyNotificationFlags, GuildFlags, NotificationFlags, NotificationType, YoutubeNotificationFlags } from "@/typings";
-import { BitfieldManager, bitfieldToArray, transformer } from "@/utils/bitfields";
+import { arrayToBitfield, BitfieldManager, bitfieldToArray, transformer } from "@/utils/bitfields";
 import { createSelectableItems } from "@/utils/create-selectable-items";
 import { getCanonicalUrl } from "@/utils/urls";
 import { LoaderCircleIcon } from "lucide-react";
@@ -218,9 +218,10 @@ export default function Home() {
                         : "Select the types of content to send."
                     }
                     defaultState={flags.toArray()}
-                    onSave={(o) => {
-                        const flags = o.map((flag) => Number(flag));
-                        editItem("flags", flags.reduce((a, b) => a | b, 0));
+                    transform={(selected) => arrayToBitfield(selected, platformFlags, item.flags)}
+                    onSave={(selected) => {
+                        const bits = arrayToBitfield(selected, platformFlags, item.flags);
+                        editItem("flags", bits);
                     }}
                 />
                 : <InputText
@@ -265,7 +266,7 @@ export default function Home() {
             endpoint={url + "/" + item.id}
             k="flags"
             defaultState={(item.flags & NotificationFlags.MustNotMatchRegex) !== 0}
-            transform={(value) => value ? [NotificationFlags.MustNotMatchRegex] : []} // very fucked up
+            transform={(value) => transformer(value, item.flags, NotificationFlags.MustNotMatchRegex)}
             onSave={(value) => editItem("flags", transformer(value, item.flags, NotificationFlags.MustNotMatchRegex))}
         />
 
@@ -276,7 +277,7 @@ export default function Home() {
                 endpoint={url + "/" + item.id}
                 k="flags"
                 defaultState={(item.flags & NotificationFlags.DeleteAfterStream) !== 0}
-                transform={(value) => value ? [NotificationFlags.DeleteAfterStream] : []} // very fucked up
+                transform={(value) => transformer(value, item.flags, NotificationFlags.DeleteAfterStream)}
                 onSave={(value) => editItem("flags", transformer(value, item.flags, NotificationFlags.DeleteAfterStream))}
             />
         )}
@@ -307,8 +308,7 @@ export default function Home() {
 }
 
 function TestButton(
-    { type, creatorId, children }:
-    { type: NotificationType; creatorId: string; children: ReactNode; }
+    { type, creatorId, children }: { type: NotificationType; creatorId: string; children: ReactNode; }
 ) {
 
     const { data, isLoading } = useQuery(
