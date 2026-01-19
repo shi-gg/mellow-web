@@ -35,7 +35,11 @@ export function ControlledColorInput({
     const [isHovered, setIsHovered] = useState(false);
 
     const actualValue = useMemo(() => {
-        if (dataName && typeof value === "string") {
+        if (dataName) {
+            if (typeof value !== "string") {
+                console.warn("ControlledColorInput: dataName is set but value is not a string");
+                return 0;
+            }
             try {
                 return JSON.parse(value)[dataName] ?? 0;
             } catch {

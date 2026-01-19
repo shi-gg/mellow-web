@@ -120,9 +120,9 @@ export default function InputMultiSelect<T extends string | number>({
         // Prevent the dropdown from opening
         e.preventDefault();
         e.stopPropagation();
-        update(value.filter((v) => v !== itemValue));
-        // Save immediately when removing via X button (menu is closed)
-        setTimeout(() => save(), 0);
+        const newValue = value.filter((v) => v !== itemValue);
+        update(newValue);
+        save(newValue);
     };
 
     const handleOpenChange = (isOpen: boolean) => {

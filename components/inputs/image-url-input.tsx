@@ -64,12 +64,6 @@ export default function InputImageUrl({
     const [imageState, setImageState] = useState<ImageState>(ImageState.Idle);
     const [debouncedUrl, setDebouncedUrl] = useState(value);
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
-    const saveRef = useRef(save);
-
-    // Keep saveRef current
-    useEffect(() => {
-        saveRef.current = save;
-    }, [save]);
 
     // Debounce URL changes before attempting to load image
     useEffect(() => {
@@ -79,12 +73,17 @@ export default function InputImageUrl({
 
         // If empty, update immediately
         if (!value?.length) {
-            setDebouncedUrl(value);
-            setImageState(ImageState.Idle);
-            return;
+            debounceRef.current = setTimeout(() => {
+                setDebouncedUrl(value);
+                setImageState(ImageState.Idle);
+            }, 0);
+            return () => {
+                if (debounceRef.current) {
+                    clearTimeout(debounceRef.current);
+                }
+            };
         }
 
-        // Set loading state while debouncing
         setImageState(ImageState.Loading);
 
         debounceRef.current = setTimeout(() => {
@@ -101,7 +100,7 @@ export default function InputImageUrl({
     const handleImageLoad = () => {
         setImageState(ImageState.Success);
         // Image loaded successfully, now save
-        saveRef.current();
+        save();
     };
 
     const handleImageError = () => {

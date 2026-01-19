@@ -105,7 +105,11 @@ export default function InputText({
                     className="dark:bg-wamellow bg-wamellow-100 border-none resize-y min-h-28"
                     placeholder={placeholder}
                     value={value || ""}
-                    onChange={(e) => update(e.target.value)}
+                    onChange={(e) => {
+                        const newValue = e.target.value;
+                        if (newValue.length > max) return;
+                        update(newValue);
+                    }}
                     disabled={disabled}
                     maxLength={max}
                     rows={3}
@@ -115,7 +119,11 @@ export default function InputText({
                     className="dark:bg-wamellow bg-wamellow-100 border-none"
                     placeholder={placeholder}
                     value={value || ""}
-                    onChange={(e) => update(e.target.value)}
+                    onChange={(e) => {
+                        const newValue = e.target.value;
+                        if (newValue.length > max) return;
+                        update(newValue);
+                    }}
                     disabled={disabled}
                     maxLength={max}
                 />

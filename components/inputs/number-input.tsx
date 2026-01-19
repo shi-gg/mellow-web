@@ -122,7 +122,7 @@ export default function InputNumber({
                 )}>
                     {isDirty && (
                         <Button
-                            onClick={save}
+                            onClick={() => save()}
                             className="h-8 rounded-lg mr-2"
                             loading={state === InputState.Loading}
                             disabled={disabled}
@@ -156,7 +156,7 @@ export default function InputNumber({
                         onChange={(e) => {
                             const val = e.target.value;
                             if (/^\d*$/.test(val)) {
-                                update(val ? Number.parseInt(val, 10) : 0);
+                                update(val ? Number.parseInt(val, 10) : min);
                             }
                         }}
                         value={value ?? 0}
