@@ -26,7 +26,6 @@ import { cn } from "@/utils/cn";
 import { toFixedArrayLength } from "@/utils/fixed-array-length";
 import { actor } from "@/utils/tts";
 import { getCanonicalUrl } from "@/utils/urls";
-import dynamic from "next/dynamic";
 import { Montserrat, Patrick_Hand } from "next/font/google";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -36,11 +35,8 @@ import { BsDiscord, BsYoutube } from "react-icons/bs";
 import { HiArrowNarrowRight, HiArrowRight, HiCash, HiCheck, HiFire, HiLockOpen, HiUserAdd } from "react-icons/hi";
 
 import { Commands } from "./commands.component";
+import { Faq } from "./faq.component";
 import { Ratings } from "./ratings.component";
-
-const Faq = dynamic(() => import("./faq.component").then((m) => m.Faq), {
-    ssr: false
-});
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 const handwritten = Patrick_Hand({ subsets: ["latin"], weight: "400" });
