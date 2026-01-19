@@ -27,8 +27,6 @@ interface InputOptions<T> {
 
 export type InputProps<T> = InputOptions<T> & HTMLProps<HTMLDivElement> & {
     label?: string;
-    /** @deprecated Use `label` instead. Kept for backward compatibility. */
-    name?: string;
     description?: string;
     disabled?: boolean;
 };
@@ -49,6 +47,17 @@ export function useInput<T>(options: InputOptions<T>) {
         setValue(options.defaultState);
         setSavedValue(options.defaultState);
 
+        return () => {
+            if (timeout.current) {
+                clearTimeout(timeout.current);
+                timeout.current = null;
+            }
+
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+                debounceRef.current = null;
+            }
+        };
     }, [defaultStateKey]);
 
     const save = useCallback(
