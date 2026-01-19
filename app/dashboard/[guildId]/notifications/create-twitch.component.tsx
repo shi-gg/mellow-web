@@ -1,8 +1,8 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import DumbTextInput from "@/components/inputs/dumb-text-input";
-import SelectMenu from "@/components/inputs/select-menu";
+import { ControlledInput } from "@/components/inputs/controlled-input";
+import { InputSelect } from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { Section } from "@/components/section";
 import TutorialPic from "@/public/docs-assets/notifications-channel-urls.webp";
@@ -73,20 +73,19 @@ export function TwitchNotificationModal({
             }}
             isDisabled={!name || !channelId}
         >
-            <DumbTextInput
-                name="Streamer's username"
+            <ControlledInput
+                label="Streamer's username"
                 placeholder="DarkViperAU"
                 value={name}
                 setValue={setName}
             />
 
-            <SelectMenu
-                name="Channel"
-                dataName="channelId"
+            <InputSelect
+                label="Channel"
                 items={createSelectableItems(channels)}
                 description="Select a channel where notifications should be send into."
                 onSave={(o) => {
-                    setChannelId(o.value as string);
+                    setChannelId(o as string);
                 }}
             />
 

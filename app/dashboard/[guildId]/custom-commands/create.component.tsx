@@ -1,6 +1,6 @@
 "use client";
 
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import Modal from "@/components/modal";
 import Notice from "@/components/notice";
 import { Button } from "@/components/ui/button";
@@ -67,8 +67,8 @@ export function CreateTag({ guildId, style, addTag, setTagId }: Props) {
         >
             <Notice message="Start the name with a '/' to create a slash command" />
 
-            <DumbTextInput
-                name="Name"
+            <ControlledInput
+                label="Command Name"
                 placeholder="new-tag"
                 value={name}
                 setValue={(val) => setName((val || "").toLowerCase())}

@@ -1,6 +1,6 @@
 "use client";
 
-import SelectMenu from "@/components/inputs/select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
 import {
     AudioPlayerButton,
     AudioPlayerDuration,
@@ -75,15 +75,15 @@ export default function Home() {
             <div>
                 <div className="rounded-xl bg-linear-to-br from-violet-300/8 to-violet-200/5 p-5 h-fit">
                     <div className="flex flex-wrap items-center gap-3">
-                        <SelectMenu
+                        <InputSelect
                             className="w-full"
-                            name="Voice & language"
+                            label="Voice & language"
                             items={voices.map((voiceKey) => ({
                                 name: getVoices(voiceKey)[0],
                                 value: voiceKey
                             }))}
                             defaultState={voice}
-                            onSave={({ value }) => setVoice((value as string) || fallbackVoice)}
+                            onSave={(value) => setVoice((value as string) || fallbackVoice)}
                             showClear={false}
                         />
                     </div>

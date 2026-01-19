@@ -4,11 +4,11 @@ import { guildStore } from "@/common/guilds";
 import { DiscordMarkdown } from "@/components/discord/markdown";
 import DiscordMessage from "@/components/discord/message";
 import DiscordMessageEmbed from "@/components/discord/message-embed";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import NumberInput from "@/components/inputs/number-input";
-import SelectMenu from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
-import TextInput from "@/components/inputs/text-input";
+import { InputColor } from "@/components/inputs/color-input";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputNumber } from "@/components/inputs/number-input";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
 import Notice from "@/components/notice";
 import { Button } from "@/components/ui/button";
 import { useApi } from "@/lib/api/hook";
@@ -60,7 +60,7 @@ export default function Home() {
             </Button>
         </div>
 
-        <Switch
+        <InputSwitch
             label="Enable Starboard"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -69,7 +69,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.StarboardEnabled) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Allow bots, apps and webhooks"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -78,7 +78,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.StarboardAllowBots) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Allow NSFW channels"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -87,7 +87,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.StarboardAllowNSFW) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Allow message edits"
             description="If a message is being edited, update it in the data."
             endpoint={`/guilds/${guild?.id}`}
@@ -97,7 +97,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.StarboardAllowEdits) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Allow author reaction"
             description="Lets the message author star their own messages."
             endpoint={`/guilds/${guild?.id}`}
@@ -107,8 +107,8 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.StarboardAllowSelf) })}
         />
 
-        <Switch
-            label="Display stared message reference"
+        <InputSwitch
+            label="Display starred message reference"
             description="Repost the message reply in the data."
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -117,7 +117,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.StarboardDisplayReference) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Delete message from starboard upon losing reactions"
             description="If a message in the starboard looses the required reactions, it gets deleted."
             endpoint={`/guilds/${guild?.id}`}
@@ -127,8 +127,8 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.StarboardDeleteOnLoss) })}
         />
 
-        <NumberInput
-            name="Number of reactions required"
+        <InputNumber
+            label="Number of reactions required"
             description="Sets the number of reactions needed to get a message onto the data."
             url={url}
             dataName="requiredEmojis"
@@ -138,21 +138,21 @@ export default function Home() {
             onSave={(v) => edit("requiredEmojis", v)}
         />
 
-        <SelectMenu
-            name="Channel"
+        <InputSelect
+            label="Channel"
             url={url}
             dataName="channelId"
             items={createSelectableItems(guild?.channels)}
             description="Select the channel where the starboard messages should be send into."
             defaultState={data.channelId}
             disabled={!enabled}
-            onSave={(o) => edit("channelId", o.value as string)}
+            onSave={(o) => edit("channelId", o as string)}
         />
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <SelectMenu
-                    name="Emoji"
+                <InputSelect
+                    label="Emoji"
                     url={url}
                     dataName="emoji"
                     items={[
@@ -175,12 +175,12 @@ export default function Home() {
                     description="Select the emoji that needs to be reacted with."
                     defaultState={data.emoji}
                     disabled={!enabled}
-                    onSave={(o) => edit("emoji", o.value as string)}
+                    onSave={(o) => edit("emoji", o as string)}
                 />
             </div>
             <div className="lg:w-1/2">
-                <SelectMenu
-                    name="Profile display style"
+                <InputSelect
+                    label="Profile display style"
                     url={url}
                     dataName="style"
                     items={[
@@ -208,15 +208,15 @@ export default function Home() {
                     description="The style members profile gets displayed."
                     defaultState={data.style}
                     disabled={!enabled}
-                    onSave={(o) => edit("style", o.value as number)}
+                    onSave={(o) => edit("style", o as number)}
                 />
             </div>
         </div>
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Blacklisted channels"
+                <InputMultiSelect
+                    label="Blacklisted channels"
                     url={url}
                     dataName="blacklistChannelIds"
                     items={createSelectableItems(guild?.channels)}
@@ -224,12 +224,12 @@ export default function Home() {
                     defaultState={data.blacklistChannelIds || []}
                     max={500}
                     disabled={!enabled}
-                    onSave={(o) => edit("blacklistChannelIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("blacklistChannelIds", o)}
                 />
             </div>
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Blacklisted roles"
+                <InputMultiSelect
+                    label="Blacklisted roles"
                     url={url}
                     dataName="blacklistRoleIds"
                     items={createSelectableItems(guild?.roles)}
@@ -237,21 +237,20 @@ export default function Home() {
                     defaultState={data.blacklistRoleIds || []}
                     max={500}
                     disabled={!enabled}
-                    onSave={(o) => edit("blacklistRoleIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("blacklistRoleIds", o)}
                 />
             </div>
         </div>
 
         <div className="lg:flex gap-3">
             <div className="w-1/2">
-                <TextInput
-                    name="Color"
+                <InputColor
+                    label="Color"
                     url={url}
                     dataName="embedColor"
                     description="Color used for the side of the embed."
-                    type="color"
                     defaultState={data.embedColor ?? 0}
-                    onSave={(o) => edit("embedColor", o as number)}
+                    onSave={(o) => edit("embedColor", o)}
                 />
             </div>
         </div>

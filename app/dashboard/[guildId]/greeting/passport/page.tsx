@@ -2,8 +2,8 @@
 
 import { guildStore } from "@/common/guilds";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard";
-import SelectInput from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
 import Notice from "@/components/notice";
 import { OverviewLink } from "@/components/overview-link";
 import { Section } from "@/components/section";
@@ -53,7 +53,7 @@ export default function Home() {
             edit={edit}
         />
 
-        <Switch
+        <InputSwitch
             label="Enable Passport"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -62,21 +62,21 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.PassportEnabled) })}
         />
 
-        <SelectInput
-            name="Logging channel"
+        <InputSelect
+            label="Channel"
             url={`/guilds/${guild?.id}/modules/passport`}
             dataName="channelId"
             items={createSelectableItems(guild?.channels)}
             description="Select the channel where verification logs should be send into."
             defaultState={data.channelId}
             disabled={!enabled}
-            onSave={(o) => edit("channelId", o.value)}
+            onSave={(o) => edit("channelId", o as string)}
         />
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <SelectInput
-                    name="Unverified role"
+                <InputSelect
+                    label="Unverified role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="unverifiedRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
@@ -84,28 +84,28 @@ export default function Home() {
                     defaultState={data.unverifiedRoleId}
                     showClear
                     disabled={!enabled}
-                    onSave={(o) => edit("unverifiedRoleId", o.value)}
+                    onSave={(o) => edit("unverifiedRoleId", o as string)}
                 />
             </div>
 
             <div className="lg:w-1/2">
-                <SelectInput
-                    name="Verified role"
+                <InputSelect
+                    label="Verified role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="successRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                     description="Select what role members should get when completing verification."
                     defaultState={data.successRoleId}
                     disabled={!enabled}
-                    onSave={(o) => edit("successRoleId", o.value)}
+                    onSave={(o) => edit("successRoleId", o as string)}
                 />
             </div>
         </div>
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <SelectInput
-                    name="Failed verification action"
+                <InputSelect
+                    label="Failed verification action"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="punishment"
                     items={[
@@ -116,20 +116,20 @@ export default function Home() {
                     description="Choose what should happen if a member failes verification."
                     defaultState={data.punishment}
                     disabled={!enabled}
-                    onSave={(o) => edit("punishment", o.value as ApiV1GuildsModulesPassportGetResponse["punishment"])}
+                    onSave={(o) => edit("punishment", o as ApiV1GuildsModulesPassportGetResponse["punishment"])}
                 />
             </div>
 
             <div className="lg:w-1/2">
-                <SelectInput
-                    name="Punishment role"
+                <InputSelect
+                    label="Punishment role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="punishmentRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                     description="Select what role members should get when failing verification."
                     defaultState={data.punishmentRoleId}
                     disabled={!enabled || data.punishment !== 2}
-                    onSave={(o) => edit("punishmentRoleId", o.value)}
+                    onSave={(o) => edit("punishmentRoleId", o as string)}
                 />
             </div>
         </div>

@@ -3,11 +3,11 @@ import { guildStore } from "@/common/guilds";
 import { userStore } from "@/common/user";
 import Fetch from "@/components/button-fetch";
 import MessageCreatorEmbed from "@/components/embed-creator";
-import ImageUrlInput from "@/components/inputs/image-url-input";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import NumberInput from "@/components/inputs/number-input";
-import SelectMenu from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
+import { InputImageUrl } from "@/components/inputs/image-url-input";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputNumber } from "@/components/inputs/number-input";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
 import Notice from "@/components/notice";
 import { Section } from "@/components/section";
 import { Button } from "@/components/ui/button";
@@ -42,7 +42,7 @@ export default function Home() {
     return (<>
         <Head guildId={params.guildId as string} />
 
-        <Switch
+        <InputSwitch
             label="Enable Welcome"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -51,7 +51,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.WelcomeEnabled) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Restore roles and nickname on rejoin"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -60,7 +60,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.WelcomeRestore) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Delete welcome message after leave"
             description="This only takes affect if the user joined less than 24h ago."
             endpoint={`/guilds/${guild?.id}/modules/welcome`}
@@ -70,8 +70,8 @@ export default function Home() {
             onSave={(s) => edit("deleteAfterLeave", s)}
         />
 
-        <NumberInput
-            name="After how many seconds the message should be deleted"
+        <InputNumber
+            label="After how many seconds the message should be deleted"
             description="Set to 0 to disable."
             url={`/guilds/${guild?.id}/modules/welcome`}
             dataName="deleteAfter"
@@ -81,9 +81,9 @@ export default function Home() {
         />
 
         <div className="flex md:gap-4 gap-2">
-            <SelectMenu
+            <InputSelect
                 className="w-2/3 md:w-5/6"
-                name="Channel"
+                label="Channel"
                 url={`/guilds/${guild?.id}/modules/welcome`}
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels)}
@@ -91,7 +91,7 @@ export default function Home() {
                 defaultState={data.channelId}
                 disabled={!enabled}
                 showClear
-                onSave={(o) => edit("channelId", o.value)}
+                onSave={(o) => edit("channelId", o as string)}
             />
 
             <Fetch
@@ -106,8 +106,8 @@ export default function Home() {
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Roles"
+                <InputMultiSelect
+                    label="Enabled"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="roleIds"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
@@ -115,13 +115,13 @@ export default function Home() {
                     defaultState={data.roleIds}
                     max={5}
                     disabled={!enabled}
-                    onSave={(o) => edit("roleIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("roleIds", o)}
                 />
             </div>
 
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Pings"
+                <InputMultiSelect
+                    label="Also send in DMs"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="pingIds"
                     items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages"])}
@@ -129,15 +129,15 @@ export default function Home() {
                     defaultState={data.pingIds}
                     max={5}
                     disabled={!enabled}
-                    onSave={(o) => edit("pingIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("pingIds", o)}
                 />
             </div>
         </div>
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="First user message reactions"
+                <InputMultiSelect
+                    label="First user message reactions"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="reactions.firstMessageEmojis"
                     items={createSelectableEmojiItems(guild?.emojis)}
@@ -148,15 +148,15 @@ export default function Home() {
                     onSave={(o) => {
                         edit("reactions", {
                             ...data.reactions,
-                            firstMessageEmojis: o.map(({ value }) => value)
+                            firstMessageEmojis: o
                         });
                     }}
                 />
             </div>
 
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Welcome message reactions"
+                <InputMultiSelect
+                    label="Welcome message reactions"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="reactions.welcomeMessageEmojis"
                     items={createSelectableEmojiItems(guild?.emojis)}
@@ -167,7 +167,7 @@ export default function Home() {
                     onSave={(o) => {
                         edit("reactions", {
                             ...data.reactions,
-                            welcomeMessageEmojis: o.map(({ value }) => value)
+                            welcomeMessageEmojis: o
                         });
                     }}
                 />
@@ -194,7 +194,7 @@ export default function Home() {
         >
 
             <div className={cn("mt-2 mb-4 border-2 dark:border-wamellow border-wamellow-100 rounded-xl p-6", (guild!.flags & GuildFlags.WelcomeCard) === 0 && "pb-0")}>
-                <Switch
+                <InputSwitch
                     label="Show image card"
                     endpoint={`/guilds/${guild?.id}`}
                     k="flags"
@@ -205,7 +205,7 @@ export default function Home() {
                 />
 
                 {(guild!.flags & GuildFlags.WelcomeCard) !== 0 && (<>
-                    <Switch
+                    <InputSwitch
                         label="Set image inside embed"
                         endpoint={`/guilds/${guild?.id}`}
                         k="flags"
@@ -215,8 +215,8 @@ export default function Home() {
                         onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.WelcomeCardInEmbed) })}
                     />
 
-                    <ImageUrlInput
-                        name="Card Background"
+                    <InputImageUrl
+                        label="Card Avatar"
                         url={`/guilds/${guild?.id}/modules/welcome`}
                         ratio="aspect-4/1"
                         dataName="card.background"
@@ -251,7 +251,7 @@ export default function Home() {
         >
 
             <div className="m-2">
-                <Switch
+                <InputSwitch
                     label="Enable DM"
                     endpoint={`/guilds/${guild?.id}`}
                     k="flags"
@@ -271,7 +271,7 @@ export default function Home() {
             Bring Discord&apos;s &quot;Wave to say hi!&quot; feature on customized messages, just with a random greet!
         </Section>
 
-        <Switch
+        <InputSwitch
             label="Enable button"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -281,7 +281,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.WelcomeButton) })}
         />
 
-        <Switch
+        <InputSwitch
             label="Ping new member"
             description="Whenever the mention in the greet message should ping or not."
             endpoint={`/guilds/${guild?.id}`}
@@ -294,8 +294,8 @@ export default function Home() {
 
         <div className="lg:flex gap-3 pt-3">
             <div className="lg:w-1/2">
-                <SelectMenu
-                    name="Button color"
+                <InputSelect
+                    label="Button color"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="button.style"
                     items={
@@ -317,14 +317,14 @@ export default function Home() {
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
-                            style: o.value as 1
+                            style: o as 1
                         });
                     }}
                 />
             </div>
             <div className="lg:w-1/2">
-                <SelectMenu
-                    name="Button emoji"
+                <InputSelect
+                    label="Webhook Profile"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="button.emoji"
                     items={createSelectableEmojiItems(guild?.emojis)}
@@ -334,7 +334,7 @@ export default function Home() {
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
-                            emoji: o.value
+                            emoji: o as string
                         });
                     }}
                 />

@@ -1,9 +1,9 @@
 "use client";
 
 import { type Guild, guildStore } from "@/common/guilds";
-import ImageUrlInput from "@/components/inputs/image-url-input";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import Switch from "@/components/inputs/switch";
+import { InputImageUrl } from "@/components/inputs/image-url-input";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
 import { ScreenMessage } from "@/components/screen-message";
 import { Section, SubSection } from "@/components/section";
 import { useApi } from "@/lib/api/hook";
@@ -43,7 +43,7 @@ export default function Home() {
 
     return (<>
         <div className="flex flex-col-reverse md:flex-row gap-6">
-            <div>
+            <div className="w-full">
                 <OverviewLink
                     title="View Leaderboard"
                     message="Easily access and view the top chatters, voice timers, and inviters from this server in the web."
@@ -51,8 +51,8 @@ export default function Home() {
                     icon={<HiChartBar />}
                 />
 
-                <ImageUrlInput
-                    name="Banner"
+                <InputImageUrl
+                    label="Enabled"
                     url={url}
                     ratio="aspect-4/1"
                     dataName="banner"
@@ -75,8 +75,8 @@ export default function Home() {
 
         <div className="lg:flex gap-3 mt-5">
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Top messager roles"
+                <InputMultiSelect
+                    label="Top messager roles"
                     url={url}
                     dataName="roles.messages"
                     items={createSelectableItems(guild?.roles)}
@@ -86,8 +86,8 @@ export default function Home() {
                 />
             </div>
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Top voice roles"
+                <InputMultiSelect
+                    label="Blacklisted roles"
                     url={url}
                     dataName="roles.voiceminutes"
                     items={createSelectableItems(guild?.roles)}
@@ -99,8 +99,8 @@ export default function Home() {
         </div>
 
         <div className="lg:w-1/2">
-            <MultiSelectMenu
-                name="Blacklisted channels"
+            <InputMultiSelect
+                label="Blacklisted channels"
                 url={url}
                 dataName="blacklistChannelIds"
                 items={createSelectableItems(guild?.channels, [], [ChannelType.GuildCategory, ChannelType.GuildText, ChannelType.GuildAnnouncement, ChannelType.GuildVoice])}
@@ -128,7 +128,7 @@ export default function Home() {
             Manage the privacy of the leaderboard.
         </Section>
 
-        <Switch
+        <InputSwitch
             label="Hide leaderboard website"
             description="Disable the public website for the leaderboard."
             endpoint={`/guilds/${params.guildId}`}

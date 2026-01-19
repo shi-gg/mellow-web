@@ -94,7 +94,7 @@ export function ListTab({ tabs, url, searchParamName, disabled }: ListProps) {
         };
     }, []);
 
-    const defaultValue = searchParamName
+    const currentValue = searchParamName
         ? params.get(searchParamName)
         : path.split(url)[1].split("/").slice(0, 2).join("/");
 
@@ -102,7 +102,7 @@ export function ListTab({ tabs, url, searchParamName, disabled }: ListProps) {
         <div className="mt-2 mb-4 flex items-center relative">
             <Tabs
                 className="w-full"
-                defaultValue={defaultValue || tabs[0].value}
+                value={currentValue || tabs[0].value}
                 onValueChange={handleChange}
             >
                 <TabsList

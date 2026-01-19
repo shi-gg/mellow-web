@@ -1,9 +1,9 @@
 "use client";
 
 import type { Guild } from "@/common/guilds";
-import SelectInput from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
-import TextInput from "@/components/inputs/text-input";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
+import { InputText } from "@/components/inputs/text-input";
 import Modal from "@/components/modal";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ApiV1GuildsModulesLeaderboardUpdatingPostResponse } from "@/typings";
@@ -166,12 +166,12 @@ export default function UpdatingLeaderboardCard({
             }
         >
 
-            <SelectInput
-                name="Channel"
+            <InputSelect
+                label="Channel"
                 items={createSelectableItems(guild.channels, ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles"])}
                 description="Select a channel where the leaderboard should be send into."
                 defaultState={leaderboard?.channelId}
-                onSave={(o) => setChannelId(o.value as string)}
+                onSave={(o) => setChannelId(o as string)}
             />
 
             <div className="mb-3">
@@ -203,49 +203,49 @@ export default function UpdatingLeaderboardCard({
 
             {structure === 0 && (<>
                 {!leaderboard?.channelId && (
-                    <TextInput
-                        name="Title"
+                    <InputText
+                        label="Mode"
                         description="The title of the embed"
                         defaultState={`☕ ${type.replace(/^\w/, (match) => match.toUpperCase())} leaderboard`}
                         max={256}
                         onSave={(v) => {
                             setEmbed({
                                 ...embed,
-                                title: v as string
+                                title: v
                             });
                         }}
                     />
                 )}
 
                 <div className="flex gap-2">
-                    <SelectInput
-                        name="Rank"
+                    <InputSelect
+                        label="Sorting direction"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.rank || undefined}
                         onSave={(o) => {
-                            setStyles({ ...styles, rank: o.value as null });
+                            setStyles({ ...styles, rank: o as null });
                         }}
                     />
-                    <SelectInput
-                        name="Number"
+                    <InputSelect
+                        label="Show numbers"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.number || undefined}
                         onSave={(o) => {
-                            setStyles({ ...styles, number: o.value as null });
+                            setStyles({ ...styles, number: o as null });
                         }}
                     />
-                    <SelectInput
-                        name="User"
+                    <InputSelect
+                        label="Maximum entries"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.user || undefined}
                         onSave={(o) => {
-                            setStyles({ ...styles, user: o.value as null });
+                            setStyles({ ...styles, user: o as null });
                         }}
                     />
                 </div>
 
-                <SelectInput
-                    name="Display name"
+                <InputSelect
+                    label="Show nickname"
                     items={
                         ["mention", "username", "nickname", "id"].map((key) => ({
                             name: key.replace(/^\w/, (char) => char.toUpperCase()),
@@ -256,22 +256,22 @@ export default function UpdatingLeaderboardCard({
                     defaultState={leaderboard?.display}
                     showClear
                     onSave={(o) => {
-                        setDisplay(o.value as ApiV1GuildsModulesLeaderboardUpdatingPostResponse["display"]);
+                        setDisplay(o as ApiV1GuildsModulesLeaderboardUpdatingPostResponse["display"]);
                     }}
                 />
 
-                <SelectInput
-                    name="Emoji"
+                <InputSelect
+                    label="Emoji"
                     items={createSelectableEmojiItems(guild.emojis)}
-                    description="Select a emots which will be between shown after the data count."
+                    description="Select an emoji which will be shown after the data count."
                     defaultState={leaderboard?.emoji || undefined}
                     showClear
                     onSave={(o) => {
-                        setEmoji(o.value as string);
+                        setEmoji(o as string);
                     }}
                 />
 
-                <Switch
+                <InputSwitch
                     label="Use quotes for text"
                     isTickbox
                     defaultState={leaderboard?.styles?.useQuotes || false}

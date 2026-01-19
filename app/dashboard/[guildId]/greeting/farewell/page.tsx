@@ -3,10 +3,10 @@ import { guildStore } from "@/common/guilds";
 import { userStore } from "@/common/user";
 import Fetch from "@/components/button-fetch";
 import MessageCreatorEmbed from "@/components/embed-creator";
-import ImageUrlInput from "@/components/inputs/image-url-input";
-import NumberInput from "@/components/inputs/number-input";
-import SelectMenu from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
+import { InputImageUrl } from "@/components/inputs/image-url-input";
+import { InputNumber } from "@/components/inputs/number-input";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
 import Notice from "@/components/notice";
 import { Button } from "@/components/ui/button";
 import { useApi } from "@/lib/api/hook";
@@ -40,7 +40,7 @@ export default function Home() {
     return (<>
         <Head guildId={params.guildId as string} />
 
-        <Switch
+        <InputSwitch
             label="Enable Farewell"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -49,8 +49,8 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.FarewellEnabled) })}
         />
 
-        <NumberInput
-            name="After how many seconds the message should be deleted"
+        <InputNumber
+            label="After how many seconds the message should be deleted"
             description="Set to 0 to disable"
             url={`/guilds/${guild?.id}/modules/bye`}
             dataName="deleteAfter"
@@ -60,15 +60,15 @@ export default function Home() {
         />
 
         <div className="flex md:gap-4 gap-2">
-            <SelectMenu
-                name="Channel"
+            <InputSelect
+                label="Channel"
                 url={`/guilds/${guild?.id}/modules/bye`}
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels)}
                 description="Select the channel where the farewell message should be send into"
                 defaultState={data.channelId}
                 disabled={!enabled}
-                onSave={(o) => edit("channelId", o.value)}
+                onSave={(o) => edit("channelId", o as string)}
             />
 
             <Fetch
@@ -101,7 +101,7 @@ export default function Home() {
         >
 
             <div className={cn("mt-2 mb-4 border-2 dark:border-wamellow border-wamellow-100 rounded-xl p-6", (guild!.flags & GuildFlags.FarewellCard) === 0 && "pb-0")}>
-                <Switch
+                <InputSwitch
                     label="Show image card"
                     endpoint={`/guilds/${guild?.id}`}
                     k="flags"
@@ -112,7 +112,7 @@ export default function Home() {
                 />
 
                 {(guild!.flags & GuildFlags.FarewellCard) !== 0 && (<>
-                    <Switch
+                    <InputSwitch
                         label="Set image inside embed"
                         endpoint={`/guilds/${guild?.id}`}
                         k="flags"
@@ -122,8 +122,8 @@ export default function Home() {
                         onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.FarewellCardInEmbed) })}
                     />
 
-                    <ImageUrlInput
-                        name="Card Background"
+                    <InputImageUrl
+                        label="Card Background"
                         url={`/guilds/${guild?.id}/modules/bye`}
                         ratio="aspect-4/1"
                         dataName="card.background"

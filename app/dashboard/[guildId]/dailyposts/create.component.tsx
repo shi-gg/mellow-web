@@ -1,8 +1,8 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import SelectMenu from "@/components/inputs/select-menu";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { type ApiV1GuildsModulesDailypostsGetResponse, DailypostType } from "@/typings";
@@ -89,28 +89,28 @@ export function CreateDailypost({
             }}
             isDisabled={!hours.length || !type || !channelId}
         >
-            <SelectMenu
-                name="Channel"
+            <InputSelect
+                label="Channel"
                 dataName="channelId"
                 items={createSelectableItems(channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
                 description="Select a channel where dailyposts should be send into."
                 onSave={(o) => {
-                    setChannelId(o.value as string);
+                    setChannelId(o as string);
                 }}
             />
 
-            <MultiSelectMenu
-                name="Run at"
+            <InputMultiSelect
+                label="Run at"
                 items={hoursArray}
                 description="Select one or multiple hours when posts should be made."
+                defaultState={hours}
                 onSave={(o) => {
-                    setHours(o.map((i) => i.value));
+                    setHours(o);
                 }}
             />
 
-            <SelectMenu
-                name="Type"
-                dataName="type"
+            <InputSelect
+                label="Type"
                 items={
                     Object.entries(DailypostType)
                         .filter(([key]) => key.length > 2)
@@ -118,7 +118,7 @@ export function CreateDailypost({
                 }
                 description="Select what type of content should be posted daily."
                 onSave={(o) => {
-                    setType(o.value as number);
+                    setType(o as number);
                 }}
             />
         </Modal>

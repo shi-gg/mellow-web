@@ -3,8 +3,8 @@
 import { guildStore } from "@/common/guilds";
 import { StatsBar } from "@/components/counter";
 import MessageCreatorEmbed from "@/components/embed-creator";
-import SelectInput from "@/components/inputs/select-menu";
-import TextInput from "@/components/inputs/text-input";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputText } from "@/components/inputs/text-input";
 import { ScreenMessage } from "@/components/screen-message";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -170,9 +170,9 @@ export default function Home() {
 
             <div className="lg:flex gap-3 mt-6">
                 <div className="lg:w-1/2">
-                    <TextInput
+                    <InputText
                         key={tag.id}
-                        name="Name"
+                        label="Command Name"
                         url={url + "/" + tag.id}
                         dataName="name"
                         description="The name of the custom command."
@@ -184,9 +184,9 @@ export default function Home() {
                 </div>
 
                 <div className="lg:w-1/2">
-                    <SelectInput
+                    <InputSelect
                         key={tag.id}
-                        name="Permissions"
+                        label="Permissions"
                         url={url + "/" + tag.id}
                         items={
                             Permissions.sort((a, b) => a.localeCompare(b)).map((p) => (
@@ -196,7 +196,7 @@ export default function Home() {
                         dataName="permission"
                         description="The permissions needed to execute this tag."
                         defaultState={tag.permission}
-                        onSave={(option) => editTag("permission", option.value)}
+                        onSave={(option) => editTag("permission", option)}
                         showClear
                     />
                 </div>

@@ -1,18 +1,20 @@
-import type { ApiError } from "@/typings";
+"use client";
+
 import { cn } from "@/utils/cn";
-import { useEffect, useState } from "react";
+import { type InputProps, InputState, useInput } from "@/utils/input";
+import Link from "next/link";
 import { HiCheck, HiChevronDown, HiExclamationCircle, HiX } from "react-icons/hi";
 import { TailSpin } from "react-loading-icons";
 
-import { ClickOutside } from "../click-outside";
+import { Badge } from "../ui/badge";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "../ui/dropdown-menu";
 
-enum State {
-    Idle = 0,
-    Loading = 1,
-    Success = 2
-}
-
-interface Item<T extends string | number> {
+export interface SelectItem<T extends string | number> {
     icon?: React.ReactNode;
     name: string;
     value: T | null;
@@ -21,205 +23,163 @@ interface Item<T extends string | number> {
 }
 
 interface Props<T extends string | number> {
-    className?: string;
-
-    name: string;
-    url?: string;
-    dataName?: string;
-    items: Item<T>[];
-    disabled?: boolean;
-    description?: string;
-    defaultState?: T | null;
+    link?: string;
+    badge?: string;
+    items: SelectItem<T>[];
     showClear?: boolean;
-
-    onSave?: (options: { name: string; value: T | null; error?: string; }) => void;
 }
 
-export default function SelectMenu<T extends string | number>({
+export function InputSelect<T extends string | number>({
     className,
-    name,
-    url,
-    dataName,
-    items = [],
-    disabled,
+
+    label,
+    name, // @deprecated - use label instead
+    link,
+    badge,
     description,
-    defaultState,
+    disabled,
+    items = [],
     showClear,
+
+    endpoint,
+    url, // @deprecated - use endpoint instead
+    k,
+    dataName, // @deprecated - use k instead
+
+    defaultState,
+    transform,
+
     onSave
-}: Props<T>) {
-    const [state, setState] = useState<State>(State.Idle);
-    const [error, setError] = useState<string | null>(null);
+}: Omit<InputProps<T | null>, "defaultState"> & Props<T> & { defaultState?: T | null; }) {
+    const {
+        value,
+        state,
+        error,
+        update
+    } = useInput({
+        endpoint,
+        url,
+        k,
+        dataName,
 
-    const [open, setOpen] = useState<boolean>(false);
-    const [defaultvalue, setDefaultalue] = useState<T | null | undefined>();
-    const [value, setValue] = useState<Item<T> | undefined>();
+        defaultState: defaultState ?? null,
+        transform,
 
-    useEffect(() => {
-        setValue(items.find((i) => i.value === defaultState));
-        setDefaultalue(defaultState);
-    }, [defaultState]);
+        onSave
+    });
 
-    useEffect(() => {
-        setError(null);
+    const selectedItem = items.find((i) => i.value === value);
 
-        if (!value || value.error || value.value === defaultvalue) {
-            setState(State.Idle);
-            return;
-        }
+    const handleSelect = (item: SelectItem<T>) => {
+        if (item.error) return; // Don't select items with errors
+        update(item.value);
+    };
 
-        if (!url) {
-            if (!onSave) throw new Error("Warning: <SelectInput.onSave> must be defined when not using <SelectInput.url>.");
-            onSave(value);
-            setState(State.Idle);
-            return;
-        }
+    const handleClear = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        update(null as T | null);
+    };
 
-        if (!dataName) throw new Error("Warning: <SelectInput.dataName> must be defined when using <SelectInput.url>.");
-
-        setState(State.Loading);
-
-        fetch(`${process.env.NEXT_PUBLIC_API}${url}`, {
-            method: "PATCH",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dataName.includes(".") ?
-                { [dataName.split(".")[0]]: { [dataName.split(".")[1]]: value.value } }
-                :
-                { [dataName]: value.value }
-            )
-        })
-            .then(async (res) => {
-                const response = await res.json();
-                if (!response) return;
-
-                switch (res.status) {
-                    case 200: {
-                        onSave?.(value);
-                        setState(State.Success);
-                        setTimeout(() => setState(State.Idle), 1_000 * 8);
-                        break;
-                    }
-                    default: {
-                        setState(State.Idle);
-                        setError((response as unknown as ApiError).message);
-                        break;
-                    }
-                }
-
-            })
-            .catch(() => {
-                setState(State.Idle);
-                setError("Error while updating");
-            });
-
-    }, [value]);
+    const isDisabled = state === InputState.Loading || disabled;
 
     return (
-        <div className={cn("select-none w-full max-w-full mb-2 relative", className)}>
-            <div className="flex items-center gap-2">
-                <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{name}</span>
-                {state === State.Loading && <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />}
+        <div className={cn("select-none w-full max-w-full relative", description && "mb-2", className)}>
+            <div className="flex items-center gap-2 mb-1">
+                <span className="sm:text-lg font-medium text-neutral-100">
+                    {label || name}
+                </span>
+
+                {badge && (
+                    <Badge variant="flat" size="sm">
+                        {badge}
+                    </Badge>
+                )}
+
+                {state === InputState.Loading && (
+                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                )}
             </div>
 
-            <button
-                className={cn(
-                    "mt-1 h-12 w-full bg-wamellow rounded-lg flex items-center px-3 wamellow-modal",
-                    open && "outline-solid outline-violet-400 outline-offset-2 outline-2",
-                    (value?.error || error) && !open && "outline-solid outline-red-500 outline-1",
-                    state === State.Success && !open && "outline-solid outline-green-500 outline-1",
-                    (state === State.Loading || disabled) && "cursor-not-allowed opacity-50"
-                )}
-                onClick={() => setOpen(!open)}
-                disabled={state === State.Loading || disabled}
-            >
-                <div
+            <DropdownMenu>
+                <DropdownMenuTrigger
                     className={cn(
-                        "flex items-center flex-wrap overflow-x-hidden py-3 gap-2 dark:text-neutral-600 text-neutral-400",
-                        value?.name && "dark:text-neutral-300 text-neutral-700"
+                        "h-12 w-full dark:bg-wamellow bg-wamellow-100 rounded-lg flex items-center px-3 text-left",
+                        "focus:outline-violet-400 focus:outline-2 focus:outline-offset-2",
+                        selectedItem?.error && "outline-solid outline-red-500 outline-1",
+                        state === InputState.Success && "outline-solid outline-green-500 outline-1",
+                        isDisabled && "cursor-not-allowed opacity-50"
                     )}
-                    style={value?.color ? { color: `#${value.color.toString(16)}` } : {}}
+                    disabled={isDisabled}
                 >
-                    {value?.icon && <span>{value?.icon}</span>}
-                    {value?.name || "Select.."}
-                </div>
-                <div className="ml-auto flex items-center gap-2">
-                    {value?.error &&
-                        <div className="text-sm flex items-center gap-1 text-red-500">
-                            <HiExclamationCircle /> {value.error}
-                        </div>
-                    }
-                    {value?.name && showClear &&
-                        <button
-                            onClick={() => {
-                                setOpen(false);
-                                setValue({ value: null, name: "" });
-                            }}
-                        >
-                            <HiX />
-                        </button>
-                    }
-                    <HiChevronDown />
-                </div>
-            </button>
+                    <div
+                        className={cn(
+                            "flex items-center flex-wrap overflow-x-hidden gap-2",
+                            selectedItem?.name ? "text-neutral-100" : "text-neutral-500"
+                        )}
+                        style={selectedItem?.color ? { color: `#${selectedItem.color.toString(16)}` } : {}}
+                    >
+                        {selectedItem?.icon && <span>{selectedItem.icon}</span>}
+                        {selectedItem?.name || "Select.."}
+                    </div>
 
-            {open &&
-                <div className="absolute mt-2 w-full bg-wamellow backdrop-blur-lg backdrop-brightness-50 rounded-lg max-h-40 overflow-y-scroll shadow-lg z-20 wamellow-modal">
-                    <ClickOutside onClose={(() => setOpen(false))} />
+                    <div className="ml-auto flex items-center gap-2">
+                        {selectedItem?.error && (
+                            <div className="text-sm flex items-center gap-1 text-red-500">
+                                <HiExclamationCircle /> {selectedItem.error}
+                            </div>
+                        )}
+                        {selectedItem?.name && showClear && (
+                            <button onClick={handleClear} className="hover:text-neutral-300">
+                                <HiX />
+                            </button>
+                        )}
+                        <HiChevronDown />
+                    </div>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] max-h-40">
                     {items.map((item) => (
-                        <button
+                        <DropdownMenuItem
                             key={"select-" + item.value}
                             className={cn(
-                                "p-4 py-2 w-full text-left duration-200 flex items-center hover:bg-wamellow",
+                                "cursor-pointer",
                                 item.error && "dark:bg-red-500/10 dark:hover:bg-red-500/25 bg-red-500/30 hover:bg-red-500/40"
                             )}
                             style={item.color ? { color: `#${item.color.toString(16)}` } : {}}
-                            onClick={() => {
-                                setOpen(false);
-                                setState(State.Idle);
-                                if (value?.value) setDefaultalue(value.value);
-                                setValue(item);
-                            }}
+                            onClick={() => handleSelect(item)}
+                            disabled={Boolean(item.error)}
                         >
-                            {item?.icon &&
-                                <span className="mr-2">
-                                    {item?.icon}
-                                </span>
-                            }
+                            {item.icon && <span className="mr-2">{item.icon}</span>}
 
                             <span className={cn("truncate", item.error && "max-w-[calc(100%-13rem)]")}>
                                 {item.name}
                             </span>
 
-                            {value?.value === item.value &&
-                                <HiCheck className="ml-1" />
-                            }
+                            {value === item.value && <HiCheck className="ml-auto" />}
 
-                            {item.error &&
+                            {item.error && (
                                 <div className="ml-auto text-sm flex items-center gap-1 text-red-500">
                                     <HiExclamationCircle /> {item.error}
                                 </div>
-                            }
-                        </button>
+                            )}
+                        </DropdownMenuItem>
                     ))}
-                </div>
-            }
+                </DropdownMenuContent>
+            </DropdownMenu>
 
-            <div className={cn("mt-1 flex md:block", open && "opacity-0")}>
-                {description &&
-                    <div className="dark:text-neutral-500 text-neutral-400 text-sm">
-                        {description}
+            <div className="mt-1">
+                {description && (
+                    <div className="text-neutral-500 text-sm">
+                        {description} {link && <Link href={link} target="_blank" className="text-violet-400 hover:underline">Learn more</Link>}
                     </div>
-                }
+                )}
 
-                {error &&
-                    <div className="ml-auto text-red-500 text-sm">
+                {error && (
+                    <div className="text-red-500 text-sm">
                         {error}
                     </div>
-                }
+                )}
             </div>
-
         </div>
     );
 }

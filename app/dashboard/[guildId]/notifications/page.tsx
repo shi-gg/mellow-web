@@ -7,10 +7,10 @@ import { useList } from "@/components/dashboard/lists/hook";
 import { Navigation } from "@/components/dashboard/lists/navigation";
 import { ItemSelector } from "@/components/dashboard/lists/selector";
 import MessageCreatorEmbed from "@/components/embed-creator";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import SelectMenu from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
-import TextInput from "@/components/inputs/text-input";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
+import { InputText } from "@/components/inputs/text-input";
 import { ScreenMessage } from "@/components/screen-message";
 import { AvatarBadge } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -164,14 +164,14 @@ export default function Home() {
         />
 
         <div className="flex md:gap-4 gap-2">
-            <SelectMenu
-                name="Channel"
+            <InputSelect
+                label="Channel"
                 url={url + "/" + item.id}
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "EmbedLinks", item.username ? "ManageWebhooks" : null, item.roleId ? "MentionEveryone" : null])}
                 description="Select a channel where notifications should be send into."
                 defaultState={item.channelId}
-                onSave={(o) => editItem("channelId", o.value as string)}
+                onSave={(o) => editItem("channelId", o as string)}
             />
 
             <TestButton
@@ -190,9 +190,9 @@ export default function Home() {
         </div>
 
         <div className="flex md:gap-4 gap-2">
-            <SelectMenu
+            <InputSelect
                 className="md:w-1/2 w-full"
-                name="Ping role"
+                label="Ping role"
                 url={url + "/" + item.id}
                 dataName="roleId"
                 items={[
@@ -202,14 +202,14 @@ export default function Home() {
                 ]}
                 description="Select a role which should get pinged on uploads."
                 defaultState={item.roleId}
-                onSave={(o) => editItem("roleId", o.value as string)}
+                onSave={(o) => editItem("roleId", o as string)}
                 showClear
             />
 
             {platformFlags
-                ? <MultiSelectMenu
+                ? <InputMultiSelect
                     className="md:w-1/2 w-full"
-                    name="Filter"
+                    label="Filter"
                     url={url + "/" + item.id}
                     dataName="flags"
                     items={bitfieldToArray(platformFlags)}
@@ -219,13 +219,13 @@ export default function Home() {
                     }
                     defaultState={flags.toArray()}
                     onSave={(o) => {
-                        const flags = o.map((flag) => Number(flag.value));
+                        const flags = o.map((flag) => Number(flag));
                         editItem("flags", flags.reduce((a, b) => a | b, 0));
                     }}
                 />
-                : <TextInput
+                : <InputText
                     className="md:w-1/2 w-full"
-                    name={flags.has(NotificationFlags.MustNotMatchRegex)
+                    label={flags.has(NotificationFlags.MustNotMatchRegex)
                         ? "Blacklist regex"
                         : "Whitelist regex"
                     }
@@ -236,15 +236,15 @@ export default function Home() {
                         : "Only posts that match the provided regex will be sent."
                     }
                     defaultState={item.regex || ""}
-                    onSave={(value) => editItem("regex", value as string)}
+                    onSave={(value) => editItem("regex", value)}
                 />
             }
         </div>
 
         {platformFlags && (
-            <TextInput
+            <InputText
                 className="md:w-1/2 w-full"
-                name={flags.has(NotificationFlags.MustNotMatchRegex)
+                label={flags.has(NotificationFlags.MustNotMatchRegex)
                     ? "Blacklist regex"
                     : "Whitelist regex"
                 }
@@ -255,11 +255,11 @@ export default function Home() {
                     : "Only posts that match the provided regex will be sent."
                 }
                 defaultState={item.regex || ""}
-                onSave={(value) => editItem("regex", value as string)}
+                onSave={(value) => editItem("regex", value)}
             />
         )}
 
-        <Switch
+        <InputSwitch
             className="mt-2"
             label="Inverted regex (blacklist)"
             endpoint={url + "/" + item.id}
@@ -270,7 +270,7 @@ export default function Home() {
         />
 
         {item.type === NotificationType.Twitch && (
-            <Switch
+            <InputSwitch
                 className="mt-2"
                 label="Delete after stream ends"
                 endpoint={url + "/" + item.id}

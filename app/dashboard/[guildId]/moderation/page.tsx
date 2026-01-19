@@ -1,9 +1,9 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import Switch from "@/components/inputs/switch";
-import TextInput from "@/components/inputs/text-input";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
+import { InputText } from "@/components/inputs/text-input";
 import Notice from "@/components/notice";
 import { useApi } from "@/lib/api/hook";
 import { type ApiV1GuildsModulesAutomodGetResponse, AutomodType } from "@/typings";
@@ -34,7 +34,7 @@ export default function Home() {
 
     return (<>
         {AUTOMOD_TYPES.map((type) => (
-            <Switch
+            <InputSwitch
                 key={type}
                 label={`Block ${type.replace(/_/g, " ").replace(/(^| +)\w/g, (c) => c.toUpperCase())}`}
                 description={`Prevent ${type.replace(/_/, " ")} links from being sent.`}
@@ -50,8 +50,8 @@ export default function Home() {
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Whitelist channels"
+                <InputMultiSelect
+                    label="Whitelist channels"
                     url={url}
                     dataName="whitelistChannelIds"
                     items={createSelectableItems(guild?.channels, [], [ChannelType.GuildCategory, ChannelType.GuildText, ChannelType.GuildAnnouncement])}
@@ -60,13 +60,13 @@ export default function Home() {
                     max={50}
                     disabled={!enabled}
                     onSave={(value) => {
-                        edit("whitelistChannelIds", value.map((entry) => entry.value));
+                        edit("whitelistChannelIds", value);
                     }}
                 />
             </div>
             <div className="lg:w-1/2">
-                <MultiSelectMenu
-                    name="Whitelist roles"
+                <InputMultiSelect
+                    label="Whitelist roles"
                     url={url}
                     dataName="whitelistRoleIds"
                     items={createSelectableItems(guild?.roles)}
@@ -75,14 +75,14 @@ export default function Home() {
                     max={20}
                     disabled={!enabled}
                     onSave={(value) => {
-                        edit("whitelistRoleIds", value.map((entry) => entry.value));
+                        edit("whitelistRoleIds", value);
                     }}
                 />
             </div>
         </div>
 
-        <TextInput
-            name="Keyword filter"
+        <InputText
+            label="Keyword filter"
             url={url}
             dataName="keywordFilter"
             description="Separate words or phrases with a comma (dog, cat, tiger) or new line. For each word, use * at the beginning, end, or both for partial matching."
