@@ -137,7 +137,7 @@ export default function Home() {
 
         <div className="flex md:gap-4 gap-2">
             <InputSelect
-                name="Channel"
+                label="Channel"
                 url={url + "/" + item.id}
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
@@ -159,7 +159,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <InputSelect
                 className="lg:w-1/2 w-full"
-                name="Ping role"
+                label="Ping role"
                 url={url + "/" + item.id}
                 dataName="roleId"
                 items={[
@@ -174,7 +174,7 @@ export default function Home() {
             />
             <InputMultiSelect
                 className="lg:w-1/2 w-full"
-                name="Run at"
+                label="Run at"
                 url={url + "/" + item.id}
                 dataName="runtimeHours"
                 items={hoursArray}

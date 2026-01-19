@@ -68,7 +68,7 @@ export function CreateTag({ guildId, style, addTag, setTagId }: Props) {
             <Notice message="Start the name with a '/' to create a slash command" />
 
             <ControlledInput
-                name="Name"
+                label="Command Name"
                 placeholder="new-tag"
                 value={name}
                 setValue={(val) => setName((val || "").toLowerCase())}

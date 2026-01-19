@@ -83,7 +83,7 @@ export function YoutubeNotificationModal({
             isDisabled={!name || !channelId}
         >
             <ControlledInput
-                name="Creator's @handle, id or URL"
+                label="Creator's @handle, id or URL"
                 placeholder="@LinusTechTips"
                 value={name}
                 setValue={setName}

@@ -19,7 +19,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Secondary text"
+                    label="Secondary text"
                     url="/users/@me/rank"
                     dataName="subText.type"
                     description="This text will be displayed bellow the /rank progressbar."
@@ -52,7 +52,7 @@ export default function Home() {
             <div className="lg:w-1/2 flex gap-2 w-full">
                 <div className="w-1/2">
                     <InputColor
-                        name="Text color"
+                        label="Text color"
                         url="/users/@me/rank"
                         dataName="textColor"
                         description="Color used for your username."
@@ -64,7 +64,7 @@ export default function Home() {
                 </div>
                 <div className="w-1/2">
                     <InputColor
-                        name="Bar color"
+                        label="Bar color"
                         url="/users/@me/rank"
                         dataName="barColor"
                         description="Color used for the progress bar."
@@ -78,7 +78,7 @@ export default function Home() {
         </div>
 
         <InputImageUrl
-            name="Background"
+            label="Background"
             url="/users/@me/rank"
             ratio="aspect-4/1"
             dataName="background"

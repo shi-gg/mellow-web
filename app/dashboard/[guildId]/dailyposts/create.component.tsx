@@ -90,7 +90,7 @@ export function CreateDailypost({
             isDisabled={!hours.length || !type || !channelId}
         >
             <InputSelect
-                name="Channel"
+                label="Channel"
                 dataName="channelId"
                 items={createSelectableItems(channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
                 description="Select a channel where dailyposts should be send into."
@@ -100,7 +100,7 @@ export function CreateDailypost({
             />
 
             <InputMultiSelect
-                name="Run at"
+                label="Run at"
                 items={hoursArray}
                 description="Select one or multiple hours when posts should be made."
                 defaultState={hours}
@@ -110,7 +110,7 @@ export function CreateDailypost({
             />
 
             <InputSelect
-                name="Type"
+                label="Type"
                 items={
                     Object.entries(DailypostType)
                         .filter(([key]) => key.length > 2)

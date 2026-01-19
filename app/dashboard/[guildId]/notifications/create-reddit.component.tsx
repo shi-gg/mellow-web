@@ -72,7 +72,7 @@ export function RedditNotificationModal({
             isDisabled={!name || !channelId}
         >
             <ControlledInput
-                name="Subreddit"
+                label="Subreddit"
                 placeholder="r/wamellow"
                 value={name}
                 setValue={setName}

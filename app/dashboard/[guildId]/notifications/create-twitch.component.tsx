@@ -74,7 +74,7 @@ export function TwitchNotificationModal({
             isDisabled={!name || !channelId}
         >
             <ControlledInput
-                name="Streamer's username"
+                label="Streamer's username"
                 placeholder="DarkViperAU"
                 value={name}
                 setValue={setName}

@@ -63,7 +63,7 @@ export default function CompleteSetup({
             onSuccess={() => edit("successRoleId", roleId)}
         >
             <InputSelect
-                name="Role"
+                label="Role"
                 items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                 description="Select what role members should get when completing verification."
                 defaultState={data.punishmentRoleId}
@@ -92,7 +92,7 @@ export default function CompleteSetup({
             onSuccess={() => edit("punishmentRoleId", roleId)}
         >
             <InputSelect
-                name="Role"
+                label="Role"
                 items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                 description="Select what role members should get when failing verification."
                 defaultState={data.punishmentRoleId}

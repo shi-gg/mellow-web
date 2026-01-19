@@ -108,7 +108,7 @@ export default function Home() {
         />
 
         <InputSwitch
-            label="Display stared message reference"
+            label="Display starred message reference"
             description="Repost the message reply in the data."
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -128,7 +128,7 @@ export default function Home() {
         />
 
         <InputNumber
-            name="Number of reactions required"
+            label="Number of reactions required"
             description="Sets the number of reactions needed to get a message onto the data."
             url={url}
             dataName="requiredEmojis"
@@ -139,7 +139,7 @@ export default function Home() {
         />
 
         <InputSelect
-            name="Channel"
+            label="Channel"
             url={url}
             dataName="channelId"
             items={createSelectableItems(guild?.channels)}
@@ -152,7 +152,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Emoji"
+                    label="Emoji"
                     url={url}
                     dataName="emoji"
                     items={[
@@ -180,7 +180,7 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Profile display style"
+                    label="Profile display style"
                     url={url}
                     dataName="style"
                     items={[
@@ -216,7 +216,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Blacklisted channels"
+                    label="Blacklisted channels"
                     url={url}
                     dataName="blacklistChannelIds"
                     items={createSelectableItems(guild?.channels)}
@@ -229,7 +229,7 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Blacklisted roles"
+                    label="Blacklisted roles"
                     url={url}
                     dataName="blacklistRoleIds"
                     items={createSelectableItems(guild?.roles)}
@@ -245,7 +245,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="w-1/2">
                 <InputColor
-                    name="Color"
+                    label="Color"
                     url={url}
                     dataName="embedColor"
                     description="Color used for the side of the embed."

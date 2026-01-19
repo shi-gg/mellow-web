@@ -73,7 +73,7 @@ export default function FollowUpdates() {
             isDisabled={!channelId}
         >
             <InputSelect
-                name="Channel"
+                label="Channel"
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "ManageWebhooks"])}
                 description="Select a channel where updates should be send into."

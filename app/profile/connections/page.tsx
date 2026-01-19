@@ -136,7 +136,7 @@ function BlueskyConnectPDS() {
                 buttonName="Continue"
             >
                 <ControlledInput
-                    name="Your Bluesky or Atproto Handle"
+                    label="Your Bluesky or Atproto Handle"
                     placeholder="shi.gg"
                     value={handle}
                     setValue={setHandle}

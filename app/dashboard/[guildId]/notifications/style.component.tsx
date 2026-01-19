@@ -201,7 +201,7 @@ export function ChangeStyleModal({
             isDisabled={!name || Boolean(error)}
         >
             <ControlledInput
-                name="Username"
+                label="Username"
                 placeholder="DarkViperAU"
                 value={name}
                 setValue={setName}

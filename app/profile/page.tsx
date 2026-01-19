@@ -56,6 +56,7 @@ export default function Home() {
 
         <div className="flex flex-col md:flex-row md:justify-between gap-2">
             <ControlledInput
+                thin
                 value={search}
                 setValue={setSearch}
                 placeholder="Search by name or id"

@@ -50,7 +50,7 @@ export default function Home() {
         />
 
         <InputNumber
-            name="After how many seconds the message should be deleted"
+            label="After how many seconds the message should be deleted"
             description="Set to 0 to disable"
             url={`/guilds/${guild?.id}/modules/bye`}
             dataName="deleteAfter"
@@ -61,7 +61,7 @@ export default function Home() {
 
         <div className="flex md:gap-4 gap-2">
             <InputSelect
-                name="Channel"
+                label="Channel"
                 url={`/guilds/${guild?.id}/modules/bye`}
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels)}
@@ -123,7 +123,7 @@ export default function Home() {
                     />
 
                     <InputImageUrl
-                        name="Card Background"
+                        label="Card Background"
                         url={`/guilds/${guild?.id}/modules/bye`}
                         ratio="aspect-4/1"
                         dataName="card.background"

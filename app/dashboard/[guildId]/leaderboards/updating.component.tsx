@@ -167,7 +167,7 @@ export default function UpdatingLeaderboardCard({
         >
 
             <InputSelect
-                name="Channel"
+                label="Channel"
                 items={createSelectableItems(guild.channels, ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles"])}
                 description="Select a channel where the leaderboard should be send into."
                 defaultState={leaderboard?.channelId}
@@ -204,7 +204,7 @@ export default function UpdatingLeaderboardCard({
             {structure === 0 && (<>
                 {!leaderboard?.channelId && (
                     <InputText
-                        name="Title"
+                        label="Mode"
                         description="The title of the embed"
                         defaultState={`☕ ${type.replace(/^\w/, (match) => match.toUpperCase())} leaderboard`}
                         max={256}
@@ -219,7 +219,7 @@ export default function UpdatingLeaderboardCard({
 
                 <div className="flex gap-2">
                     <InputSelect
-                        name="Rank"
+                        label="Sorting direction"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.rank || undefined}
                         onSave={(o) => {
@@ -227,7 +227,7 @@ export default function UpdatingLeaderboardCard({
                         }}
                     />
                     <InputSelect
-                        name="Number"
+                        label="Show numbers"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.number || undefined}
                         onSave={(o) => {
@@ -235,7 +235,7 @@ export default function UpdatingLeaderboardCard({
                         }}
                     />
                     <InputSelect
-                        name="User"
+                        label="Maximum entries"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.user || undefined}
                         onSave={(o) => {
@@ -245,7 +245,7 @@ export default function UpdatingLeaderboardCard({
                 </div>
 
                 <InputSelect
-                    name="Display name"
+                    label="Show nickname"
                     items={
                         ["mention", "username", "nickname", "id"].map((key) => ({
                             name: key.replace(/^\w/, (char) => char.toUpperCase()),
@@ -261,9 +261,9 @@ export default function UpdatingLeaderboardCard({
                 />
 
                 <InputSelect
-                    name="Emoji"
+                    label="Emoji"
                     items={createSelectableEmojiItems(guild.emojis)}
-                    description="Select a emots which will be between shown after the data count."
+                    description="Select an emoji which will be shown after the data count."
                     defaultState={leaderboard?.emoji || undefined}
                     showClear
                     onSave={(o) => {

@@ -83,7 +83,7 @@ export default function Home() {
         <div className="flex md:gap-4 gap-2">
             <InputSelect
                 className="w-2/3 md:w-5/6"
-                name="Channel"
+                label="Channel"
                 url={`/guilds/${guild?.id}/modules/welcome`}
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels)}
@@ -107,7 +107,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Roles"
+                    label="Enabled"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="roleIds"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
@@ -121,7 +121,7 @@ export default function Home() {
 
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Pings"
+                    label="Also send in DMs"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="pingIds"
                     items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages"])}
@@ -137,7 +137,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="First user message reactions"
+                    label="First user message reactions"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="reactions.firstMessageEmojis"
                     items={createSelectableEmojiItems(guild?.emojis)}
@@ -156,7 +156,7 @@ export default function Home() {
 
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Welcome message reactions"
+                    label="Welcome message reactions"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="reactions.welcomeMessageEmojis"
                     items={createSelectableEmojiItems(guild?.emojis)}
@@ -216,7 +216,7 @@ export default function Home() {
                     />
 
                     <InputImageUrl
-                        name="Card Background"
+                        label="Card Avatar"
                         url={`/guilds/${guild?.id}/modules/welcome`}
                         ratio="aspect-4/1"
                         dataName="card.background"
@@ -295,7 +295,7 @@ export default function Home() {
         <div className="lg:flex gap-3 pt-3">
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Button color"
+                    label="Button color"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="button.style"
                     items={
@@ -324,7 +324,7 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Button emoji"
+                    label="Webhook Profile"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="button.emoji"
                     items={createSelectableEmojiItems(guild?.emojis)}

@@ -52,7 +52,7 @@ export default function Home() {
                 />
 
                 <InputImageUrl
-                    name="Banner"
+                    label="Enabled"
                     url={url}
                     ratio="aspect-4/1"
                     dataName="banner"
@@ -76,7 +76,7 @@ export default function Home() {
         <div className="lg:flex gap-3 mt-5">
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Top messager roles"
+                    label="Top messager roles"
                     url={url}
                     dataName="roles.messages"
                     items={createSelectableItems(guild?.roles)}
@@ -87,7 +87,7 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Top voice roles"
+                    label="Blacklisted roles"
                     url={url}
                     dataName="roles.voiceminutes"
                     items={createSelectableItems(guild?.roles)}
@@ -100,7 +100,7 @@ export default function Home() {
 
         <div className="lg:w-1/2">
             <InputMultiSelect
-                name="Blacklisted channels"
+                label="Blacklisted channels"
                 url={url}
                 dataName="blacklistChannelIds"
                 items={createSelectableItems(guild?.channels, [], [ChannelType.GuildCategory, ChannelType.GuildText, ChannelType.GuildAnnouncement, ChannelType.GuildVoice])}

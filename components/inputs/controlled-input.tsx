@@ -8,10 +8,7 @@ import { Textarea } from "../ui/textarea";
 
 interface Props {
     className?: string;
-    /** The label for the input */
     label?: string;
-    /** @deprecated Use `label` instead. Kept for backward compatibility. */
-    name?: string;
     placeholder?: string;
 
     value: string | null;
@@ -22,6 +19,7 @@ interface Props {
     max?: number;
     multiline?: boolean;
     type?: string;
+    thin?: boolean;
 
     /** For use with JSON state - specifies which key to update */
     dataName?: string;
@@ -34,7 +32,6 @@ interface Props {
 export function ControlledInput({
     className,
     label,
-    name, // @deprecated - use label instead
     placeholder,
     value,
     setValue,
@@ -43,6 +40,7 @@ export function ControlledInput({
     max = 256,
     multiline,
     type,
+    thin,
     dataName
 }: Props) {
     // Get actual value from JSON if dataName is provided
@@ -76,9 +74,9 @@ export function ControlledInput({
 
     return (
         <div className={cn("relative select-none w-full max-w-full mb-3", className)}>
-            {(label || name) && (
+            {label && (
                 <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{label || name}</span>
+                    <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{label}</span>
                 </div>
             )}
 
@@ -103,7 +101,7 @@ export function ControlledInput({
                 />
             ) : (
                 <Input
-                    className="dark:bg-wamellow bg-wamellow-100 border-none"
+                    className={cn("dark:bg-wamellow bg-wamellow-100 border-none", thin && "h-10")}
                     placeholder={placeholder}
                     value={actualValue}
                     onChange={(e) => handleChange(e.target.value)}

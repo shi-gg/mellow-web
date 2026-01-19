@@ -19,7 +19,7 @@ export default function Home() {
             <div className="lg:flex gap-6 mt-5">
                 <div className="lg:w-1/2">
                     <InputSelect
-                        name="Default Speaker"
+                        label="Default Speaker"
                         url="/users/@me/text-to-speech"
                         dataName="voice"
                         description="This is the default voice for any text to speech conversion."

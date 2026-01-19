@@ -51,7 +51,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Whitelist channels"
+                    label="Whitelist channels"
                     url={url}
                     dataName="whitelistChannelIds"
                     items={createSelectableItems(guild?.channels, [], [ChannelType.GuildCategory, ChannelType.GuildText, ChannelType.GuildAnnouncement])}
@@ -66,7 +66,7 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    name="Whitelist roles"
+                    label="Whitelist roles"
                     url={url}
                     dataName="whitelistRoleIds"
                     items={createSelectableItems(guild?.roles)}
@@ -82,7 +82,7 @@ export default function Home() {
         </div>
 
         <InputText
-            name="Keyword filter"
+            label="Keyword filter"
             url={url}
             dataName="keywordFilter"
             description="Separate words or phrases with a comma (dog, cat, tiger) or new line. For each word, use * at the beginning, end, or both for partial matching."

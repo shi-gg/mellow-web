@@ -8,8 +8,6 @@ import { AiOutlineEdit } from "react-icons/ai";
 interface Props {
     className?: string;
     label?: string;
-    /** @deprecated Use `label` instead. Kept for backward compatibility. */
-    name?: string;
     placeholder?: string;
 
     value: string | number;
@@ -24,7 +22,6 @@ interface Props {
 export function ControlledColorInput({
     className,
     label,
-    name, // @deprecated - use label instead
     value,
     setValue,
     disabled,
@@ -68,9 +65,9 @@ export function ControlledColorInput({
 
     return (
         <div className={cn("relative select-none w-full max-w-full mb-3", className)}>
-            {(label || name) && (
+            {label && (
                 <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{label || name}</span>
+                    <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{label}</span>
                 </div>
             )}
 

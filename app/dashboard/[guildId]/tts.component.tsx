@@ -29,7 +29,7 @@ export function TTSSettings() {
         <div className="lg:flex gap-6 mt-5">
             <div className="lg:w-1/2 flex flex-col gap-2">
                 <InputSelect
-                    name="Chat to Speech channel"
+                    label="Chat to Speech channel"
                     url={`/guilds/${params.guildId}`}
                     dataName="tts.channelId"
                     items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "EmbedLinks"], [ChannelType.GuildText, ChannelType.GuildVoice])}
@@ -39,7 +39,7 @@ export function TTSSettings() {
                     showClear
                 />
                 <InputSelect
-                    name="Usage logs"
+                    label="Usage logs"
                     url={`/guilds/${params.guildId}`}
                     dataName="tts.logChannelId"
                     items={createSelectableItems(guild?.channels)}
@@ -49,7 +49,7 @@ export function TTSSettings() {
                     showClear
                 />
                 <InputSelect
-                    name="Priority role"
+                    label="Priority role"
                     url={`/guilds/${params.guildId}`}
                     dataName="tts.priorityRoleId"
                     items={createSelectableItems(guild?.roles)}
@@ -59,7 +59,7 @@ export function TTSSettings() {
                     showClear
                 />
                 <InputSelect
-                    name="Blacklist role"
+                    label="Blacklist role"
                     url={`/guilds/${params.guildId}`}
                     dataName="tts.blacklistRoleId"
                     items={createSelectableItems(guild?.roles)}
@@ -94,7 +94,7 @@ export function TTSSettings() {
                     onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.TextToSpeechAllowBots) })}
                 />
                 <InputNumber
-                    name="Max message length"
+                    label="Max message length"
                     description="The maximum length of a message that can be spoken."
                     url={`/guilds/${params.guildId}`}
                     dataName="tts.maxLength"

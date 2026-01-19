@@ -165,7 +165,7 @@ export default function Home() {
 
         <div className="flex md:gap-4 gap-2">
             <InputSelect
-                name="Channel"
+                label="Channel"
                 url={url + "/" + item.id}
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "EmbedLinks", item.username ? "ManageWebhooks" : null, item.roleId ? "MentionEveryone" : null])}
@@ -192,7 +192,7 @@ export default function Home() {
         <div className="flex md:gap-4 gap-2">
             <InputSelect
                 className="md:w-1/2 w-full"
-                name="Ping role"
+                label="Ping role"
                 url={url + "/" + item.id}
                 dataName="roleId"
                 items={[
@@ -209,7 +209,7 @@ export default function Home() {
             {platformFlags
                 ? <InputMultiSelect
                     className="md:w-1/2 w-full"
-                    name="Filter"
+                    label="Filter"
                     url={url + "/" + item.id}
                     dataName="flags"
                     items={bitfieldToArray(platformFlags)}
@@ -225,7 +225,7 @@ export default function Home() {
                 />
                 : <InputText
                     className="md:w-1/2 w-full"
-                    name={flags.has(NotificationFlags.MustNotMatchRegex)
+                    label={flags.has(NotificationFlags.MustNotMatchRegex)
                         ? "Blacklist regex"
                         : "Whitelist regex"
                     }
@@ -244,7 +244,7 @@ export default function Home() {
         {platformFlags && (
             <InputText
                 className="md:w-1/2 w-full"
-                name={flags.has(NotificationFlags.MustNotMatchRegex)
+                label={flags.has(NotificationFlags.MustNotMatchRegex)
                     ? "Blacklist regex"
                     : "Whitelist regex"
                 }

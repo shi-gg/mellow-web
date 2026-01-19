@@ -5,7 +5,7 @@ import { userStore } from "@/common/user";
 import Box from "@/components/box";
 import ImageReduceMotion from "@/components/image-reduce-motion";
 import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
-import InputSwitch from "@/components/inputs/switch";
+import { InputSwitch } from "@/components/inputs/switch";
 import Modal from "@/components/modal";
 import Notice from "@/components/notice";
 import { OverviewLink } from "@/components/overview-link";
@@ -238,7 +238,7 @@ function PremiumGuildSelect({
     return (
         <InputMultiSelect
             className="w-full md:w-1/2 lg:w-1/3"
-            name="Premium Guilds"
+            label="Premium Guilds"
             url="/users/@me/billing/premium-guilds"
             dataName="guildIds"
             items={(data || [])

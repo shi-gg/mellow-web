@@ -172,7 +172,7 @@ export default function Home() {
                 <div className="lg:w-1/2">
                     <InputText
                         key={tag.id}
-                        name="Name"
+                        label="Command Name"
                         url={url + "/" + tag.id}
                         dataName="name"
                         description="The name of the custom command."
@@ -186,7 +186,7 @@ export default function Home() {
                 <div className="lg:w-1/2">
                     <InputSelect
                         key={tag.id}
-                        name="Permissions"
+                        label="Permissions"
                         url={url + "/" + tag.id}
                         items={
                             Permissions.sort((a, b) => a.localeCompare(b)).map((p) => (

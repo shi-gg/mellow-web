@@ -81,7 +81,7 @@ export function BlueskyNotificationModal({
             isDisabled={!name || !channelId}
         >
             <ControlledInput
-                name="Bluesky user"
+                label="Bluesky user"
                 placeholder="wamellow.bsky.social"
                 value={name}
                 setValue={setName}

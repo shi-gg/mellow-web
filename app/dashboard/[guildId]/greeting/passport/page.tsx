@@ -63,7 +63,7 @@ export default function Home() {
         />
 
         <InputSelect
-            name="Logging channel"
+            label="Channel"
             url={`/guilds/${guild?.id}/modules/passport`}
             dataName="channelId"
             items={createSelectableItems(guild?.channels)}
@@ -76,7 +76,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Unverified role"
+                    label="Unverified role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="unverifiedRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
@@ -90,7 +90,7 @@ export default function Home() {
 
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Verified role"
+                    label="Verified role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="successRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
@@ -105,7 +105,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Failed verification action"
+                    label="Failed verification action"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="punishment"
                     items={[
@@ -122,7 +122,7 @@ export default function Home() {
 
             <div className="lg:w-1/2">
                 <InputSelect
-                    name="Punishment role"
+                    label="Punishment role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="punishmentRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}

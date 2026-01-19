@@ -202,7 +202,7 @@ export function ChangeStyleModal({
             isDisabled={(!name && typeof avatar === "string" && typeof banner === "string") || Boolean(error)}
         >
             <ControlledInput
-                name="Username"
+                label="Username"
                 placeholder="DarkViperAU"
                 value={name}
                 setValue={setName}
@@ -210,7 +210,7 @@ export function ChangeStyleModal({
             />
 
             <ControlledInput
-                name="Bio"
+                label="Bio"
                 placeholder="gaming"
                 value={bio}
                 setValue={setBio}
