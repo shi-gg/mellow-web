@@ -16,7 +16,7 @@ import { AvatarBadge } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cacheOptions } from "@/lib/api";
 import { type ApiV1GuildsModulesNotificationsGetResponse, BlueskyNotificationFlags, GuildFlags, NotificationFlags, NotificationType, YoutubeNotificationFlags } from "@/typings";
-import { BitfieldManager, bitfieldToArray, transformer } from "@/utils/bitfields";
+import { arrayToBitfield, BitfieldManager, bitfieldToArray, transformer } from "@/utils/bitfields";
 import { createSelectableItems } from "@/utils/create-selectable-items";
 import { getCanonicalUrl } from "@/utils/urls";
 import { LoaderCircleIcon } from "lucide-react";
@@ -218,27 +218,10 @@ export default function Home() {
                         : "Select the types of content to send."
                     }
                     defaultState={flags.toArray()}
-                    transform={(selected) => {
-                        const bits = selected
-                            .map(Number)
-                            .reduce((a, b) => a | b, 0);
-
-                        const mask = Object.values(platformFlags)
-                            .filter((v): v is number => typeof v === "number")
-                            .reduce((a, b) => a | b, 0);
-
-                        return (item.flags & ~mask) | bits;
-                    }}
+                    transform={(selected) => arrayToBitfield(selected, platformFlags, item.flags)}
                     onSave={(selected) => {
-                        const bits = selected
-                            .map(Number)
-                            .reduce((a, b) => a | b, 0);
-
-                        const mask = Object.values(platformFlags)
-                            .filter((v): v is number => typeof v === "number")
-                            .reduce((a, b) => a | b, 0);
-
-                        editItem("flags", (item.flags & ~mask) | bits);
+                        const bits = arrayToBitfield(selected, platformFlags, item.flags);
+                        editItem("flags", bits);
                     }}
                 />
                 : <InputText
@@ -325,8 +308,7 @@ export default function Home() {
 }
 
 function TestButton(
-    { type, creatorId, children }:
-        { type: NotificationType; creatorId: string; children: ReactNode; }
+    { type, creatorId, children }: { type: NotificationType; creatorId: string; children: ReactNode; }
 ) {
 
     const { data, isLoading } = useQuery(

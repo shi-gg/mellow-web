@@ -45,6 +45,18 @@ export function bitfieldToArray(bitfield: Record<string | number, string | numbe
         }));
 }
 
+export function arrayToBitfield(array: (number | string)[], obj: Record<string | number, string | number>, flags: number) {
+    const bits = array
+        .map(Number)
+        .reduce((a, b) => a | b, 0);
+
+    const mask = Object.values(obj)
+        .filter((v): v is number => typeof v === "number")
+        .reduce((a, b) => a | b, 0);
+
+    return (flags & ~mask) | bits;
+}
+
 export function transformer(value: boolean, flags: number, flag: number) {
     return value ? flags | flag : flags & ~flag;
 }
