@@ -218,9 +218,27 @@ export default function Home() {
                         : "Select the types of content to send."
                     }
                     defaultState={flags.toArray()}
-                    onSave={(o) => {
-                        const flags = o.map((flag) => Number(flag));
-                        editItem("flags", flags.reduce((a, b) => a | b, 0));
+                    transform={(selected) => {
+                        const bits = selected
+                            .map(Number)
+                            .reduce((a, b) => a | b, 0);
+
+                        const mask = Object.values(platformFlags)
+                            .filter((v): v is number => typeof v === "number")
+                            .reduce((a, b) => a | b, 0);
+
+                        return (item.flags & ~mask) | bits;
+                    }}
+                    onSave={(selected) => {
+                        const bits = selected
+                            .map(Number)
+                            .reduce((a, b) => a | b, 0);
+
+                        const mask = Object.values(platformFlags)
+                            .filter((v): v is number => typeof v === "number")
+                            .reduce((a, b) => a | b, 0);
+
+                        editItem("flags", (item.flags & ~mask) | bits);
                     }}
                 />
                 : <InputText
@@ -265,7 +283,7 @@ export default function Home() {
             endpoint={url + "/" + item.id}
             k="flags"
             defaultState={(item.flags & NotificationFlags.MustNotMatchRegex) !== 0}
-            transform={(value) => value ? [NotificationFlags.MustNotMatchRegex] : []} // very fucked up
+            transform={(value) => transformer(value, item.flags, NotificationFlags.MustNotMatchRegex)}
             onSave={(value) => editItem("flags", transformer(value, item.flags, NotificationFlags.MustNotMatchRegex))}
         />
 
@@ -276,7 +294,7 @@ export default function Home() {
                 endpoint={url + "/" + item.id}
                 k="flags"
                 defaultState={(item.flags & NotificationFlags.DeleteAfterStream) !== 0}
-                transform={(value) => value ? [NotificationFlags.DeleteAfterStream] : []} // very fucked up
+                transform={(value) => transformer(value, item.flags, NotificationFlags.DeleteAfterStream)}
                 onSave={(value) => editItem("flags", transformer(value, item.flags, NotificationFlags.DeleteAfterStream))}
             />
         )}
@@ -308,7 +326,7 @@ export default function Home() {
 
 function TestButton(
     { type, creatorId, children }:
-    { type: NotificationType; creatorId: string; children: ReactNode; }
+        { type: NotificationType; creatorId: string; children: ReactNode; }
 ) {
 
     const { data, isLoading } = useQuery(
