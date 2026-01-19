@@ -29,7 +29,11 @@ export default function CompleteSetup({
     const enabled = (guild!.flags & GuildFlags.PassportEnabled) !== 0;
 
     const [prevData, setPrevData] = useState(data);
-    if (data !== prevData) {
+    if (
+        data.successRoleId !== prevData.successRoleId ||
+        data.punishmentRoleId !== prevData.punishmentRoleId ||
+        data.punishment !== prevData.punishment
+    ) {
         setPrevData(data);
         if (enabled) {
             if (!data.successRoleId) {

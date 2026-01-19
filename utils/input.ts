@@ -41,12 +41,14 @@ export function useInput<T>(options: InputOptions<T>) {
 
     const endpoint = options.endpoint || options.url;
     const k = options.k || options.dataName;
+    const { onSave, transform, manual, debounceMs, defaultState } = options;
 
-    const [prevDefaultState, setPrevDefaultState] = useState(options.defaultState);
-    if (options.defaultState !== prevDefaultState) {
-        setPrevDefaultState(options.defaultState);
-        setValue(options.defaultState);
-        setSavedValue(options.defaultState);
+    const defaultStateKey = JSON.stringify(defaultState);
+    const [prevDefaultStateKey, setPrevDefaultStateKey] = useState(defaultStateKey);
+    if (defaultStateKey !== prevDefaultStateKey) {
+        setPrevDefaultStateKey(defaultStateKey);
+        setValue(defaultState);
+        setSavedValue(defaultState);
     }
 
     useEffect(() => {
@@ -66,7 +68,7 @@ export function useInput<T>(options: InputOptions<T>) {
     const save = useCallback(
         async (val?: T) => {
             const valueToSave = val === undefined ? value : val;
-            options.onSave?.(valueToSave);
+            onSave?.(valueToSave);
             setSavedValue(valueToSave);
 
             if (!endpoint || !k) return;
@@ -86,8 +88,8 @@ export function useInput<T>(options: InputOptions<T>) {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(k.includes(".")
-                    ? { [k.split(".")[0]]: { [k.split(".")[1]]: options.transform?.(valueToSave) ?? valueToSave } }
-                    : { [k]: options.transform?.(valueToSave) ?? valueToSave }
+                    ? { [k.split(".")[0]]: { [k.split(".")[1]]: transform?.(valueToSave) ?? valueToSave } }
+                    : { [k]: transform?.(valueToSave) ?? valueToSave }
                 )
             })
                 .catch((error) => String(error));
@@ -111,26 +113,26 @@ export function useInput<T>(options: InputOptions<T>) {
             setState(InputState.Success);
             timeout.current = setTimeout(() => setState(InputState.Idle), 1_000 * 8);
         },
-        [options, endpoint, k, value]
+        [onSave, endpoint, k, transform, value]
     );
 
     const update = useCallback(
         (val: T) => {
             setValue(val);
 
-            if (options.manual) return;
+            if (manual) return;
 
             if (debounceRef.current) {
                 clearTimeout(debounceRef.current);
             }
 
-            if (options.debounceMs) {
-                debounceRef.current = setTimeout(() => save(val), options.debounceMs);
+            if (debounceMs) {
+                debounceRef.current = setTimeout(() => save(val), debounceMs);
             } else {
                 save(val);
             }
         },
-        [options, save]
+        [manual, debounceMs, save]
     );
 
     return {

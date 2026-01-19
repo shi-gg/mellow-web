@@ -39,7 +39,7 @@ import { Commands } from "./commands.component";
 import { Ratings } from "./ratings.component";
 
 const Faq = dynamic(() => import("./faq.component").then((m) => m.Faq), {
-    ssr: true
+    ssr: false
 });
 
 const montserrat = Montserrat({ subsets: ["latin"] });
