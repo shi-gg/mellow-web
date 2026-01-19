@@ -1,5 +1,5 @@
 import type { Guild } from "@/common/guilds";
-import SelectMenu from "@/components/inputs/select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import type { ApiEdit } from "@/lib/api/hook";
 import { type ApiV1GuildsModulesPassportGetResponse, GuildFlags } from "@/typings";
@@ -62,7 +62,7 @@ export default function CompleteSetup({
             isDisabled={!roleId}
             onSuccess={() => edit("successRoleId", roleId)}
         >
-            <SelectMenu
+            <InputSelect
                 name="Role"
                 items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                 description="Select what role members should get when completing verification."
@@ -91,7 +91,7 @@ export default function CompleteSetup({
             isDisabled={!roleId}
             onSuccess={() => edit("punishmentRoleId", roleId)}
         >
-            <SelectMenu
+            <InputSelect
                 name="Role"
                 items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                 description="Select what role members should get when failing verification."

@@ -18,7 +18,7 @@ interface Props {
     max?: number;
 }
 
-export default function InputNumber({
+export function InputNumber({
     className,
 
     label,

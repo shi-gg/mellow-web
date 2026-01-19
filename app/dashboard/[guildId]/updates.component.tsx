@@ -1,7 +1,7 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import SelectMenu from "@/components/inputs/select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { createSelectableItems } from "@/utils/create-selectable-items";
 import { useState } from "react";
@@ -72,7 +72,7 @@ export default function FollowUpdates() {
             }}
             isDisabled={!channelId}
         >
-            <SelectMenu
+            <InputSelect
                 name="Channel"
                 dataName="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "ManageWebhooks"])}

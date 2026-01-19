@@ -1,9 +1,9 @@
 "use client";
 
 import { type User, userStore } from "@/common/user";
-import ColorInput from "@/components/inputs/color-input";
-import ImageUrlInput from "@/components/inputs/image-url-input";
-import SelectInput from "@/components/inputs/select-menu";
+import { InputColor } from "@/components/inputs/color-input";
+import { InputImageUrl } from "@/components/inputs/image-url-input";
+import { InputSelect } from "@/components/inputs/select-menu";
 import { Section } from "@/components/section";
 import { deepMerge } from "@/utils/deepMerge";
 
@@ -18,7 +18,7 @@ export default function Home() {
     return (<>
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <SelectInput
+                <InputSelect
                     name="Secondary text"
                     url="/users/@me/rank"
                     dataName="subText.type"
@@ -51,7 +51,7 @@ export default function Home() {
 
             <div className="lg:w-1/2 flex gap-2 w-full">
                 <div className="w-1/2">
-                    <ColorInput
+                    <InputColor
                         name="Text color"
                         url="/users/@me/rank"
                         dataName="textColor"
@@ -63,7 +63,7 @@ export default function Home() {
                     />
                 </div>
                 <div className="w-1/2">
-                    <ColorInput
+                    <InputColor
                         name="Bar color"
                         url="/users/@me/rank"
                         dataName="barColor"
@@ -77,7 +77,7 @@ export default function Home() {
             </div>
         </div>
 
-        <ImageUrlInput
+        <InputImageUrl
             name="Background"
             url="/users/@me/rank"
             ratio="aspect-4/1"

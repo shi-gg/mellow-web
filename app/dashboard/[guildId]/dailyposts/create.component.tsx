@@ -1,8 +1,8 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import SelectMenu from "@/components/inputs/select-menu";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import { type ApiV1GuildsModulesDailypostsGetResponse, DailypostType } from "@/typings";
@@ -89,7 +89,7 @@ export function CreateDailypost({
             }}
             isDisabled={!hours.length || !type || !channelId}
         >
-            <SelectMenu
+            <InputSelect
                 name="Channel"
                 dataName="channelId"
                 items={createSelectableItems(channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
@@ -99,7 +99,7 @@ export function CreateDailypost({
                 }}
             />
 
-            <MultiSelectMenu
+            <InputMultiSelect
                 name="Run at"
                 items={hoursArray}
                 description="Select one or multiple hours when posts should be made."
@@ -109,7 +109,7 @@ export function CreateDailypost({
                 }}
             />
 
-            <SelectMenu
+            <InputSelect
                 name="Type"
                 items={
                     Object.entries(DailypostType)

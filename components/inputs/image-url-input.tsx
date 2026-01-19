@@ -22,7 +22,7 @@ interface Props {
     ratio?: `aspect-${string}`;
 }
 
-export default function InputImageUrl({
+export function InputImageUrl({
     className,
 
     label,

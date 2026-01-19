@@ -29,7 +29,7 @@ interface Props<T extends string | number> {
     showClear?: boolean;
 }
 
-export default function InputSelect<T extends string | number>({
+export function InputSelect<T extends string | number>({
     className,
 
     label,

@@ -1,9 +1,9 @@
 "use client";
 
 import type { Guild } from "@/common/guilds";
-import SelectInput from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
-import TextInput from "@/components/inputs/text-input";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
+import { InputText } from "@/components/inputs/text-input";
 import Modal from "@/components/modal";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ApiV1GuildsModulesLeaderboardUpdatingPostResponse } from "@/typings";
@@ -166,7 +166,7 @@ export default function UpdatingLeaderboardCard({
             }
         >
 
-            <SelectInput
+            <InputSelect
                 name="Channel"
                 items={createSelectableItems(guild.channels, ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles"])}
                 description="Select a channel where the leaderboard should be send into."
@@ -203,7 +203,7 @@ export default function UpdatingLeaderboardCard({
 
             {structure === 0 && (<>
                 {!leaderboard?.channelId && (
-                    <TextInput
+                    <InputText
                         name="Title"
                         description="The title of the embed"
                         defaultState={`☕ ${type.replace(/^\w/, (match) => match.toUpperCase())} leaderboard`}
@@ -218,7 +218,7 @@ export default function UpdatingLeaderboardCard({
                 )}
 
                 <div className="flex gap-2">
-                    <SelectInput
+                    <InputSelect
                         name="Rank"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.rank || undefined}
@@ -226,7 +226,7 @@ export default function UpdatingLeaderboardCard({
                             setStyles({ ...styles, rank: o as null });
                         }}
                     />
-                    <SelectInput
+                    <InputSelect
                         name="Number"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.number || undefined}
@@ -234,7 +234,7 @@ export default function UpdatingLeaderboardCard({
                             setStyles({ ...styles, number: o as null });
                         }}
                     />
-                    <SelectInput
+                    <InputSelect
                         name="User"
                         items={stylesList}
                         defaultState={leaderboard?.styles?.user || undefined}
@@ -244,7 +244,7 @@ export default function UpdatingLeaderboardCard({
                     />
                 </div>
 
-                <SelectInput
+                <InputSelect
                     name="Display name"
                     items={
                         ["mention", "username", "nickname", "id"].map((key) => ({
@@ -260,7 +260,7 @@ export default function UpdatingLeaderboardCard({
                     }}
                 />
 
-                <SelectInput
+                <InputSelect
                     name="Emoji"
                     items={createSelectableEmojiItems(guild.emojis)}
                     description="Select a emots which will be between shown after the data count."
@@ -271,7 +271,7 @@ export default function UpdatingLeaderboardCard({
                     }}
                 />
 
-                <Switch
+                <InputSwitch
                     label="Use quotes for text"
                     isTickbox
                     defaultState={leaderboard?.styles?.useQuotes || false}

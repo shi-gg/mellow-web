@@ -17,7 +17,7 @@ interface Props {
     placeholder?: string;
 }
 
-export default function InputColor({
+export function InputColor({
     className,
 
     label,

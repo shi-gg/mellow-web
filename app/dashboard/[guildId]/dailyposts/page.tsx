@@ -5,8 +5,8 @@ import { CreateSplash } from "@/components/dashboard/lists/create-splash";
 import { useList } from "@/components/dashboard/lists/hook";
 import { Navigation } from "@/components/dashboard/lists/navigation";
 import { ItemSelector } from "@/components/dashboard/lists/selector";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import SelectMenu from "@/components/inputs/select-menu";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
 import { ScreenMessage } from "@/components/screen-message";
 import type { ApiV1GuildsModulesDailypostsGetResponse } from "@/typings";
 import { createSelectableItems } from "@/utils/create-selectable-items";
@@ -136,7 +136,7 @@ export default function Home() {
         />
 
         <div className="flex md:gap-4 gap-2">
-            <SelectMenu
+            <InputSelect
                 name="Channel"
                 url={url + "/" + item.id}
                 dataName="channelId"
@@ -157,7 +157,7 @@ export default function Home() {
         </div>
 
         <div className="lg:flex gap-3">
-            <SelectMenu
+            <InputSelect
                 className="lg:w-1/2 w-full"
                 name="Ping role"
                 url={url + "/" + item.id}
@@ -172,7 +172,7 @@ export default function Home() {
                 onSave={(o) => editItem("roleId", o as string)}
                 showClear
             />
-            <MultiSelectMenu
+            <InputMultiSelect
                 className="lg:w-1/2 w-full"
                 name="Run at"
                 url={url + "/" + item.id}

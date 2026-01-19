@@ -1,9 +1,9 @@
 "use client";
 
 import { type Guild, guildStore } from "@/common/guilds";
-import ImageUrlInput from "@/components/inputs/image-url-input";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import Switch from "@/components/inputs/switch";
+import { InputImageUrl } from "@/components/inputs/image-url-input";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
 import { ScreenMessage } from "@/components/screen-message";
 import { Section, SubSection } from "@/components/section";
 import { useApi } from "@/lib/api/hook";
@@ -51,7 +51,7 @@ export default function Home() {
                     icon={<HiChartBar />}
                 />
 
-                <ImageUrlInput
+                <InputImageUrl
                     name="Banner"
                     url={url}
                     ratio="aspect-4/1"
@@ -75,7 +75,7 @@ export default function Home() {
 
         <div className="lg:flex gap-3 mt-5">
             <div className="lg:w-1/2">
-                <MultiSelectMenu
+                <InputMultiSelect
                     name="Top messager roles"
                     url={url}
                     dataName="roles.messages"
@@ -86,7 +86,7 @@ export default function Home() {
                 />
             </div>
             <div className="lg:w-1/2">
-                <MultiSelectMenu
+                <InputMultiSelect
                     name="Top voice roles"
                     url={url}
                     dataName="roles.voiceminutes"
@@ -99,7 +99,7 @@ export default function Home() {
         </div>
 
         <div className="lg:w-1/2">
-            <MultiSelectMenu
+            <InputMultiSelect
                 name="Blacklisted channels"
                 url={url}
                 dataName="blacklistChannelIds"
@@ -128,7 +128,7 @@ export default function Home() {
             Manage the privacy of the leaderboard.
         </Section>
 
-        <Switch
+        <InputSwitch
             label="Hide leaderboard website"
             description="Disable the public website for the leaderboard."
             endpoint={`/guilds/${params.guildId}`}

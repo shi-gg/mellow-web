@@ -2,8 +2,8 @@
 
 import { guildStore } from "@/common/guilds";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard";
-import SelectInput from "@/components/inputs/select-menu";
-import Switch from "@/components/inputs/switch";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
 import Notice from "@/components/notice";
 import { OverviewLink } from "@/components/overview-link";
 import { Section } from "@/components/section";
@@ -53,7 +53,7 @@ export default function Home() {
             edit={edit}
         />
 
-        <Switch
+        <InputSwitch
             label="Enable Passport"
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
@@ -62,7 +62,7 @@ export default function Home() {
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.PassportEnabled) })}
         />
 
-        <SelectInput
+        <InputSelect
             name="Logging channel"
             url={`/guilds/${guild?.id}/modules/passport`}
             dataName="channelId"
@@ -75,7 +75,7 @@ export default function Home() {
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <SelectInput
+                <InputSelect
                     name="Unverified role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="unverifiedRoleId"
@@ -89,7 +89,7 @@ export default function Home() {
             </div>
 
             <div className="lg:w-1/2">
-                <SelectInput
+                <InputSelect
                     name="Verified role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="successRoleId"
@@ -104,7 +104,7 @@ export default function Home() {
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <SelectInput
+                <InputSelect
                     name="Failed verification action"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="punishment"
@@ -121,7 +121,7 @@ export default function Home() {
             </div>
 
             <div className="lg:w-1/2">
-                <SelectInput
+                <InputSelect
                     name="Punishment role"
                     url={`/guilds/${guild?.id}/modules/passport`}
                     dataName="punishmentRoleId"

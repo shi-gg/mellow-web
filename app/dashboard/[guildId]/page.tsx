@@ -1,7 +1,7 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import Switch from "@/components/inputs/switch";
+import { InputSwitch } from "@/components/inputs/switch";
 import { Section } from "@/components/section";
 import { GuildFlags } from "@/typings";
 import { transformer } from "@/utils/bitfields";
@@ -45,7 +45,7 @@ export default function Home() {
             Small tools that improve chatting to insanity.
         </Section>
 
-        <Switch
+        <InputSwitch
             label="Embed message links"
             description="Reply with the original content of a message if a message link is sent."
             endpoint={`/guilds/${params.guildId}`}

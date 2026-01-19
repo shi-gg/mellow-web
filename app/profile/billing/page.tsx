@@ -4,7 +4,7 @@ import { DonationSelect, MONTHLY_PRICES, YEARLY_PRICES } from "@/app/(home)/prem
 import { userStore } from "@/common/user";
 import Box from "@/components/box";
 import ImageReduceMotion from "@/components/image-reduce-motion";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
 import InputSwitch from "@/components/inputs/switch";
 import Modal from "@/components/modal";
 import Notice from "@/components/notice";
@@ -236,7 +236,7 @@ function PremiumGuildSelect({
     if (error) return <Notice message={error} />;
 
     return (
-        <MultiSelectMenu
+        <InputMultiSelect
             className="w-full md:w-1/2 lg:w-1/3"
             name="Premium Guilds"
             url="/users/@me/billing/premium-guilds"

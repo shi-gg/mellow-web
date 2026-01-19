@@ -14,7 +14,7 @@ interface Props {
     inverted: boolean;
 }
 
-export default function InputSwitch({
+export function InputSwitch({
     className,
 
     label,

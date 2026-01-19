@@ -18,7 +18,7 @@ interface Props {
     resetState?: string;
 }
 
-export default function InputText({
+export function InputText({
     className,
 
     label,

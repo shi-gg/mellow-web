@@ -30,7 +30,7 @@ interface Props<T extends string | number> {
     max?: number;
 }
 
-export default function InputMultiSelect<T extends string | number>({
+export function InputMultiSelect<T extends string | number>({
     className,
 
     label,

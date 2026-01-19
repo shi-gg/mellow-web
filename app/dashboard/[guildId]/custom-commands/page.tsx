@@ -3,8 +3,8 @@
 import { guildStore } from "@/common/guilds";
 import { StatsBar } from "@/components/counter";
 import MessageCreatorEmbed from "@/components/embed-creator";
-import SelectInput from "@/components/inputs/select-menu";
-import TextInput from "@/components/inputs/text-input";
+import { InputSelect } from "@/components/inputs/select-menu";
+import { InputText } from "@/components/inputs/text-input";
 import { ScreenMessage } from "@/components/screen-message";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -170,7 +170,7 @@ export default function Home() {
 
             <div className="lg:flex gap-3 mt-6">
                 <div className="lg:w-1/2">
-                    <TextInput
+                    <InputText
                         key={tag.id}
                         name="Name"
                         url={url + "/" + tag.id}
@@ -184,7 +184,7 @@ export default function Home() {
                 </div>
 
                 <div className="lg:w-1/2">
-                    <SelectInput
+                    <InputSelect
                         key={tag.id}
                         name="Permissions"
                         url={url + "/" + tag.id}

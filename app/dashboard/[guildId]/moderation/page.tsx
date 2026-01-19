@@ -1,9 +1,9 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import MultiSelectMenu from "@/components/inputs/multi-select-menu";
-import Switch from "@/components/inputs/switch";
-import TextInput from "@/components/inputs/text-input";
+import { InputMultiSelect } from "@/components/inputs/multi-select-menu";
+import { InputSwitch } from "@/components/inputs/switch";
+import { InputText } from "@/components/inputs/text-input";
 import Notice from "@/components/notice";
 import { useApi } from "@/lib/api/hook";
 import { type ApiV1GuildsModulesAutomodGetResponse, AutomodType } from "@/typings";
@@ -34,7 +34,7 @@ export default function Home() {
 
     return (<>
         {AUTOMOD_TYPES.map((type) => (
-            <Switch
+            <InputSwitch
                 key={type}
                 label={`Block ${type.replace(/_/g, " ").replace(/(^| +)\w/g, (c) => c.toUpperCase())}`}
                 description={`Prevent ${type.replace(/_/, " ")} links from being sent.`}
@@ -50,7 +50,7 @@ export default function Home() {
 
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
-                <MultiSelectMenu
+                <InputMultiSelect
                     name="Whitelist channels"
                     url={url}
                     dataName="whitelistChannelIds"
@@ -65,7 +65,7 @@ export default function Home() {
                 />
             </div>
             <div className="lg:w-1/2">
-                <MultiSelectMenu
+                <InputMultiSelect
                     name="Whitelist roles"
                     url={url}
                     dataName="whitelistRoleIds"
@@ -81,7 +81,7 @@ export default function Home() {
             </div>
         </div>
 
-        <TextInput
+        <InputText
             name="Keyword filter"
             url={url}
             dataName="keywordFilter"

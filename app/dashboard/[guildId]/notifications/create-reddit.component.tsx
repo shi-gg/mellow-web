@@ -2,7 +2,7 @@
 
 import { guildStore } from "@/common/guilds";
 import { ControlledInput } from "@/components/inputs/controlled-input";
-import SelectMenu from "@/components/inputs/select-menu";
+import { InputSelect } from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { Section } from "@/components/section";
 import { type ApiV1GuildsModulesNotificationsGetResponse, NotificationType } from "@/typings";
@@ -78,7 +78,7 @@ export function RedditNotificationModal({
                 setValue={setName}
             />
 
-            <SelectMenu
+            <InputSelect
                 label="Channel"
                 items={createSelectableItems(channels)}
                 description="Select a channel where notifications should be send into."
