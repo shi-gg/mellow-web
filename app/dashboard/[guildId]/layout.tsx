@@ -72,7 +72,7 @@ export default function RootLayout({
         params.guildId,
         (data) => {
             guildStore.setState((state) => ({ ...state, channels: data }));
-            setLoaded((loaded) => [...loaded, "channels"]);
+            setLoaded((loaded) => loaded.includes("channels") ? loaded : [...loaded, "channels"]);
         }
     );
 
@@ -81,7 +81,7 @@ export default function RootLayout({
         params.guildId,
         (data) => {
             guildStore.setState((state) => ({ ...state, roles: data }));
-            setLoaded((loaded) => [...loaded, "roles"]);
+            setLoaded((loaded) => loaded.includes("roles") ? loaded : [...loaded, "roles"]);
         }
     );
 
@@ -90,7 +90,7 @@ export default function RootLayout({
         params.guildId,
         (data) => {
             guildStore.setState((state) => ({ ...state, emojis: data }));
-            setLoaded((loaded) => [...loaded, "emojis"]);
+            setLoaded((loaded) => loaded.includes("emojis") ? loaded : [...loaded, "emojis"]);
         }
     );
 
