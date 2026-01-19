@@ -79,7 +79,7 @@ export default function FollowUpdates() {
                 description="Select a channel where updates should be send into."
                 defaultState={guild?.follownewsChannel?.id}
                 onSave={(o) => {
-                    setChannelId(o.value as string);
+                    setChannelId(o as string);
                 }}
             />
         </Modal>

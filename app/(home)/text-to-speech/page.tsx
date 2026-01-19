@@ -77,13 +77,13 @@ export default function Home() {
                     <div className="flex flex-wrap items-center gap-3">
                         <SelectMenu
                             className="w-full"
-                            name="Voice & language"
+                            label="Voice & language"
                             items={voices.map((voiceKey) => ({
                                 name: getVoices(voiceKey)[0],
                                 value: voiceKey
                             }))}
                             defaultState={voice}
-                            onSave={({ value }) => setVoice((value as string) || fallbackVoice)}
+                            onSave={(value) => setVoice((value as string) || fallbackVoice)}
                             showClear={false}
                         />
                     </div>

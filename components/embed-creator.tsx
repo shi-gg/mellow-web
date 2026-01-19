@@ -8,8 +8,8 @@ import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { DiscordMarkdown } from "./discord/markdown";
 import DiscordMessage from "./discord/message";
 import DiscordMessageEmbed from "./discord/message-embed";
-import DumbColorInput from "./inputs/dumb-color-input";
-import DumbTextInput from "./inputs/dumb-text-input";
+import { ControlledColorInput } from "./inputs/controlled-color-input";
+import { ControlledInput } from "./inputs/controlled-input";
 import { Button } from "./ui/button";
 
 enum State {
@@ -187,17 +187,17 @@ export default function MessageCreatorEmbed({
 
                             <div className="lg:w-3/6 m-1">
 
-                                <DumbTextInput placeholder="Content" value={content} setValue={setContent} max={2_000} disabled={disabled} />
-                                <DumbTextInput placeholder="Embed Title" value={embed} setValue={setEmbed} max={256} dataName="title" disabled={disabled} />
-                                <DumbTextInput placeholder="Embed Description" value={embed} setValue={setEmbed} max={4_096} dataName="description" disabled={disabled} />
+                                <ControlledInput placeholder="Content" value={content} setValue={setContent} max={2_000} disabled={disabled} />
+                                <ControlledInput placeholder="Embed Title" value={embed} setValue={setEmbed} max={256} dataName="title" disabled={disabled} />
+                                <ControlledInput placeholder="Embed Description" value={embed} setValue={setEmbed} max={4_096} dataName="description" disabled={disabled} />
                                 <div className="flex gap-2">
-                                    <DumbColorInput placeholder="Embed Color" value={embed} setValue={setEmbed} dataName="color" disabled={disabled} />
-                                    <DumbTextInput placeholder="Embed Thumbnail" value={embed} setValue={setEmbed} max={256} dataName="thumbnail" disabled={disabled} />
+                                    <ControlledColorInput placeholder="Embed Color" value={embed} setValue={setEmbed} dataName="color" disabled={disabled} />
+                                    <ControlledInput placeholder="Embed Thumbnail" value={embed} setValue={setEmbed} max={256} dataName="thumbnail" disabled={disabled} />
                                 </div>
-                                <DumbTextInput placeholder="Embed Image" value={embed} setValue={setEmbed} max={256} dataName="image" disabled={disabled} />
+                                <ControlledInput placeholder="Embed Image" value={embed} setValue={setEmbed} max={256} dataName="image" disabled={disabled} />
                                 <div className="flex gap-2">
-                                    <DumbTextInput placeholder="Embed Footer Icon" value={embedfooter} setValue={setEmbedfooter} max={256} dataName="icon_url" disabled={disabled} />
-                                    <DumbTextInput placeholder="Embed Footer" value={embedfooter} setValue={setEmbedfooter} max={256} dataName="text" disabled={disabled} />
+                                    <ControlledInput placeholder="Embed Footer Icon" value={embedfooter} setValue={setEmbedfooter} max={256} dataName="icon_url" disabled={disabled} />
+                                    <ControlledInput placeholder="Embed Footer" value={embedfooter} setValue={setEmbedfooter} max={256} dataName="text" disabled={disabled} />
                                 </div>
 
                                 <Button
@@ -266,21 +266,19 @@ export default function MessageCreatorEmbed({
                             </div>
 
                         </div>
-                        <div className="text-sm m-1 text-neutral-500">
-                            The preview might display things wrong*
-                        </div>
 
+                        <div className="flex justify-between">
+                            <div className="text-sm m-1 text-neutral-500">
+                                The preview might display things wrong*
+                            </div>
+                            <div className="flex gap-2">
+                                {error && <div className="ml-auto text-red-500 text-sm">{error}</div>}
+                                {state === State.Success && <div className="ml-auto text-green-500 text-sm">Saved</div>}
+                            </div>
+                        </div>
                     </div>}
 
             </div>
-
-            <div className="flex relative bottom-3">
-                <div className="ml-auto mb-2">
-                    {error && <div className="ml-auto text-red-500 text-sm">{error}</div>}
-                    {state === State.Success && <div className="ml-auto text-green-500 text-sm">Saved</div>}
-                </div>
-            </div>
-
         </div>
     );
 }

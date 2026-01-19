@@ -196,7 +196,7 @@ export default function Home() {
                         dataName="permission"
                         description="The permissions needed to execute this tag."
                         defaultState={tag.permission}
-                        onSave={(option) => editTag("permission", option.value)}
+                        onSave={(option) => editTag("permission", option)}
                         showClear
                     />
                 </div>

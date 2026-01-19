@@ -1,6 +1,6 @@
 "use client";
 
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import {
     Accordion,
     AccordionContent,
@@ -59,7 +59,7 @@ export function Side({
             </Accordion>
 
             <div>
-                <DumbTextInput
+                <ControlledInput
                     placeholder="Paste your Server Id"
                     value={guildId}
                     setValue={setGuildId}

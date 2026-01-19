@@ -67,7 +67,7 @@ export default function CompleteSetup({
                 items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                 description="Select what role members should get when completing verification."
                 defaultState={data.punishmentRoleId}
-                onSave={(o) => setRoleId(o.value)}
+                onSave={(o) => setRoleId(o)}
             />
         </Modal>
 
@@ -96,7 +96,7 @@ export default function CompleteSetup({
                 items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                 description="Select what role members should get when failing verification."
                 defaultState={data.punishmentRoleId}
-                onSave={(o) => setRoleId(o.value)}
+                onSave={(o) => setRoleId(o)}
             />
         </Modal>
     </>);

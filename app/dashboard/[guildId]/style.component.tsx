@@ -1,7 +1,7 @@
 "use client";
 import { guildStore } from "@/common/guilds";
 import DiscordMessage from "@/components/discord/message";
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import Modal from "@/components/modal";
 import { Section } from "@/components/section";
 import { UserAvatar } from "@/components/ui/avatar";
@@ -201,7 +201,7 @@ export function ChangeStyleModal({
             }}
             isDisabled={(!name && typeof avatar === "string" && typeof banner === "string") || Boolean(error)}
         >
-            <DumbTextInput
+            <ControlledInput
                 name="Username"
                 placeholder="DarkViperAU"
                 value={name}
@@ -209,7 +209,7 @@ export function ChangeStyleModal({
                 max={32}
             />
 
-            <DumbTextInput
+            <ControlledInput
                 name="Bio"
                 placeholder="gaming"
                 value={bio}

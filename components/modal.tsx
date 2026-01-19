@@ -119,7 +119,7 @@ export default function Modal<T>({
 
                 <div
                     className={cn(
-                        "scrollbar-none overflow-y-scroll overflow-x-hidden max-h-[70vh] px-0.5",
+                        "scrollbar-none overflow-y-scroll overflow-x-hidden max-h-[70vh] px-1",
                         className
                     )}
                 >

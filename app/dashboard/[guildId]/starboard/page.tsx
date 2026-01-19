@@ -4,11 +4,11 @@ import { guildStore } from "@/common/guilds";
 import { DiscordMarkdown } from "@/components/discord/markdown";
 import DiscordMessage from "@/components/discord/message";
 import DiscordMessageEmbed from "@/components/discord/message-embed";
+import ColorInput from "@/components/inputs/color-input";
 import MultiSelectMenu from "@/components/inputs/multi-select-menu";
 import NumberInput from "@/components/inputs/number-input";
 import SelectMenu from "@/components/inputs/select-menu";
 import Switch from "@/components/inputs/switch";
-import TextInput from "@/components/inputs/text-input";
 import Notice from "@/components/notice";
 import { Button } from "@/components/ui/button";
 import { useApi } from "@/lib/api/hook";
@@ -146,7 +146,7 @@ export default function Home() {
             description="Select the channel where the starboard messages should be send into."
             defaultState={data.channelId}
             disabled={!enabled}
-            onSave={(o) => edit("channelId", o.value as string)}
+            onSave={(o) => edit("channelId", o as string)}
         />
 
         <div className="lg:flex gap-3">
@@ -175,7 +175,7 @@ export default function Home() {
                     description="Select the emoji that needs to be reacted with."
                     defaultState={data.emoji}
                     disabled={!enabled}
-                    onSave={(o) => edit("emoji", o.value as string)}
+                    onSave={(o) => edit("emoji", o as string)}
                 />
             </div>
             <div className="lg:w-1/2">
@@ -208,7 +208,7 @@ export default function Home() {
                     description="The style members profile gets displayed."
                     defaultState={data.style}
                     disabled={!enabled}
-                    onSave={(o) => edit("style", o.value as number)}
+                    onSave={(o) => edit("style", o as number)}
                 />
             </div>
         </div>
@@ -224,7 +224,7 @@ export default function Home() {
                     defaultState={data.blacklistChannelIds || []}
                     max={500}
                     disabled={!enabled}
-                    onSave={(o) => edit("blacklistChannelIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("blacklistChannelIds", o)}
                 />
             </div>
             <div className="lg:w-1/2">
@@ -237,21 +237,20 @@ export default function Home() {
                     defaultState={data.blacklistRoleIds || []}
                     max={500}
                     disabled={!enabled}
-                    onSave={(o) => edit("blacklistRoleIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("blacklistRoleIds", o)}
                 />
             </div>
         </div>
 
         <div className="lg:flex gap-3">
             <div className="w-1/2">
-                <TextInput
+                <ColorInput
                     name="Color"
                     url={url}
                     dataName="embedColor"
                     description="Color used for the side of the embed."
-                    type="color"
                     defaultState={data.embedColor ?? 0}
-                    onSave={(o) => edit("embedColor", o as number)}
+                    onSave={(o) => edit("embedColor", o)}
                 />
             </div>
         </div>

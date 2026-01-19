@@ -71,7 +71,7 @@ export default function Home() {
         />
 
         <NumberInput
-            name="After how many seconds the message should be deleted"
+            label="After how many seconds the message should be deleted"
             description="Set to 0 to disable."
             url={`/guilds/${guild?.id}/modules/welcome`}
             dataName="deleteAfter"
@@ -91,7 +91,7 @@ export default function Home() {
                 defaultState={data.channelId}
                 disabled={!enabled}
                 showClear
-                onSave={(o) => edit("channelId", o.value)}
+                onSave={(o) => edit("channelId", o as string)}
             />
 
             <Fetch
@@ -115,7 +115,7 @@ export default function Home() {
                     defaultState={data.roleIds}
                     max={5}
                     disabled={!enabled}
-                    onSave={(o) => edit("roleIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("roleIds", o)}
                 />
             </div>
 
@@ -129,7 +129,7 @@ export default function Home() {
                     defaultState={data.pingIds}
                     max={5}
                     disabled={!enabled}
-                    onSave={(o) => edit("pingIds", o.map(({ value }) => value))}
+                    onSave={(o) => edit("pingIds", o)}
                 />
             </div>
         </div>
@@ -148,7 +148,7 @@ export default function Home() {
                     onSave={(o) => {
                         edit("reactions", {
                             ...data.reactions,
-                            firstMessageEmojis: o.map(({ value }) => value)
+                            firstMessageEmojis: o
                         });
                     }}
                 />
@@ -167,7 +167,7 @@ export default function Home() {
                     onSave={(o) => {
                         edit("reactions", {
                             ...data.reactions,
-                            welcomeMessageEmojis: o.map(({ value }) => value)
+                            welcomeMessageEmojis: o
                         });
                     }}
                 />
@@ -317,7 +317,7 @@ export default function Home() {
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
-                            style: o.value as 1
+                            style: o as 1
                         });
                     }}
                 />
@@ -334,7 +334,7 @@ export default function Home() {
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
-                            emoji: o.value
+                            emoji: o as string
                         });
                     }}
                 />

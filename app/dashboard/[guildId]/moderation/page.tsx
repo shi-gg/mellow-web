@@ -60,7 +60,7 @@ export default function Home() {
                     max={50}
                     disabled={!enabled}
                     onSave={(value) => {
-                        edit("whitelistChannelIds", value.map((entry) => entry.value));
+                        edit("whitelistChannelIds", value);
                     }}
                 />
             </div>
@@ -75,7 +75,7 @@ export default function Home() {
                     max={20}
                     disabled={!enabled}
                     onSave={(value) => {
-                        edit("whitelistRoleIds", value.map((entry) => entry.value));
+                        edit("whitelistRoleIds", value);
                     }}
                 />
             </div>

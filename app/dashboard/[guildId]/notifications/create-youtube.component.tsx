@@ -1,7 +1,7 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import SelectMenu from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { Section } from "@/components/section";
@@ -82,7 +82,7 @@ export function YoutubeNotificationModal({
             }}
             isDisabled={!name || !channelId}
         >
-            <DumbTextInput
+            <ControlledInput
                 name="Creator's @handle, id or URL"
                 placeholder="@LinusTechTips"
                 value={name}
@@ -90,12 +90,11 @@ export function YoutubeNotificationModal({
             />
 
             <SelectMenu
-                name="Channel"
-                dataName="channelId"
+                label="Channel"
                 items={createSelectableItems(channels)}
                 description="Select a channel where notifications should be send into."
                 onSave={(o) => {
-                    setChannelId(o.value as string);
+                    setChannelId(o as string);
                 }}
             />
 

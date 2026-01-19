@@ -1,137 +1,152 @@
-import type { ApiError } from "@/typings";
-import { useEffect, useState } from "react";
+"use client";
+
+import { cn } from "@/utils/cn";
+import { type InputProps, InputState, useInput } from "@/utils/input";
+import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
+import { useId, useState } from "react";
+import { AiOutlineEdit } from "react-icons/ai";
 import { TailSpin } from "react-loading-icons";
 
-import DumbColorInput from "./dumb-color-input";
-import { useStateDebounced } from "../../utils/useDebounce";
-
-enum State {
-    Idle = 0,
-    Loading = 1,
-    Success = 2
-}
+import { Badge } from "../ui/badge";
 
 interface Props {
-    name: string;
-    url: string;
-    dataName: string;
-    disabled?: boolean;
-    description?: string;
-    defaultState: string | number;
-    resetState?: string | number;
-
+    link?: string;
+    badge?: string;
+    resetState?: number;
     placeholder?: string;
-
-    onSave?: (value: string | number) => void;
 }
 
-export default function ColorInput({
-    name,
-    url,
-    dataName,
-    disabled,
+export default function InputColor({
+    className,
+
+    label,
+    name, // @deprecated using label
+    link,
+    badge,
     description,
-    defaultState,
+    disabled,
     resetState,
     placeholder,
+
+    endpoint,
+    url, // @deprecated - use endpoint instead
+    k,
+    dataName, // @deprecated - use k instead
+
+    defaultState,
+    transform,
+
     onSave
-}: Props) {
-    const [state, setState] = useState<State>(State.Idle);
-    const [error, setError] = useState<string | null>(null);
+}: InputProps<number> & Props) {
+    const {
+        value,
+        state,
+        error,
+        update,
+        reset
+    } = useInput({
+        endpoint,
+        url,
+        k,
+        dataName,
 
-    const [valuedebounced, setValuedebounced] = useStateDebounced<string | number>("", 1_000);
-    const [value, setValue] = useState<string | number>("");
-    const [defaultStatealue, setdefaultStatealue] = useState<string | number>("");
+        defaultState,
+        transform: transform ?? ((v) => v || 0x00_00_00),
 
-    useEffect(() => {
-        if (!defaultStatealue) setdefaultStatealue(defaultState);
-        setValue(defaultState);
-    }, [defaultState]);
+        onSave,
+        debounceMs: 1_000
+    });
 
-    useEffect(() => {
-        if (defaultStatealue === value) return;
-        setError(null);
-        setState(State.Loading);
+    const inputId = useId();
+    const [isHovered, setIsHovered] = useState(false);
 
-        fetch(`${process.env.NEXT_PUBLIC_API}${url}`, {
-            method: "PATCH",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ [dataName]: value || 0x00_00_00 })
-        })
-            .then(async (res) => {
-                const response = await res.json();
-                if (!response) return;
+    const colorHex = value ? `#${value.toString(16).padStart(6, "0")}` : "#ffffff";
 
-                switch (res.status) {
-                    case 200: {
-                        setValue(value || 0x00_00_00);
-                        onSave?.(value || 0x00_00_00);
-                        setdefaultStatealue(value || 0x00_00_00);
-
-                        setState(State.Success);
-                        setTimeout(() => setState(State.Idle), 1_000 * 8);
-                        break;
-                    }
-                    default: {
-                        setState(State.Idle);
-                        setError((response as unknown as ApiError).message);
-                        break;
-                    }
-                }
-
-            })
-            .catch(() => {
-                setState(State.Idle);
-                setError("Error while updatung");
-            });
-
-    }, [valuedebounced]);
+    const isDisabled = state === InputState.Loading || disabled;
 
     return (
-        <div className="relative w-full">
+        <div className={cn("relative w-full", description && "mb-2", className)}>
+            <div className="flex items-center gap-2 mb-1">
+                <span className="sm:text-lg font-medium text-neutral-100">
+                    {label || name}
+                </span>
 
-            <div className="flex items-center gap-2">
-                <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{name}</span>
-                {state === State.Loading && <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />}
+                {badge && (
+                    <Badge variant="flat" size="sm">
+                        {badge}
+                    </Badge>
+                )}
 
-                {(resetState && resetState !== value) &&
+                {state === InputState.Loading && (
+                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                )}
+
+                {resetState !== undefined && resetState !== value && (
                     <button
                         className="text-sm ml-auto text-violet-400/60 hover:text-violet-400/90 duration-200"
-                        onClick={() => {
-                            setValue(resetState);
-                            setValuedebounced(resetState);
-                            setState(State.Idle);
-                        }}
+                        onClick={reset}
                         disabled={disabled}
                     >
                         reset
                     </button>
-                }
+                )}
             </div>
 
-            <DumbColorInput
-                value={value}
-                setValue={(v) => {
-                    setValue(v);
-                    setValuedebounced(v);
-                    setState(State.Idle);
-                }}
-                disabled={disabled}
+            {/* Hidden color input */}
+            <input
+                className="absolute -bottom-2 left-0 w-0 h-0 opacity-0 pointer-events-none"
+                id={inputId}
                 placeholder={placeholder}
-                description={description}
+                onChange={(e) => {
+                    const color = Number.parseInt(e.target.value.slice(1), 16);
+                    update(color || 0);
+                }}
+                value={colorHex}
+                disabled={isDisabled}
+                type="color"
             />
 
-            <div className="flex absolute right-0 bottom-0">
-                {error &&
-                    <div className="ml-auto text-red-500 text-sm">
+            {/* Color display label */}
+            <label
+                htmlFor={inputId}
+                className={cn(
+                    "block w-full h-12 rounded-lg cursor-pointer relative overflow-hidden",
+                    "focus-within:outline-violet-400 focus-within:outline-2 focus-within:outline-offset-2",
+                    isDisabled && "cursor-not-allowed opacity-50"
+                )}
+                style={{ backgroundColor: colorHex }}
+                onPointerEnter={() => setIsHovered(true)}
+                onPointerLeave={() => setIsHovered(false)}
+            >
+                <AnimatePresence initial={false} mode="wait">
+                    {isHovered && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15, ease: "easeInOut" }}
+                            className="absolute inset-0 bg-black/50 flex items-center justify-center"
+                        >
+                            <AiOutlineEdit className="w-6 h-6 text-white/80" />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </label>
+
+            <div className="mt-1">
+                {description && (
+                    <div className="text-neutral-500 text-sm">
+                        {description} {link && <Link href={link} target="_blank" className="text-violet-400 hover:underline">Learn more</Link>}
+                    </div>
+                )}
+
+                {error && (
+                    <div className="text-red-500 text-sm">
                         {error}
                     </div>
-                }
+                )}
             </div>
-
         </div>
     );
 }

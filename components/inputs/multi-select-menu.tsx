@@ -1,18 +1,21 @@
-import type { ApiError } from "@/typings";
+"use client";
+
 import { cn } from "@/utils/cn";
-import { useEffect, useState } from "react";
-import { HiCheck, HiChevronDown, HiExclamationCircle, HiX } from "react-icons/hi";
+import { type InputProps, InputState, useInput } from "@/utils/input";
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { HiChevronDown, HiExclamationCircle, HiX } from "react-icons/hi";
 import { TailSpin } from "react-loading-icons";
 
-import { ClickOutside } from "../click-outside";
+import { Badge } from "../ui/badge";
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuTrigger
+} from "../ui/dropdown-menu";
 
-enum State {
-    Idle = 0,
-    Loading = 1,
-    Success = 2
-}
-
-interface Item<T extends string | number> {
+export interface MultiSelectItem<T extends string | number> {
     icon?: React.ReactNode;
     name: string;
     value: T;
@@ -21,224 +24,233 @@ interface Item<T extends string | number> {
 }
 
 interface Props<T extends string | number> {
-    className?: string;
-
-    name: string;
-    url?: string;
-    dataName?: string;
-    items: Item<T>[];
-    disabled?: boolean;
+    link?: string;
+    badge?: string;
+    items: MultiSelectItem<T>[];
     max?: number;
-    description?: string;
-    defaultState?: T[];
-
-    onSave?: (options: { name: string; value: T; error?: string; }[]) => void;
 }
 
-export default function MultiSelectMenu<T extends string | number>({
+export default function InputMultiSelect<T extends string | number>({
     className,
-    name,
-    url,
-    dataName,
-    items = [],
-    disabled,
-    max = Infinity,
+
+    label,
+    name, // @deprecated - use label instead
+    link,
+    badge,
     description,
+    disabled,
+    items = [],
+    max = Infinity,
+
+    endpoint,
+    url, // @deprecated - use endpoint instead
+    k,
+    dataName, // @deprecated - use k instead
+
     defaultState,
+    transform,
+
     onSave
-}: Props<T>) {
-    const [state, setState] = useState<State>(State.Idle);
-    const [error, setError] = useState<string | null>(null);
+}: InputProps<T[]> & Props<T>) {
+    const {
+        value,
+        state,
+        error,
+        update,
+        save
+    } = useInput({
+        endpoint,
+        url,
+        k,
+        dataName,
 
-    const [open, setOpen] = useState<boolean>(false);
-    const [defaultvalue, setDefaultalue] = useState<T[]>([]);
-    const [values, setValues] = useState<Item<T>[]>([]);
+        defaultState,
+        transform,
 
+        onSave,
+        manual: true // Save only when menu closes or after debounce
+    });
+
+    const [open, setOpen] = useState(false);
+    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+    const valueRef = useRef(value);
+
+    // Keep valueRef in sync
     useEffect(() => {
-        if (!defaultState) return;
+        valueRef.current = value;
+    }, [value]);
 
-        setValues(items.filter((i) => defaultState?.includes(i.value)));
-        setDefaultalue(defaultState);
-    }, [defaultState, items]);
+    // Debounce save after 5 seconds of inactivity while menu is open
+    const debouncedSave = useCallback(() => {
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+        debounceRef.current = setTimeout(() => {
+            save();
+        }, 5_000);
+    }, [save]);
 
+    // Clear debounce on unmount
     useEffect(() => {
-        if (values.some((v) => Boolean(v.error)) || JSON.stringify(values.map((v) => v.value)) === JSON.stringify(defaultvalue)) {
-            setState(State.Idle);
-            return;
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
+    }, []);
+
+    const selectedItems = items.filter((i) => value.includes(i.value));
+
+    const handleToggle = (item: MultiSelectItem<T>) => {
+        if (item.error) return;
+
+        const isSelected = value.includes(item.value);
+
+        if (isSelected) {
+            update(value.filter((v) => v !== item.value));
+        } else if (value.length < max) {
+            update([...value, item.value]);
         }
 
-        setError(null);
+        // Trigger debounced save
+        debouncedSave();
+    };
 
-        if (!url) {
-            if (!onSave) throw new Error("Warning: <MultiSelectMenu.onSave> must be defined when not using <MultiSelectMenu.url>.");
-            onSave(values);
-            setState(State.Idle);
-            return;
+    const handleRemove = (e: React.PointerEvent, itemValue: T) => {
+        // Prevent the dropdown from opening
+        e.preventDefault();
+        e.stopPropagation();
+        update(value.filter((v) => v !== itemValue));
+        // Save immediately when removing via X button (menu is closed)
+        setTimeout(() => save(), 0);
+    };
+
+    const handleOpenChange = (isOpen: boolean) => {
+        setOpen(isOpen);
+
+        if (!isOpen) {
+            // Menu closed - save and clear any pending debounce
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+                debounceRef.current = null;
+            }
+            save();
         }
+    };
 
-        if (!dataName) throw new Error("Warning: <MultiSelectMenu.dataName> must be defined when using <MultiSelectMenu.url>.");
-
-        setState(State.Loading);
-
-        fetch(`${process.env.NEXT_PUBLIC_API}${url}`, {
-            method: "PATCH",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dataName.includes(".") ?
-                { [dataName.split(".")[0]]: { [dataName.split(".")[1]]: values.map((v) => v.value) } }
-                :
-                { [dataName]: values.map((v) => v.value) }
-            )
-        })
-            .then(async (res) => {
-                const response = await res.json();
-                if (!response) return;
-
-                switch (res.status) {
-                    case 200: {
-                        onSave?.(values);
-                        setState(State.Success);
-                        setTimeout(() => setState(State.Idle), 1_000 * 8);
-                        break;
-                    }
-                    default: {
-                        setState(State.Idle);
-                        setError((response as unknown as ApiError).message);
-                        break;
-                    }
-                }
-
-            })
-            .catch(() => {
-                setState(State.Idle);
-                setError("Error while updating");
-            });
-
-    }, [open]);
+    const isDisabled = state === InputState.Loading || disabled;
+    const hasErrors = selectedItems.some((v) => Boolean(v.error));
 
     return (
-        <div className={cn("select-none w-full max-w-full mb-3 relative", className)}>
-            <div className="flex items-center gap-2">
-                <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{name}</span>
-                {state === State.Loading && <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />}
+        <div className={cn("select-none w-full max-w-full relative", description && "mb-2", className)}>
+            <div className="flex items-center gap-2 mb-1">
+                <span className="sm:text-lg font-medium text-neutral-100">
+                    {label || name}
+                </span>
+
+                {badge && (
+                    <Badge variant="flat" size="sm">
+                        {badge}
+                    </Badge>
+                )}
+
+                {state === InputState.Loading && (
+                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                )}
             </div>
 
-            <button
-                className={cn(
-                    "mt-1 min-h-12 w-full bg-wamellow rounded-lg flex items-center px-3 duration-100 wamellow-modal",
-                    open && "outline-solid outline-violet-400 outline-2",
-                    (values.some((v) => Boolean(v.error)) || error) && !open && "outline-solid outline-red-500 outline-1",
-                    state === State.Success && !open && "outline-solid outline-green-500 outline-1",
-                    (state === State.Loading || disabled) && "cursor-not-allowed opacity-50"
-                )}
-                onClick={() => {
-                    setOpen(!open);
-                    if (!open) setDefaultalue(values.map((v) => v.value));
-                }}
-                disabled={state === State.Loading || disabled}
-            >
-                <div
+            <DropdownMenu open={open} onOpenChange={handleOpenChange}>
+                <DropdownMenuTrigger
                     className={cn(
-                        "flex flex-wrap overflow-x-hidden gap-1 py-3 dark:text-neutral-600 text-neutral-400",
-                        values.length && "dark:text-neutral-300 text-neutral-700"
+                        "min-h-12 w-full dark:bg-wamellow bg-wamellow-100 rounded-lg flex items-center px-3 text-left",
+                        "focus:outline-violet-400 focus:outline-2 focus:outline-offset-2",
+                        hasErrors && "outline-solid outline-red-500 outline-1",
+                        state === InputState.Success && "outline-solid outline-green-500 outline-1",
+                        isDisabled && "cursor-not-allowed opacity-50"
                     )}
+                    disabled={isDisabled}
                 >
-                    {!values.length && <span>Select..</span>}
-                    {values.map((v) => (
-                        <button
-                            key={"multiselected-" + v.value}
-                            className={cn(
-                                "relative px-2 bg-wamellow rounded-md flex items-center gap-1 wamellow-modal",
-                                open && "hover:bg-red-500/50! text-neutral-100 duration-200"
-                            )}
-                            onClick={(e) => {
-                                if (!open) return;
-                                e.stopPropagation();
-                                setValues((_v) => {
-                                    return _v.filter((i) => i.value !== v.value);
-                                });
-                            }}
-                        >
-                            {v.icon && <span>{v.icon}</span>}
-                            <span>{v.name}</span>
-                            {open && <HiX className="h-4 w-4" />}
-                        </button>
-                    ))}
-                </div>
-                <div className="ml-auto flex items-center gap-2">
-                    {values.some((v) => Boolean(v.error)) &&
-                        <div className="text-sm flex items-center gap-1 text-red-500">
-                            <HiExclamationCircle /> {values.find((v) => v.error)?.error}
-                        </div>
-                    }
-                    {max !== Infinity &&
-                        <span className="dark:text-neutral-600 text-neutral-400">
-                            {values.length}/{max}
-                        </span>
-                    }
-                    <HiChevronDown />
-                </div>
-            </button>
+                    <div
+                        className={cn(
+                            "flex flex-wrap overflow-x-hidden gap-1 py-2",
+                            selectedItems.length ? "text-neutral-100" : "text-neutral-500"
+                        )}
+                    >
+                        {!selectedItems.length && <span>Select..</span>}
+                        {selectedItems.map((item) => (
+                            <button
+                                key={"multiselected-" + item.value}
+                                className={cn(
+                                    "relative px-2 py-0.5 bg-wamellow rounded-md flex items-center gap-1",
+                                    "hover:bg-red-500/50 text-neutral-100 duration-200 group"
+                                )}
+                                onPointerDown={(e) => handleRemove(e, item.value)}
+                            >
+                                {item.icon && <span className="group-hover:hidden">{item.icon}</span>}
+                                <HiX className="size-4 hidden group-hover:block" />
+                                <span>{item.name}</span>
+                            </button>
+                        ))}
+                    </div>
 
-            {open &&
-                <div className="absolute mt-2 w-full bg-wamellow backdrop-blur-lg backdrop-brightness-50 rounded-lg max-h-40 overflow-y-scroll shadow-lg z-20 wamellow-modal">
-                    <ClickOutside onClose={(() => setOpen(false))} />
+                    <div className="ml-auto flex items-center gap-2">
+                        {hasErrors && (
+                            <div className="text-sm flex items-center gap-1 text-red-500">
+                                <HiExclamationCircle /> {selectedItems.find((v) => v.error)?.error}
+                            </div>
+                        )}
+                        {max !== Infinity && (
+                            <span className="text-neutral-500">
+                                {value.length}/{max}
+                            </span>
+                        )}
+                        <HiChevronDown />
+                    </div>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-[var(--radix-dropdown-menu-trigger-width)] max-h-40">
                     {items.map((item) => (
-                        <button
+                        <DropdownMenuCheckboxItem
+                            key={"multiselect-" + item.value}
                             className={cn(
-                                "p-4 py-2 w-full text-left duration-200 flex items-center hover:bg-wamellow",
+                                "cursor-pointer",
                                 item.error && "dark:bg-red-500/10 dark:hover:bg-red-500/25 bg-red-500/30 hover:bg-red-500/40"
                             )}
                             style={item.color ? { color: `#${item.color.toString(16)}` } : {}}
-                            key={"multiselect-" + item.value}
-                            onClick={() => {
-                                setState(State.Idle);
-                                setValues((v) => {
-                                    if (v.length >= max || v.some((i) => i.value === item.value)) return v.filter((i) => i.value !== item.value);
-                                    return [...v, item];
-                                });
-                            }}
+                            checked={value.includes(item.value)}
+                            onCheckedChange={() => handleToggle(item)}
+                            onSelect={(e) => e.preventDefault()} // Prevent menu from closing
+                            disabled={Boolean(item.error) || (!value.includes(item.value) && value.length >= max)}
                         >
-                            {item?.icon &&
-                                <span className="mr-2">
-                                    {item?.icon}
-                                </span>
-                            }
+                            {item.icon && <span className="mr-2">{item.icon}</span>}
 
                             <span className="max-w-[calc(100%-1rem)] truncate">
                                 {item.name}
                             </span>
 
-                            {values.find((v) => v.value === item.value) &&
-                                <HiCheck className="relative left-1 top-px" />
-                            }
-
-                            {item.error &&
+                            {item.error && (
                                 <div className="ml-auto text-sm flex items-center gap-1 text-red-500">
                                     <HiExclamationCircle /> {item.error}
                                 </div>
-                            }
-                        </button>
+                            )}
+                        </DropdownMenuCheckboxItem>
                     ))}
-                </div>
-            }
+                </DropdownMenuContent>
+            </DropdownMenu>
 
-            <div className={cn("mt-1 flex md:block", open && "opacity-0")}>
-                {description &&
-                    <div className="dark:text-neutral-500 text-neutral-400 text-sm">
-                        {description}
+            <div className="mt-1">
+                {description && (
+                    <div className="text-neutral-500 text-sm">
+                        {description} {link && <Link href={link} target="_blank" className="text-violet-400 hover:underline">Learn more</Link>}
                     </div>
-                }
+                )}
 
-                {error &&
-                    <div className="ml-auto text-red-500 text-sm">
+                {error && (
+                    <div className="text-red-500 text-sm">
                         {error}
                     </div>
-                }
+                )}
             </div>
-
         </div>
     );
 }

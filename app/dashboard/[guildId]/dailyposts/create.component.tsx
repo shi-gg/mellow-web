@@ -95,7 +95,7 @@ export function CreateDailypost({
                 items={createSelectableItems(channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
                 description="Select a channel where dailyposts should be send into."
                 onSave={(o) => {
-                    setChannelId(o.value as string);
+                    setChannelId(o as string);
                 }}
             />
 
@@ -103,14 +103,14 @@ export function CreateDailypost({
                 name="Run at"
                 items={hoursArray}
                 description="Select one or multiple hours when posts should be made."
+                defaultState={hours}
                 onSave={(o) => {
-                    setHours(o.map((i) => i.value));
+                    setHours(o);
                 }}
             />
 
             <SelectMenu
                 name="Type"
-                dataName="type"
                 items={
                     Object.entries(DailypostType)
                         .filter(([key]) => key.length > 2)
@@ -118,7 +118,7 @@ export function CreateDailypost({
                 }
                 description="Select what type of content should be posted daily."
                 onSave={(o) => {
-                    setType(o.value as number);
+                    setType(o as number);
                 }}
             />
         </Modal>

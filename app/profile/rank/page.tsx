@@ -1,9 +1,9 @@
 "use client";
 
 import { type User, userStore } from "@/common/user";
+import ColorInput from "@/components/inputs/color-input";
 import ImageUrlInput from "@/components/inputs/image-url-input";
 import SelectInput from "@/components/inputs/select-menu";
-import TextInput from "@/components/inputs/text-input";
 import { Section } from "@/components/section";
 import { deepMerge } from "@/utils/deepMerge";
 
@@ -43,20 +43,19 @@ export default function Home() {
                         }
                     ]}
                     defaultState={user?.extended?.rank?.subText?.type}
-                    onSave={(options) => {
-                        userStore.setState(deepMerge<User>(user, { extended: { rank: { subText: { type: Number(options.value) as 0 | 1 | 2 | 3 } } } }));
+                    onSave={(value) => {
+                        userStore.setState(deepMerge<User>(user, { extended: { rank: { subText: { type: Number(value) as 0 | 1 | 2 | 3 } } } }));
                     }}
                 />
             </div>
 
             <div className="lg:w-1/2 flex gap-2 w-full">
                 <div className="w-1/2">
-                    <TextInput
+                    <ColorInput
                         name="Text color"
                         url="/users/@me/rank"
                         dataName="textColor"
                         description="Color used for your username."
-                        type="color"
                         defaultState={user?.extended?.rank?.textColor ?? 0}
                         onSave={(value) => {
                             userStore.setState(deepMerge<User>(user, { extended: { rank: { textColor: Number(value) } } }));
@@ -64,12 +63,11 @@ export default function Home() {
                     />
                 </div>
                 <div className="w-1/2">
-                    <TextInput
+                    <ColorInput
                         name="Bar color"
                         url="/users/@me/rank"
                         dataName="barColor"
                         description="Color used for the progress bar."
-                        type="color"
                         defaultState={user?.extended?.rank?.barColor ?? 0}
                         onSave={(value) => {
                             userStore.setState(deepMerge<User>(user, { extended: { rank: { barColor: Number(value) } } }));

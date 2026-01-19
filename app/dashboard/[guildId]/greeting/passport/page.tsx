@@ -70,7 +70,7 @@ export default function Home() {
             description="Select the channel where verification logs should be send into."
             defaultState={data.channelId}
             disabled={!enabled}
-            onSave={(o) => edit("channelId", o.value)}
+            onSave={(o) => edit("channelId", o as string)}
         />
 
         <div className="lg:flex gap-3">
@@ -84,7 +84,7 @@ export default function Home() {
                     defaultState={data.unverifiedRoleId}
                     showClear
                     disabled={!enabled}
-                    onSave={(o) => edit("unverifiedRoleId", o.value)}
+                    onSave={(o) => edit("unverifiedRoleId", o as string)}
                 />
             </div>
 
@@ -97,7 +97,7 @@ export default function Home() {
                     description="Select what role members should get when completing verification."
                     defaultState={data.successRoleId}
                     disabled={!enabled}
-                    onSave={(o) => edit("successRoleId", o.value)}
+                    onSave={(o) => edit("successRoleId", o as string)}
                 />
             </div>
         </div>
@@ -116,7 +116,7 @@ export default function Home() {
                     description="Choose what should happen if a member failes verification."
                     defaultState={data.punishment}
                     disabled={!enabled}
-                    onSave={(o) => edit("punishment", o.value as ApiV1GuildsModulesPassportGetResponse["punishment"])}
+                    onSave={(o) => edit("punishment", o as ApiV1GuildsModulesPassportGetResponse["punishment"])}
                 />
             </div>
 
@@ -129,7 +129,7 @@ export default function Home() {
                     description="Select what role members should get when failing verification."
                     defaultState={data.punishmentRoleId}
                     disabled={!enabled || data.punishment !== 2}
-                    onSave={(o) => edit("punishmentRoleId", o.value)}
+                    onSave={(o) => edit("punishmentRoleId", o as string)}
                 />
             </div>
         </div>

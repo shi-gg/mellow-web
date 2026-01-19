@@ -43,7 +43,7 @@ export default function Home() {
 
     return (<>
         <div className="flex flex-col-reverse md:flex-row gap-6">
-            <div>
+            <div className="w-full">
                 <OverviewLink
                     title="View Leaderboard"
                     message="Easily access and view the top chatters, voice timers, and inviters from this server in the web."

@@ -2,7 +2,7 @@
 import { guildStore } from "@/common/guilds";
 import { DiscordMarkdown } from "@/components/discord/markdown";
 import DiscordMessage from "@/components/discord/message";
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import Modal from "@/components/modal";
 import { Section } from "@/components/section";
 import { UserAvatar } from "@/components/ui/avatar";
@@ -200,7 +200,7 @@ export function ChangeStyleModal({
             }}
             isDisabled={!name || Boolean(error)}
         >
-            <DumbTextInput
+            <ControlledInput
                 name="Username"
                 placeholder="DarkViperAU"
                 value={name}

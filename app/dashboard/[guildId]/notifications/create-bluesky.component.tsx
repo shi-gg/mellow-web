@@ -1,7 +1,7 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import SelectMenu from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { Section } from "@/components/section";
@@ -80,7 +80,7 @@ export function BlueskyNotificationModal({
             }}
             isDisabled={!name || !channelId}
         >
-            <DumbTextInput
+            <ControlledInput
                 name="Bluesky user"
                 placeholder="wamellow.bsky.social"
                 value={name}
@@ -88,12 +88,11 @@ export function BlueskyNotificationModal({
             />
 
             <SelectMenu
-                name="Channel"
-                dataName="channelId"
+                label="Channel"
                 items={createSelectableItems(channels)}
                 description="Select a channel where notifications should be send into."
                 onSave={(o) => {
-                    setChannelId(o.value as string);
+                    setChannelId(o as string);
                 }}
             />
 

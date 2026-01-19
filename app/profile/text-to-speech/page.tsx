@@ -28,8 +28,8 @@ export default function Home() {
                             value: voice
                         }))}
                         defaultState={user?.extended?.voice}
-                        onSave={(options) => {
-                            userStore.setState(deepMerge<User>(user, { extended: { voice: options.value as keyof typeof actor } }));
+                        onSave={(value) => {
+                            userStore.setState(deepMerge<User>(user, { extended: { voice: value as keyof typeof actor } }));
                         }}
                     />
                     <Switch

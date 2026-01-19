@@ -1,7 +1,7 @@
 "use client";
 
 import ImageReduceMotion from "@/components/image-reduce-motion";
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import { ScreenMessage } from "@/components/screen-message";
 import { Button } from "@/components/ui/button";
 import { useApi } from "@/lib/api/hook";
@@ -54,15 +54,12 @@ export default function Home() {
 
     return (<div className="flex flex-col w-full">
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-            <div className="relative top-2 w-full">
-                <DumbTextInput
-                    value={search}
-                    setValue={setSearch}
-                    placeholder="Search by name or id"
-                    thin
-                />
-            </div>
+        <div className="flex flex-col md:flex-row md:justify-between gap-2">
+            <ControlledInput
+                value={search}
+                setValue={setSearch}
+                placeholder="Search by name or id"
+            />
 
             <div className="flex gap-2 md:mt-0">
                 <Button

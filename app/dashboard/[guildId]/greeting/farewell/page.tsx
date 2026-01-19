@@ -68,7 +68,7 @@ export default function Home() {
                 description="Select the channel where the farewell message should be send into"
                 defaultState={data.channelId}
                 disabled={!enabled}
-                onSave={(o) => edit("channelId", o.value)}
+                onSave={(o) => edit("channelId", o as string)}
             />
 
             <Fetch

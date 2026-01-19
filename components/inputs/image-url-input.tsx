@@ -1,175 +1,200 @@
-import type { ApiError } from "@/typings";
+"use client";
+
 import { cn } from "@/utils/cn";
-import { useEffect, useState } from "react";
+import { type InputProps, InputState, useInput } from "@/utils/input";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { TailSpin } from "react-loading-icons";
 
-import DumbTextInput from "./dumb-text-input";
-
-enum State {
-    Idle = 0,
-    Loading = 1,
-    Success = 2
-}
+import { Badge } from "../ui/badge";
+import { Input } from "../ui/input";
 
 enum ImageState {
-    Errored = 1,
-    Success = 2
+    Idle = 0,
+    Loading = 1,
+    Errored = 2,
+    Success = 3
 }
 
 interface Props {
-    name: string;
-    url: string;
-    dataName: string;
-    disabled?: boolean;
-    description?: string;
-    defaultState: string;
-    ratio: `aspect-${number}/${number}`;
-
-    onSave?: (value: string) => void;
+    link?: string;
+    badge?: string;
+    ratio?: `aspect-${string}`;
 }
 
-export default function ImageUrlInput({
-    name,
-    url,
-    dataName,
-    disabled,
+export default function InputImageUrl({
+    className,
+
+    label,
+    link,
+    badge,
     description,
+    disabled,
+    ratio = "aspect-[906/256]",
+
+    endpoint,
+    url, // @deprecated - use endpoint instead
+    k,
+    dataName, // @deprecated - use k instead
+
     defaultState,
-    onSave,
-    ratio
-}: Props) {
-    const [state, setState] = useState<State>(State.Idle);
-    const [error, setError] = useState<string | null>(null);
+    transform,
 
-    const [value, setValue] = useState<string>("");
-    const [defaultStatealue, setdefaultStatealue] = useState<string>("");
-    const [imagestate, setImagestate] = useState<ImageState | undefined>(undefined);
+    onSave
+}: InputProps<string> & Props) {
+    const {
+        value,
+        state,
+        error,
+        update,
+        save
+    } = useInput({
+        endpoint,
+        url,
+        k,
+        dataName,
 
+        defaultState,
+        transform: transform ?? ((v) => v || null),
+
+        onSave,
+        manual: true // Only save when image loads successfully
+    });
+
+    const [imageState, setImageState] = useState<ImageState>(ImageState.Idle);
+    const [debouncedUrl, setDebouncedUrl] = useState(value);
+    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+    const saveRef = useRef(save);
+
+    // Keep saveRef current
     useEffect(() => {
-        if (!defaultStatealue) setdefaultStatealue(defaultState);
-        setValue(defaultState);
-    }, [defaultState]);
+        saveRef.current = save;
+    }, [save]);
 
+    // Debounce URL changes before attempting to load image
     useEffect(() => {
-        if (!value?.length) setImagestate(ImageState.Success);
+        if (debounceRef.current) {
+            clearTimeout(debounceRef.current);
+        }
+
+        // If empty, update immediately
+        if (!value?.length) {
+            setDebouncedUrl(value);
+            setImageState(ImageState.Idle);
+            return;
+        }
+
+        // Set loading state while debouncing
+        setImageState(ImageState.Loading);
+
+        debounceRef.current = setTimeout(() => {
+            setDebouncedUrl(value);
+        }, 800);
+
+        return () => {
+            if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+            }
+        };
     }, [value]);
 
-    useEffect(() => {
-        if (imagestate !== ImageState.Success || defaultStatealue === value) return;
-        setError(null);
-        setState(State.Loading);
+    const handleImageLoad = () => {
+        setImageState(ImageState.Success);
+        // Image loaded successfully, now save
+        saveRef.current();
+    };
 
-        fetch(`${process.env.NEXT_PUBLIC_API}${url}`, {
-            method: "PATCH",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(dataName.includes(".") ?
-                { [dataName.split(".")[0]]: { [dataName.split(".")[1]]: value || null } }
-                :
-                { [dataName]: value || null }
-            )
-        })
-            .then(async (res) => {
-                const response = await res.json();
-                if (!response) return;
+    const handleImageError = () => {
+        setImageState(ImageState.Errored);
+        // Don't save - image failed to load
+    };
 
-                switch (res.status) {
-                    case 200: {
-                        setValue(value);
-                        setdefaultStatealue(value);
-                        onSave?.(value);
-
-                        setState(State.Success);
-                        setTimeout(() => setState(State.Idle), 1_000 * 8);
-                        break;
-                    }
-                    default: {
-                        setState(State.Idle);
-                        setError((response as unknown as ApiError).message);
-                        break;
-                    }
-                }
-
-            })
-            .catch(() => {
-                setState(State.Idle);
-                setError("Error while updatung");
-            });
-
-    }, [imagestate]);
+    const isDisabled = state === InputState.Loading || disabled;
 
     return (
-        <div className="relative">
+        <div className={cn("relative w-full", description && "mb-2", className)}>
+            <div className="flex items-center gap-2 mb-1">
+                <span className="sm:text-lg font-medium text-neutral-100">
+                    {label}
+                </span>
 
-            <div className="flex items-center gap-2">
-                <span className="text-lg dark:text-neutral-300 text-neutral-700 font-medium">{name}</span>
-                {state === State.Loading && <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />}
+                {badge && (
+                    <Badge variant="flat" size="sm">
+                        {badge}
+                    </Badge>
+                )}
+
+                {state === InputState.Loading && (
+                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                )}
             </div>
 
-            <div className="lg:flex mt-1 w-full gap-4">
+            <div className="lg:flex w-full gap-4">
+                <div className="flex-1">
+                    <Input
+                        className="dark:bg-wamellow bg-wamellow-100 border-none h-12"
+                        placeholder="Paste a direct image url..."
+                        value={value || ""}
+                        onChange={(e) => update(e.target.value)}
+                        disabled={isDisabled}
+                        maxLength={256}
+                    />
 
-                <DumbTextInput
-                    value={value}
-                    setValue={(v) => {
-                        setValue(v);
-                        setState(State.Idle);
-                        if (imagestate === ImageState.Success) setImagestate(undefined);
-                    }}
-                    disabled={disabled}
-                    placeholder="Paste a direct image url..."
-                    max={256}
-                    description={description + " At this time, only .PNG files are supported."}
-                />
+                    {description && (
+                        <div className="text-neutral-500 text-sm mt-1">
+                            {description}
+                            {link && <> <Link href={link} target="_blank" className="text-violet-400 hover:underline">Learn more</Link></>}
+                        </div>
+                    )}
 
-                <div className="max-w-1/2 w-full">
+                    {error && (
+                        <div className="text-red-500 text-sm mt-1">
+                            {error}
+                        </div>
+                    )}
+                </div>
 
-                    {value && imagestate !== ImageState.Errored ?
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                            src={value}
-                            alt="upload"
-                            className={cn("rounded-lg w-full h-full object-cover aspect-906/256", ratio)}
-                            onError={() => setImagestate(ImageState.Errored)}
-                            onLoad={() => setImagestate(ImageState.Success)}
-                        />
-                        :
+                <div className="lg:max-w-1/2 w-full mt-2 lg:mt-0">
+                    {debouncedUrl && imageState !== ImageState.Errored ? (
+                        <div className="relative">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={debouncedUrl}
+                                alt="Preview"
+                                className={cn(
+                                    "rounded-lg w-full h-full object-cover",
+                                    ratio,
+                                    imageState === ImageState.Loading && "opacity-50"
+                                )}
+                                onError={handleImageError}
+                                onLoad={handleImageLoad}
+                            />
+                            {imageState === ImageState.Loading && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="h-8 w-8" />
+                                </div>
+                            )}
+                        </div>
+                    ) : (
                         <div className={cn(
-                            "w-full border-2 rounded-md flex items-center justify-center dark:border-wamellow border-wamellow-100",
-                            imagestate === ImageState.Errored && "dark:border-red-500 border-red-300",
+                            "w-full border-2 rounded-lg flex items-center justify-center dark:border-wamellow border-wamellow-100",
+                            imageState === ImageState.Errored && "dark:border-red-500 border-red-300",
                             ratio
                         )}>
-                            {imagestate === ImageState.Errored ?
-                                <div className="text-red-400 m-4">
+                            {imageState === ImageState.Errored ? (
+                                <div className="text-red-400 m-4 text-center">
                                     <div className="font-medium">Enter a valid image url!</div>
-                                    <div className="text-xs">
+                                    <div className="text-xs mt-1">
                                         <div>Recommended resolution: 1024x256</div>
                                         <div>Supported types: .png, .jpg, .jpeg, .webp</div>
                                     </div>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={value}
-                                        className="w-0 h-0"
-                                        onLoad={() => setImagestate(ImageState.Success)}
-                                    />
                                 </div>
-                                :
-                                <span className="text-neutral-400">Enter a image url to preview</span>
-                            }
+                            ) : (
+                                <span className="text-neutral-400">Enter an image url to preview</span>
+                            )}
                         </div>
-                    }
-
+                    )}
                 </div>
-
-            </div>
-
-            <div className="flex">
-                {error && (
-                    <div className="ml-auto text-red-500 text-sm">
-                        {error}
-                    </div>
-                )}
             </div>
         </div>
     );

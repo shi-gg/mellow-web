@@ -1,6 +1,6 @@
 "use client";
 
-import DumbTextInput from "@/components/inputs/dumb-text-input";
+import { ControlledInput } from "@/components/inputs/controlled-input";
 import Modal from "@/components/modal";
 import Notice, { NoticeType } from "@/components/notice";
 import { ScreenMessage } from "@/components/screen-message";
@@ -135,7 +135,7 @@ function BlueskyConnectPDS() {
                 }}
                 buttonName="Continue"
             >
-                <DumbTextInput
+                <ControlledInput
                     name="Your Bluesky or Atproto Handle"
                     placeholder="shi.gg"
                     value={handle}

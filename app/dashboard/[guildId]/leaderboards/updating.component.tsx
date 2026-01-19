@@ -171,7 +171,7 @@ export default function UpdatingLeaderboardCard({
                 items={createSelectableItems(guild.channels, ["ViewChannel", "SendMessages", "EmbedLinks", "AttachFiles"])}
                 description="Select a channel where the leaderboard should be send into."
                 defaultState={leaderboard?.channelId}
-                onSave={(o) => setChannelId(o.value as string)}
+                onSave={(o) => setChannelId(o as string)}
             />
 
             <div className="mb-3">
@@ -211,7 +211,7 @@ export default function UpdatingLeaderboardCard({
                         onSave={(v) => {
                             setEmbed({
                                 ...embed,
-                                title: v as string
+                                title: v
                             });
                         }}
                     />
@@ -223,7 +223,7 @@ export default function UpdatingLeaderboardCard({
                         items={stylesList}
                         defaultState={leaderboard?.styles?.rank || undefined}
                         onSave={(o) => {
-                            setStyles({ ...styles, rank: o.value as null });
+                            setStyles({ ...styles, rank: o as null });
                         }}
                     />
                     <SelectInput
@@ -231,7 +231,7 @@ export default function UpdatingLeaderboardCard({
                         items={stylesList}
                         defaultState={leaderboard?.styles?.number || undefined}
                         onSave={(o) => {
-                            setStyles({ ...styles, number: o.value as null });
+                            setStyles({ ...styles, number: o as null });
                         }}
                     />
                     <SelectInput
@@ -239,7 +239,7 @@ export default function UpdatingLeaderboardCard({
                         items={stylesList}
                         defaultState={leaderboard?.styles?.user || undefined}
                         onSave={(o) => {
-                            setStyles({ ...styles, user: o.value as null });
+                            setStyles({ ...styles, user: o as null });
                         }}
                     />
                 </div>
@@ -256,7 +256,7 @@ export default function UpdatingLeaderboardCard({
                     defaultState={leaderboard?.display}
                     showClear
                     onSave={(o) => {
-                        setDisplay(o.value as ApiV1GuildsModulesLeaderboardUpdatingPostResponse["display"]);
+                        setDisplay(o as ApiV1GuildsModulesLeaderboardUpdatingPostResponse["display"]);
                     }}
                 />
 
@@ -267,7 +267,7 @@ export default function UpdatingLeaderboardCard({
                     defaultState={leaderboard?.emoji || undefined}
                     showClear
                     onSave={(o) => {
-                        setEmoji(o.value as string);
+                        setEmoji(o as string);
                     }}
                 />
 

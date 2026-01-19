@@ -143,7 +143,7 @@ export default function Home() {
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
                 description="Select a channel where dailyposts should be send into."
                 defaultState={item.channelId}
-                onSave={(o) => editItem("channelId", o.value as string)}
+                onSave={(o) => editItem("channelId", o as string)}
             />
 
             {/* <Fetch
@@ -169,7 +169,7 @@ export default function Home() {
                 ]}
                 description="Select a role which should get pinged on posts."
                 defaultState={item.roleId}
-                onSave={(o) => editItem("roleId", o.value as string)}
+                onSave={(o) => editItem("roleId", o as string)}
                 showClear
             />
             <MultiSelectMenu

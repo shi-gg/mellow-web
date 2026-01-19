@@ -171,7 +171,7 @@ export default function Home() {
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "EmbedLinks", item.username ? "ManageWebhooks" : null, item.roleId ? "MentionEveryone" : null])}
                 description="Select a channel where notifications should be send into."
                 defaultState={item.channelId}
-                onSave={(o) => editItem("channelId", o.value as string)}
+                onSave={(o) => editItem("channelId", o as string)}
             />
 
             <TestButton
@@ -202,7 +202,7 @@ export default function Home() {
                 ]}
                 description="Select a role which should get pinged on uploads."
                 defaultState={item.roleId}
-                onSave={(o) => editItem("roleId", o.value as string)}
+                onSave={(o) => editItem("roleId", o as string)}
                 showClear
             />
 
@@ -219,7 +219,7 @@ export default function Home() {
                     }
                     defaultState={flags.toArray()}
                     onSave={(o) => {
-                        const flags = o.map((flag) => Number(flag.value));
+                        const flags = o.map((flag) => Number(flag));
                         editItem("flags", flags.reduce((a, b) => a | b, 0));
                     }}
                 />
@@ -236,7 +236,7 @@ export default function Home() {
                         : "Only posts that match the provided regex will be sent."
                     }
                     defaultState={item.regex || ""}
-                    onSave={(value) => editItem("regex", value as string)}
+                    onSave={(value) => editItem("regex", value)}
                 />
             }
         </div>
@@ -255,7 +255,7 @@ export default function Home() {
                     : "Only posts that match the provided regex will be sent."
                 }
                 defaultState={item.regex || ""}
-                onSave={(value) => editItem("regex", value as string)}
+                onSave={(value) => editItem("regex", value)}
             />
         )}
 
