@@ -129,7 +129,14 @@ export function InputSelect<T extends string | number>({
                             </div>
                         )}
                         {selectedItem?.name && showClear && (
-                            <button onClick={handleClear} className="hover:text-neutral-300">
+                            <button
+                                onClick={handleClear}
+                                onPointerDown={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }}
+                                className="hover:text-neutral-300"
+                            >
                                 <HiX />
                             </button>
                         )}
