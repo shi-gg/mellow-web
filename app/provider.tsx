@@ -32,7 +32,7 @@ export function Provider({ children, className }: Props) {
         );
 
         if (!path.startsWith("/dashboard/")) guildStore.setState(undefined);
-    }, [path]);
+    }, [path, cookies]);
 
     return (
         <TooltipProvider>

@@ -24,7 +24,7 @@ export function useApi<T>(url: string, enabled?: boolean) {
                 [key]: value
             } as T));
         },
-        [data]
+        [data, queryClient, url]
     );
 
     if (data && typeof data === "object" && "message" in data && typeof data.message === "string") {

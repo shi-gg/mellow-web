@@ -42,11 +42,14 @@ export function useInput<T>(options: InputOptions<T>) {
     const endpoint = options.endpoint || options.url;
     const k = options.k || options.dataName;
 
-    const defaultStateKey = JSON.stringify(options.defaultState);
-    useEffect(() => {
+    const [prevDefaultState, setPrevDefaultState] = useState(options.defaultState);
+    if (options.defaultState !== prevDefaultState) {
+        setPrevDefaultState(options.defaultState);
         setValue(options.defaultState);
         setSavedValue(options.defaultState);
+    }
 
+    useEffect(() => {
         return () => {
             if (timeout.current) {
                 clearTimeout(timeout.current);
@@ -58,7 +61,7 @@ export function useInput<T>(options: InputOptions<T>) {
                 debounceRef.current = null;
             }
         };
-    }, [defaultStateKey]);
+    }, []);
 
     const save = useCallback(
         async (val?: T) => {
@@ -108,7 +111,7 @@ export function useInput<T>(options: InputOptions<T>) {
             setState(InputState.Success);
             timeout.current = setTimeout(() => setState(InputState.Idle), 1_000 * 8);
         },
-        [options.onSave, endpoint, k, options.transform, value]
+        [options, endpoint, k, value]
     );
 
     const update = useCallback(
@@ -127,7 +130,7 @@ export function useInput<T>(options: InputOptions<T>) {
                 save(val);
             }
         },
-        [options.manual, options.debounceMs, save]
+        [options, save]
     );
 
     return {

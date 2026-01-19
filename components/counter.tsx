@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import CountUp, { type CountUpProps } from "react-countup";
 import { HiInformationCircle } from "react-icons/hi";
 
@@ -11,22 +11,23 @@ export function ClientCountUp(props: Omit<CountUpProps, "duration">) {
     const [isInViewport, setIsInViewport] = useState(false);
     const componentRef = useRef<HTMLDivElement | null>(null);
 
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+    const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
         const [entry] = entries;
         setIsInViewport(entry.isIntersecting);
-    };
+    }, []);
 
     useEffect(() => {
+        const node = componentRef.current;
         const observer = new IntersectionObserver(handleIntersection, {
             threshold: 0.5
         });
 
-        if (componentRef.current) observer.observe(componentRef.current);
+        if (node) observer.observe(node);
 
         return () => {
-            if (componentRef.current) observer.unobserve(componentRef.current);
+            if (node) observer.unobserve(node);
         };
-    }, []);
+    }, [handleIntersection]);
 
     return (
         <span ref={componentRef} className={props.className || ""}>

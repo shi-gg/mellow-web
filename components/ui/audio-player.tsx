@@ -101,7 +101,7 @@ export function AutoPlay({ url }: { url: string; }) {
             id: url,
             src: url
         });
-    }, [url]);
+    }, [url, player]);
 
     return null;
 }

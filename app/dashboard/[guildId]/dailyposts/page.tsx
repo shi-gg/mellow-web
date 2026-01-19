@@ -24,7 +24,7 @@ export default function Home() {
     const params = useParams();
 
     const date = useMemo(() => new Date(), []);
-    const hoursArray = useMemo(() => generateHourArray(date), []);
+    const hoursArray = useMemo(() => generateHourArray(date), [date]);
 
     const url = `/guilds/${params.guildId}/modules/dailyposts` as const;
     const {

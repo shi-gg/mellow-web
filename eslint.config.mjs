@@ -40,10 +40,7 @@ export default tseslint.config(
             ...next.configs.recommended.rules,
             ...next.configs["core-web-vitals"].rules,
 
-            // Fixes
             "react/prop-types": "off",
-            "react-hooks/exhaustive-deps": "off",
-            "react-hooks/preserve-manual-memoization": "off",
 
             // stylistic Rules
             "@stylistic/array-bracket-newline": ["error", "consistent"],

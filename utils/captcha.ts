@@ -12,10 +12,17 @@ export function useCaptcha(path: string, userId?: string) {
     const [error, setError] = useState<string | null>(null);
 
     const button = useRef<HTMLButtonElement | null>(null);
+    const stateRef = useRef(state);
+
+    useEffect(() => {
+        stateRef.current = state;
+    }, [state]);
 
     useEffect(() => {
         if (!userId) return;
         const { init } = gt4init();
+        let clickHandler: (() => void) | null = null;
+        const btn = button.current;
 
         init(
             {
@@ -29,21 +36,22 @@ export function useCaptcha(path: string, userId?: string) {
 
         // @ts-expect-error GeeTest types suck
         function handlerForBind(captcha) {
-            const btn = button.current;
             let isReady = false;
 
             captcha.onReady(() => {
                 isReady = true;
             });
 
-            btn?.addEventListener("click", () => {
-                if (!isReady || state === State.Success) return;
+            clickHandler = () => {
+                if (!isReady || stateRef.current === State.Success) return;
 
                 setState(State.Idle);
                 setError(null);
 
                 captcha.showCaptcha();
-            });
+            };
+
+            btn?.addEventListener("click", clickHandler);
 
             captcha.onSuccess(async () => {
                 setState(State.Loading);
@@ -85,6 +93,10 @@ export function useCaptcha(path: string, userId?: string) {
                 setState(State.Idle);
             });
         }
+
+        return () => {
+            if (clickHandler) btn?.removeEventListener("click", clickHandler);
+        };
     }, [path, userId]);
 
     return { state, error, button };

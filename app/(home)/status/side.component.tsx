@@ -24,7 +24,7 @@ export function Side({
         () => /^\d{15,20}$/.test(guildId)
             ? getClusterId(guildId || "", status.clusters.length)
             : null,
-        [guildId]
+        [guildId, status.clusters.length]
     );
 
     useEffect(() => {

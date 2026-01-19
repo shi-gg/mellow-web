@@ -26,6 +26,7 @@ import { cn } from "@/utils/cn";
 import { toFixedArrayLength } from "@/utils/fixed-array-length";
 import { actor } from "@/utils/tts";
 import { getCanonicalUrl } from "@/utils/urls";
+import dynamic from "next/dynamic";
 import { Montserrat, Patrick_Hand } from "next/font/google";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -35,8 +36,11 @@ import { BsDiscord, BsYoutube } from "react-icons/bs";
 import { HiArrowNarrowRight, HiArrowRight, HiCash, HiCheck, HiFire, HiLockOpen, HiUserAdd } from "react-icons/hi";
 
 import { Commands } from "./commands.component";
-import { Faq } from "./faq.component";
 import { Ratings } from "./ratings.component";
+
+const Faq = dynamic(() => import("./faq.component").then((m) => m.Faq), {
+    ssr: true
+});
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 const handwritten = Patrick_Hand({ subsets: ["latin"], weight: "400" });
@@ -66,11 +70,14 @@ const messageProps = (command?: string) => ({
 });
 
 export default async function Home() {
-    const topGuilds = await fetch(`${process.env.NEXT_PUBLIC_API}/top-guilds`, defaultFetchOptions)
+    const topGuildsPromise = fetch(`${process.env.NEXT_PUBLIC_API}/top-guilds`, defaultFetchOptions)
         .then((res) => res.json())
-        .catch(() => null) as ApiV1TopguildsGetResponse[] | null;
+        .catch(() => null) as Promise<ApiV1TopguildsGetResponse[] | null>;
 
-    const isEmbedded = (await headers()).get("sec-fetch-dest") === "iframe";
+    const heads = await headers();
+    const isEmbedded = heads.get("sec-fetch-dest") === "iframe";
+
+    const topGuilds = await topGuildsPromise;
 
     return (
         <div className="flex items-center flex-col w-full">
@@ -710,7 +717,9 @@ export default async function Home() {
 
             </article>
 
-            <Faq />
+            <Suspense fallback={<Skeleton className="w-full h-96" isLoading={true} />}>
+                <Faq />
+            </Suspense>
 
             <Comment
                 username="Luna’s Grandpa <3"

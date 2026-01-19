@@ -24,7 +24,7 @@ export function ClickOutside({
         return () => {
             document.removeEventListener("click", handleDocumentClick);
         };
-    }, []);
+    }, [onClose]);
 
     return <></>;
 }

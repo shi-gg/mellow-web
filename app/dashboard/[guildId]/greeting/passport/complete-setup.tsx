@@ -4,7 +4,7 @@ import Modal from "@/components/modal";
 import type { ApiEdit } from "@/lib/api/hook";
 import { type ApiV1GuildsModulesPassportGetResponse, GuildFlags } from "@/typings";
 import { createSelectableItems } from "@/utils/create-selectable-items";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 enum ModalType {
     None = 0,
@@ -28,18 +28,17 @@ export default function CompleteSetup({
 
     const enabled = (guild!.flags & GuildFlags.PassportEnabled) !== 0;
 
-    useEffect(() => {
-        if (!enabled) return;
-
-        if (!data.successRoleId) {
-            setModal(ModalType.VerifiedRole);
-            return;
+    const [prevData, setPrevData] = useState(data);
+    if (data !== prevData) {
+        setPrevData(data);
+        if (enabled) {
+            if (!data.successRoleId) {
+                setModal(ModalType.VerifiedRole);
+            } else if (data.punishment === 2 && !data.punishmentRoleId) {
+                setModal(ModalType.PunishmentRole);
+            }
         }
-
-        if (data.punishment === 2 && !data.punishmentRoleId) {
-            setModal(ModalType.PunishmentRole);
-        }
-    }, [data]);
+    }
 
     return (<>
         <Modal

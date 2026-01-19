@@ -22,7 +22,7 @@ export function TTSSettings() {
                 return g;
             });
         },
-        [guild]
+        []
     );
 
     return (

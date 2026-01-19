@@ -48,14 +48,14 @@ export default function Home() {
         return params.toString();
     }, [search]);
 
-    const setTagId = (id: string) => {
+    const setTagId = useCallback((id: string) => {
         router.push(pathname + "?" + createQueryString("id", id));
-    };
+    }, [router, pathname, createQueryString]);
 
     useEffect(() => {
         if (!Array.isArray(data)) return;
         if (data && !tag && data[0]) setTagId(data[0].id);
-    }, [data]);
+    }, [data, tag, setTagId]);
 
     if (error || (data && "message" in data)) {
         return (
