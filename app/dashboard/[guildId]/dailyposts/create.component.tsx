@@ -37,7 +37,7 @@ export function CreateDailypost({
     const [channelId, setChannelId] = useState<string | null>(null);
 
     const date = useMemo(() => new Date(), []);
-    const hoursArray = useMemo(() => generateHourArray(date), []);
+    const hoursArray = useMemo(() => generateHourArray(date), [date]);
 
     return (<>
         {style === Style.Compact

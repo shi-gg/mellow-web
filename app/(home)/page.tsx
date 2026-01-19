@@ -66,11 +66,14 @@ const messageProps = (command?: string) => ({
 });
 
 export default async function Home() {
-    const topGuilds = await fetch(`${process.env.NEXT_PUBLIC_API}/top-guilds`, defaultFetchOptions)
+    const topGuildsPromise = fetch(`${process.env.NEXT_PUBLIC_API}/top-guilds`, defaultFetchOptions)
         .then((res) => res.json())
-        .catch(() => null) as ApiV1TopguildsGetResponse[] | null;
+        .catch(() => null) as Promise<ApiV1TopguildsGetResponse[] | null>;
 
-    const isEmbedded = (await headers()).get("sec-fetch-dest") === "iframe";
+    const heads = await headers();
+    const isEmbedded = heads.get("sec-fetch-dest") === "iframe";
+
+    const topGuilds = await topGuildsPromise;
 
     return (
         <div className="flex items-center flex-col w-full">
@@ -710,7 +713,9 @@ export default async function Home() {
 
             </article>
 
-            <Faq />
+            <Suspense fallback={<Skeleton className="w-full h-96" isLoading={true} />}>
+                <Faq />
+            </Suspense>
 
             <Comment
                 username="Luna’s Grandpa <3"

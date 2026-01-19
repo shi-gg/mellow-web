@@ -10,7 +10,7 @@ import { type ApiError, type ApiV1GuildsGetResponse, type ApiV1GuildsStylePatchR
 import { State } from "@/utils/captcha";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { HiOutlineUpload, HiPencil, HiX } from "react-icons/hi";
 
 const ALLOWED_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp", "image/gif", "image/apng"];
@@ -153,14 +153,15 @@ export function ChangeStyleModal({
     const [banner, setBanner] = useState<ArrayBuffer | string | null>(bannerUrl);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(
-        () => {
-            if (!isOpen) return;
-            setAvatar(avatarUrl);
-            setBanner(bannerUrl);
-        },
-        [isOpen, avatarUrl, bannerUrl]
-    );
+    const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+    if (isOpen && !prevIsOpen) {
+        setPrevIsOpen(true);
+        setName(username);
+        setAvatar(avatarUrl);
+        setBanner(bannerUrl);
+    } else if (!isOpen && prevIsOpen) {
+        setPrevIsOpen(false);
+    }
 
     const render = useCallback(
         (buf: ArrayBuffer | string | null) => !buf || typeof buf === "string"
@@ -169,8 +170,8 @@ export function ChangeStyleModal({
         []
     );
 
-    const renderableAvatar = useMemo(() => render(avatar), [avatar]);
-    const renderableBanner = useMemo(() => render(banner), [banner]);
+    const renderableAvatar = useMemo(() => render(avatar), [avatar, render]);
+    const renderableBanner = useMemo(() => render(banner), [banner, render]);
 
     return (<>
         <Modal<ApiV1GuildsStylePatchResponse>

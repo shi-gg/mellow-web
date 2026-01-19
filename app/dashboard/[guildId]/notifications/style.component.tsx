@@ -11,7 +11,7 @@ import type { ApiError, ApiV1GuildsModulesNotificationsGetResponse, ApiV1GuildsM
 import { State } from "@/utils/captcha";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { HiOutlineUpload, HiPencil, HiSparkles, HiX } from "react-icons/hi";
 
 const ALLOWED_FILE_TYPES = ["image/png", "image/jpeg", "image/webp"];
@@ -157,13 +157,14 @@ export function ChangeStyleModal({
     const [avatar, setAvatar] = useState<ArrayBuffer | string | null>(avatarUrl);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(
-        () => {
-            if (!isOpen) return;
-            setAvatar(avatarUrl);
-        },
-        [isOpen, avatarUrl]
-    );
+    const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+    if (isOpen && !prevIsOpen) {
+        setPrevIsOpen(true);
+        setName(username);
+        setAvatar(avatarUrl);
+    } else if (!isOpen && prevIsOpen) {
+        setPrevIsOpen(false);
+    }
 
     const renderable = useMemo(
         () => !avatar || typeof avatar === "string"

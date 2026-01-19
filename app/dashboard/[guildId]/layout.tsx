@@ -19,13 +19,14 @@ import { useQuery } from "react-query";
 
 function useGuildData<T extends unknown[]>(
     url: string,
+    guildId: string | string[] | undefined,
     onLoad: (data: T, error: boolean) => void
 ) {
     return useQuery(
         url,
         () => getData<T>(url),
         {
-            enabled: Boolean(guildStore((g) => g)?.id),
+            enabled: Boolean(guildId),
             onSettled: (data) => {
                 const isError = !data || "message" in data;
                 onLoad(isError ? [] as unknown as T : data, isError);
@@ -45,7 +46,10 @@ export default function RootLayout({
 
     const [loaded, setLoaded] = useState<string[]>([]);
 
-    const guild = guildStore((g) => g);
+    const guildId = guildStore((g) => g?.id);
+    const guildName = guildStore((g) => g?.name);
+    const guildIcon = guildStore((g) => g?.icon);
+    const guildMemberCount = guildStore((g) => g?.memberCount);
 
     const session = useMemo(() => cookies.get("session"), [cookies]);
 
@@ -65,25 +69,28 @@ export default function RootLayout({
 
     useGuildData<ApiV1GuildsChannelsGetResponse[]>(
         `${url}/channels`,
+        params.guildId,
         (data) => {
-            guildStore.setState({ ...guild, channels: data });
-            setLoaded((loaded) => [...loaded, "channels"]);
+            guildStore.setState((state) => ({ ...state, channels: data }));
+            setLoaded((loaded) => loaded.includes("channels") ? loaded : [...loaded, "channels"]);
         }
     );
 
     useGuildData<ApiV1GuildsRolesGetResponse[]>(
         `${url}/roles`,
+        params.guildId,
         (data) => {
-            guildStore.setState({ ...guild, roles: data });
-            setLoaded((loaded) => [...loaded, "roles"]);
+            guildStore.setState((state) => ({ ...state, roles: data }));
+            setLoaded((loaded) => loaded.includes("roles") ? loaded : [...loaded, "roles"]);
         }
     );
 
     useGuildData<ApiV1GuildsEmojisGetResponse[]>(
         `${url}/emojis`,
+        params.guildId,
         (data) => {
-            guildStore.setState({ ...guild, emojis: data });
-            setLoaded((loaded) => [...loaded, "emojis"]);
+            guildStore.setState((state) => ({ ...state, emojis: data }));
+            setLoaded((loaded) => loaded.includes("emojis") ? loaded : [...loaded, "emojis"]);
         }
     );
 
@@ -91,14 +98,14 @@ export default function RootLayout({
 
     useEffect(() => {
         if (!data || "message" in data) return;
-        guildStore.setState(data);
+        guildStore.setState((state) => ({ ...state, ...data }));
     }, [data]);
 
     return (
         <div className="flex flex-col w-full">
-            {guild?.name && (
+            {guildName && (
                 <Head>
-                    <title>{guild.name}{"'"}s Dashboard</title>
+                    <title>{guildName}{"'"}s Dashboard</title>
                 </Head>
             )}
 
@@ -116,13 +123,13 @@ export default function RootLayout({
 
                 <div className="text-lg flex gap-5">
                     <Skeleton
-                        isLoading={!guild?.id}
+                        isLoading={!guildId}
                         className="rounded-xl size-14 ring-offset-(--background-rgb) ring-2 ring-offset-2 ring-violet-400/40 shrink-0 relative top-1 left-1"
                     >
                         <ImageReduceMotion
                             alt="this server's icon"
                             className="rounded-xl"
-                            url={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}`}
+                            url={`https://cdn.discordapp.com/icons/${guildId}/${guildIcon}`}
                             size={128}
                         />
                     </Skeleton>
@@ -134,8 +141,8 @@ export default function RootLayout({
                         </div>
                         :
                         <div className="flex flex-col mt-[6px]">
-                            <div className="text-2xl dark:text-neutral-200 text-neutral-800 font-medium">{guild?.name || "Unknown Server"}</div>
-                            <div className="text-xs font-semibold flex items-center gap-1">  <HiUsers /> {intl.format(guild?.memberCount || 0)}</div>
+                            <div className="text-2xl dark:text-neutral-200 text-neutral-800 font-medium">{guildName || "Unknown Server"}</div>
+                            <div className="text-xs font-semibold flex items-center gap-1">  <HiUsers /> {intl.format(guildMemberCount || 0)}</div>
                         </div>
                     }
                 </div>
@@ -186,7 +193,7 @@ export default function RootLayout({
                         }
                     ]}
                     url={`/dashboard/${params.guildId}`}
-                    disabled={!guild || Boolean(error)}
+                    disabled={!guildId || Boolean(error)}
                 />
             </Suspense>
 
@@ -211,7 +218,7 @@ export default function RootLayout({
                     </>}
                 />
                 :
-                (guild && loaded.length === 3) ? children : <></>
+                (guildId && loaded.length === 3) ? children : <></>
             }
 
         </div>

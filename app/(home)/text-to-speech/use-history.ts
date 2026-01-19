@@ -81,10 +81,11 @@ export function useHistory() {
 
         loadHistory();
 
+        const cache = urlCache.current;
         return () => {
             mounted = false;
             dbRef.current?.close();
-            for (const [, url] of urlCache.current) URL.revokeObjectURL(url);
+            for (const [, url] of cache) URL.revokeObjectURL(url);
         };
     }, [isIndexDbSupported]);
 
