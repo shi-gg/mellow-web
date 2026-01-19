@@ -131,7 +131,10 @@ export function InputSelect<T extends string | number>({
                         {selectedItem?.name && showClear && (
                             <button
                                 onClick={handleClear}
-                                onPointerDown={(e) => e.stopPropagation()}
+                                onPointerDown={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }}
                                 className="hover:text-neutral-300"
                             >
                                 <HiX />
