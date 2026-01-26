@@ -24,6 +24,16 @@ const nextConfig: NextConfig = {
             "@radix-ui/react-tooltip"
         ]
     },
+    rewrites: () => [
+        {
+            source: "/static/analytics.js",
+            destination: "http://172.17.0.1:7004/js/script.outbound-links.js"
+        },
+        {
+            source: "/api/event",
+            destination: "http://172.17.0.1:7004/api/event"
+        }
+    ],
     images: {
         localPatterns: [
             {
