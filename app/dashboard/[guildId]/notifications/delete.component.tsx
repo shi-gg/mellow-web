@@ -27,7 +27,7 @@ export function DeleteNotification({
         <Tooltip>
             <TooltipTrigger asChild>
                 <Button
-                    className="size-9 p-1.5"
+                    size="icon"
                     variant="destructive"
                     onClick={() => setOpen(true)}
                     disabled={!id}
