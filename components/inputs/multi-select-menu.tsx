@@ -56,6 +56,7 @@ export function InputMultiSelect<T extends string | number>({
         value,
         state,
         error,
+        isDirty,
         update,
         save
     } = useInput({
@@ -134,7 +135,10 @@ export function InputMultiSelect<T extends string | number>({
                 clearTimeout(debounceRef.current);
                 debounceRef.current = null;
             }
-            save();
+
+            if (isDirty) {
+                save();
+            }
         }
     };
 
