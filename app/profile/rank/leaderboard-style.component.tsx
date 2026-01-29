@@ -1,6 +1,6 @@
 import { type User, userStore } from "@/common/user";
 import { type ApiError, type ApiV1UsersMeGetResponse, UserFlags } from "@/typings";
-import { BitfieldManager } from "@/utils/bitfields";
+import { Bitfield } from "@/utils/bitfields";
 import { cn } from "@/utils/cn";
 import { deepMerge } from "@/utils/deepMerge";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function LeaderboardStyle() {
     const user = userStore((s) => s);
 
-    const flags = new BitfieldManager(user?.extended?.flags || 0);
+    const flags = new Bitfield(user?.extended?.flags || 0);
     const enabled = flags.has(UserFlags.LeaderboardAlternateStyle);
 
     const [error, setError] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export default function LeaderboardStyle() {
     async function update(alternateLeaderboardStyle: boolean) {
         setError(null);
 
-        const flags = new BitfieldManager(user?.extended?.flags || 0);
+        const flags = new Bitfield(user?.extended?.flags || 0);
         if (alternateLeaderboardStyle) flags.add(UserFlags.LeaderboardAlternateStyle);
         else flags.remove(UserFlags.LeaderboardAlternateStyle);
 

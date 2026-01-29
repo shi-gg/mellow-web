@@ -1,4 +1,4 @@
-export class BitfieldManager {
+export class Bitfield {
     constructor(private flags: number) {}
 
     add(flag: number) {
