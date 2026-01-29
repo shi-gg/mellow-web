@@ -9,7 +9,6 @@ import { useApi } from "@/lib/api/hook";
 import { type ApiV1UsersMeConnectionsGetResponse, ConnectionType } from "@/typings";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BsSpotify } from "react-icons/bs";
 import { HiFingerPrint, HiTrash } from "react-icons/hi";
@@ -89,7 +88,6 @@ function Connection(
                 <Button
                     onClick={() => {
                         if (disabled) return;
-                        // idk with router.push logout doesn't update
                         window.location.href = `/login/${name.toLowerCase()}${connection ? "?logout=true" : ""}`;
                     }}
                     disabled={disabled}
@@ -110,8 +108,6 @@ function Icon({ type }: { type: ConnectionType; }) {
 }
 
 function BlueskyConnectPDS() {
-    const router = useRouter();
-
     const [handle, setHandle] = useState("");
     const [open, setOpen] = useState<boolean>(false);
 
@@ -130,7 +126,7 @@ function BlueskyConnectPDS() {
                 isOpen={open}
                 onClose={() => setOpen(false)}
                 onSubmit={() => {
-                    router.push(`/login/bluesky?handle=${handle}`);
+                    window.location.href = `/login/bluesky?handle=${handle}`;
                     return undefined;
                 }}
                 buttonName="Continue"
