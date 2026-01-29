@@ -71,12 +71,13 @@ export function InputSelect<T extends string | number>({
     const selectedItem = items.find((i) => i.value === value);
 
     const handleSelect = (item: SelectItem<T>) => {
-        if (item.error) return; // Don't select items with errors
+        if (item.error || item.value === value) return; // Don't select items with errors or if same
         update(item.value);
     };
 
     const handleClear = (e: React.MouseEvent) => {
         e.stopPropagation();
+        if (value === null) return;
         update(null as T | null);
     };
 
