@@ -35,7 +35,7 @@ Pick a role that lets users override other messages that are currently being spo
 Specify a role that is restricted from using Text-to-Speech.
 
 ### 🔉 Announce user
-Wamellow will announce which user is currently talking through it. If a user says "hello there," the bot will speak "Luna says: hello there."
+Wamellow will announce which user is currently talking through it. If a user says "hello there", the bot will speak "Luna says: hello there"
 <br />
 <br />
 
@@ -43,6 +43,8 @@ Wamellow will announce which user is currently talking through it. If a user say
 
 ### 🛒 Message queue
 Queue up sent chat to speech messages, to be spoken in the order they were sent. This is useful for long conversations or when multiple users want to speak at once and will prevent any messages from being skipped and Wamellow returning an error stating that someone else's message is still being spoken.
+
+Messages can be skipped by moderators with the `Mute Members` permission and by the user whose message is currently being spoken using the `/tts skip` command.
 
 ### 🔏 Max message length
 Set a maximum length for messages to avoid spamming.
@@ -56,7 +58,7 @@ Discord Nitro members can send messages with up to 4,000 characters, while non-N
 While this feature is free, we would be grateful if you could consider [shooting us a donation](/premium) or [voting on top.gg](/vote). Please note that messages longer than 300 characters are vote locked. Unfortunately, money and growth (sadly) don't grow on trees (money isn't exactly normal paper).
 
 ### 🤚 Blacklist users & roles
-If you want to prevent certain users from using text or chat to speech, you can either use Discord's channel or integration permission system. ([watch a tutorial](/disable-commands))
+If you want to prevent certain users from using text or chat to speech, you can either use Discord's channel, integration permission system ([watch a tutorial](/disable-commands)), or configure a blacklist role in the wamellow dashboard.
 
 ## Moderation
 You can use Wamellow's native **<:badge_automod:1307719909618225263> AutoMod** to block certain words or phrases for Text-to-Speech by [setting up rules on your server's Moderation tab](/profile?to=moderation).
@@ -82,7 +84,7 @@ To prevent Wamellow from speaking your messages inside of Chat to Speech channel
 If you want to disable it for everyone, [read the setup section of these docs](#setup).
 
 ## Voice filters
-Filters are a way to tamper with the voices when using Wamellow in VCs, they can be toggled using `/tts set filter` by VC moderators.
+Filters are a way to tamper with the voices when using Wamellow in VCs, they can be toggled using `/tts set filter` by VC moderators with the `Mute Members` permission.
 This setting applies to anyone currently using Wamellow in the VC, all filters will be removed once Wamellow leaves.
 Some filters can be enabled and used at the same time. Pitch and Speed may not be used with other filters. Choosing a filter may override the pitch and speed settings.
 <br />
@@ -236,8 +238,8 @@ A list of available nodes and regions can be found [on the status page](/status)
 <br />
 <br />
 
-If the voice channel's *Region Override* is set to `Automatic`, it will default to Frankfurt, Germany.
-If an override is set, it will use the selected region, if available.
+If the voice channel's *Region Override* is set to `Automatic`, it will default to a node with the lowest resource usage.
+If an override is set, it will use the selected region, or one closest to it, if available.
 
 ## Troubleshooting
 If Wamellow joins the voice channel but doesn't speak, check that it has the `Connect` and `Speak` permissions in the channel settings. If it does, [please report the issue to us](/support).
@@ -245,4 +247,4 @@ If Wamellow joins the voice channel but doesn't speak, check that it has the `Co
 <br />
 
 If Wamellow says that someone else's message is still being spoken, but it's not talking, use `/tts stop`.
-You can also use this to stop any message that is currently being spoken (i.e.: because of spam).
+You can also use this or `/tts skip` to stop any message that is currently being spoken (i.e.: because of spam).
