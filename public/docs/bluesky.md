@@ -9,12 +9,19 @@ Reacting with a *light blue 🩵*-emoji to a message containing a Bluesky post f
 2. Head to your connections by going to [wamellow.com/profile/connections](https://wamellow.com/profile/connections).
 3. Click **Connect Bluesky** and follow the steps.
 4. Reacting with a **🩵 emoji** to any message containing a Bluesky post.
+<br />
+<br />
 
-### 💻 Does Wamellow have to be in the server?
-Yes, for Wamellow's features to work, you must [invite the bot](https://wamellow.com/add) to your server. Ensure it has the "View Channel" permission in all channels where you want to use its capabilities.
+For Wamellow's features to work, you must [invite the bot](https://wamellow.com/add) to your server. Ensure it has the `View Channel` permission in all channels where you want to use its capabilities.
 
-### 🩵 Any heart emoji?
-No, only specific heart emojis will work. To like a post, you must react with either the light blue heart (🩵) or the blue heart (💙) emoji.
+### 🩵 Like using reactions
+To like a post, you must react with either the light blue heart (🩵) or the blue heart (💙) emoji.
+<br/>
+<br/>
+
+Wamellow will automatically react with 🩵 to any message containing a link matching one of the following patterns:
+- `*.app/profile/*/post/*`
+- `*.social/profile/*/post/*`
 
 ### 🤔 Discord Direct Messages Disabled
 If you have DMs disabled on Discord, you can connect your Bluesky account manually. Simply visit [wamellow.com/profile/connections](https://wamellow.com/profile/connections) to link your account directly.
@@ -32,6 +39,10 @@ Wamellow is compatible with any PDS, including Bluesky mushroom, Spark PDS, or y
 <br />
 
 **Note:** Re-authorizing the connection will typically resolve any problems. If you are unfamiliar with what a PDS is, you can disregard this section.
+<br/>
+<br/>
+
+Wamellow will attempt to automatically refresh your session once a month. PDSs usually enforce a maximum session duration of three months and a total lifetime of two years. You may need to re-authorize more often if your PDS has a shorter session duration or if the lifetime limit is reached.
 
 ### 🚨 Interaction with Bluesky Notifications
 When Wamellow sends a [Bluesky post notification in Discord](https://wamellow.com/docs/Notifications), you will see two additional buttons that allow you to interact directly with the post:
