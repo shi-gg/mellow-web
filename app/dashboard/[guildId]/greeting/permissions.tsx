@@ -6,7 +6,7 @@ import { HiExclamation } from "react-icons/hi";
 export function PermissionAlert(
     { channel, permissions }: { channel?: ApiV1GuildsChannelsGetResponse; permissions: number[]; }
 ) {
-    if (!channel?.permissions || !permissions?.length) return null;
+    if (channel?.permissions === undefined || !permissions?.length) return null;
 
     const missingPermission = permissions.find((permission) => {
         const permissionBit = BigInt(permission);
