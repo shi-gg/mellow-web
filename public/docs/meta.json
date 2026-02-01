@@ -137,7 +137,8 @@
             "permissions": {
                 "bot": [
                     "View Channel",
-                    "Add Reactions"
+                    "Add Reactions",
+                    "Read Message History"
                 ],
                 "user": [
                     "View Channel",
