@@ -2,9 +2,9 @@
 
 import { ControlledInput } from "@/components/inputs/controlled-input";
 import Modal from "@/components/modal";
-import Notice, { NoticeType } from "@/components/notice";
 import { ScreenMessage } from "@/components/screen-message";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useApi } from "@/lib/api/hook";
 import { type ApiV1UsersMeConnectionsGetResponse, ConnectionType } from "@/typings";
 import { cn } from "@/utils/cn";
@@ -27,15 +27,18 @@ export default function Home() {
         return <ScreenMessage description={error} />;
     }
 
-    if (isLoading || !data) return <></>;
+    if (isLoading || !data) {
+        return (
+            <div className="space-y-2">
+                {CONNECTION_TYPES.map(([, type]) => (
+                    <Skeleton key={type} className="w-full rounded-xl h-21" isLoading={true} />
+                ))}
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-2">
-            <Notice
-                type={NoticeType.Info}
-                message="This is still in testing, don&apos;t expect it to work properly yet!"
-            />
-
             {CONNECTION_TYPES.map(([name, type]) => (
                 <Connection key={name} name={name} type={type} data={data} />
             ))}
@@ -58,13 +61,13 @@ function Connection(
             {connection
                 ? <Image
                     alt={`user's ${name} avatar`}
-                    className="rounded-full size-12 shrink-0"
+                    className="rounded-full size-13 shrink-0"
                     height={56}
                     src={connection?.avatar || "/discord.webp"}
                     width={56}
                 />
                 : (
-                    <div className="bg-wamellow-100 rounded-full size-12 flex items-center justify-center text-neutral-300 shrink-0">
+                    <div className="bg-wamellow-100 rounded-full size-13 flex items-center justify-center text-neutral-300 shrink-0">
                         <Icon type={type} />
                     </div>
                 )

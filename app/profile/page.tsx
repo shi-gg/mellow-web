@@ -39,7 +39,8 @@ export default function Home() {
         [data, search]
     );
 
-    const isHuge = Array.isArray(data) && data.length > MAX_GUILDS;
+    const size = Array.isArray(data) ? data.length : 0;
+    const isHuge = size > MAX_GUILDS;
 
     if (error) {
         return (
@@ -50,10 +51,7 @@ export default function Home() {
         );
     }
 
-    if (isLoading || !data) return <></>;
-
     return (<div className="flex flex-col w-full">
-
         <div className="flex flex-col md:flex-row md:justify-between gap-2">
             <ControlledInput
                 thin
@@ -99,8 +97,8 @@ export default function Home() {
                         opacity: 1,
                         scale: 1,
                         transition: {
-                            delayChildren: data.length > 20 ? 0.2 : 0.3,
-                            staggerChildren: data.length > 20 ? 0.1 : 0.2
+                            delayChildren: size > 20 ? 0.2 : 0.3,
+                            staggerChildren: size > 20 ? 0.1 : 0.2
                         }
                     }
                 }}
@@ -117,15 +115,17 @@ export default function Home() {
                 ))
                 }
             </motion.ul>
-        )}
+        )
+        }
 
         {isHuge && (
             <ScreenMessage
+                top="5rem"
                 title="There are too many servers.."
-                description={`To save some performance, use the search to find a guild. Showing ${MAX_GUILDS} out of ~${data.length < 1_000 ? data.length : Math.round(data.length / 1_000) * 1_000}.`}
+                description={`To save some performance, use the search to find a guild. Showing ${MAX_GUILDS} out of ~${size < 1_000 ? size : Math.round(size / 1_000) * 1_000}.`}
             />
         )}
-    </div>);
+    </div >);
 }
 
 function sort(a: ApiV1UsersMeGuildsGetResponse, b: ApiV1UsersMeGuildsGetResponse) {
