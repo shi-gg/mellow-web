@@ -16,7 +16,7 @@ import { AvatarBadge } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cacheOptions } from "@/lib/api";
 import { type ApiV1GuildsModulesNotificationsGetResponse, BlueskyNotificationFlags, GuildFlags, NotificationFlags, NotificationType, YoutubeNotificationFlags } from "@/typings";
-import { arrayToBitfield, BitfieldManager, bitfieldToArray, transformer } from "@/utils/bitfields";
+import { arrayToBitfield, Bitfield, bitfieldToArray, transformer } from "@/utils/bitfields";
 import { createSelectableItems } from "@/utils/create-selectable-items";
 import { getCanonicalUrl } from "@/utils/urls";
 import { LoaderCircleIcon } from "lucide-react";
@@ -51,7 +51,7 @@ export default function Home() {
     } = useList<ApiV1GuildsModulesNotificationsGetResponse>({ url });
 
     const platformFlags = getFlags(item?.type || 0);
-    const flags = useMemo(() => new BitfieldManager(item?.flags || 0), [item?.flags]);
+    const flags = useMemo(() => new Bitfield(item?.flags || 0), [item?.flags]);
 
     if (error) {
         return (
