@@ -69,7 +69,13 @@ export function InputMultiSelect<T extends string | number>({
         transform,
 
         onSave,
-        manual: true // Save only when menu closes or after debounce
+        manual: true, // Save only when menu closes or after debounce
+        isEqual: (a, b) => {
+            if (a === b) return true;
+            if (a.length !== b.length) return false;
+            const setA = new Set(a);
+            return b.every((v) => setA.has(v));
+        }
     });
 
     const [open, setOpen] = useState(false);
