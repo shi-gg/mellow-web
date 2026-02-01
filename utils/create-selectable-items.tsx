@@ -1,17 +1,19 @@
-import { type ApiV1GuildsChannelsGetResponse, type ApiV1GuildsEmojisGetResponse, type ApiV1GuildsRolesGetResponse, PermissionFlagsBits } from "@/typings";
-import { ChannelType } from "discord-api-types/v10";
+import type { ApiV1GuildsChannelsGetResponse, ApiV1GuildsEmojisGetResponse, ApiV1GuildsRolesGetResponse } from "@/typings";
+import { ChannelType, PermissionFlagsBits } from "discord-api-types/v10";
 import Image from "next/image";
 import { HiAtSymbol, HiHashtag, HiMenuAlt2, HiNewspaper, HiVolumeUp } from "react-icons/hi";
 
 type Item = ApiV1GuildsChannelsGetResponse | ApiV1GuildsRolesGetResponse;
 type PermissionNames = keyof typeof PermissionFlagsBits | "RoleHirachy";
 
+const zero = BigInt(0);
+
 function parsePermissions(permissions: number, required: PermissionNames[]) {
     if (permissions === -1 && required.includes("RoleHirachy")) return ["Role is above Wamellow"];
 
     return required
         .filter((perm) => perm !== "RoleHirachy")
-        .map((perm) => (permissions & PermissionFlagsBits[perm]) === 0 ? perm : false)
+        .map((perm) => (BigInt(permissions) & PermissionFlagsBits[perm]) === zero ? perm : false)
         .filter(Boolean);
 }
 

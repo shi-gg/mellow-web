@@ -4,7 +4,7 @@ import { PermissionFlagsBits } from "discord-api-types/v10";
 import { HiExclamation } from "react-icons/hi";
 
 export function PermissionAlert(
-    { channel, permissions }: { channel?: ApiV1GuildsChannelsGetResponse; permissions: number[]; }
+    { channel, permissions }: { channel?: ApiV1GuildsChannelsGetResponse; permissions: bigint[]; }
 ) {
     if (channel?.permissions === undefined || !permissions?.length) return null;
 
@@ -35,7 +35,7 @@ export function PermissionAlert(
 
 const getMissingPermissionContext = (
     channels: ApiV1GuildsChannelsGetResponse[],
-    permissions: number[]
+    permissions: bigint[]
 ): { missingPermissionName: string | null; affectedChannelNames: string[]; } => {
     for (const permission of permissions) {
         const permissionBit = BigInt(permission);
@@ -57,7 +57,7 @@ const getMissingPermissionContext = (
 };
 
 export function PermissionsAlert(
-    { channels, permissions }: { channels: ApiV1GuildsChannelsGetResponse[]; permissions: number[]; }
+    { channels, permissions }: { channels: ApiV1GuildsChannelsGetResponse[]; permissions: bigint[]; }
 ) {
     if (!channels?.length || !permissions?.length) return null;
 
