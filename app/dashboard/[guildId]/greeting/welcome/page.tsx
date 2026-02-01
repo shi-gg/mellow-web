@@ -16,10 +16,13 @@ import { type ApiV1GuildsModulesWelcomeGetResponse, GuildFlags } from "@/typings
 import { transformer } from "@/utils/bitfields";
 import { cn } from "@/utils/cn";
 import { createSelectableEmojiItems, createSelectableItems } from "@/utils/create-selectable-items";
+import { PermissionFlagsBits } from "discord-api-types/v10";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { HiArrowLeft, HiChat, HiExternalLink } from "react-icons/hi";
+
+import { PermissionAlert } from "../permissions";
 
 export default function Home() {
     const guild = guildStore((g) => g);
@@ -39,8 +42,17 @@ export default function Home() {
         </div>
     );
 
+    const channel = guild?.channels?.find((channel) => channel.id === data.channelId);
+
     return (<>
         <Head guildId={params.guildId as string} />
+
+        {(data.deleteAfterLeave || data.deleteAfter) &&
+            <PermissionAlert
+                channel={channel}
+                permissions={[PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ReadMessageHistory]}
+            />
+        }
 
         <InputSwitch
             label="Enable Welcome"
