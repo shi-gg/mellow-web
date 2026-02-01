@@ -8,18 +8,16 @@ export function PermissionAlert(
 ) {
     if (channel?.permissions === undefined || !permissions?.length) return null;
 
-    const missingPermission = permissions.find((permission) => {
-        const permissionBit = BigInt(permission);
-        const channelPermissions = BigInt(channel.permissions);
-        return (channelPermissions & permissionBit) !== permissionBit;
-    });
+    const missingPermission = permissions.find((permission) => (
+        (BigInt(channel.permissions) & permission) !== permission
+    ));
 
     if (missingPermission === undefined) {
         return null;
     }
 
     const permissionName =
-        Object.entries(PermissionFlagsBits).find(([, value]) => value === BigInt(missingPermission))?.[0] ??
+        Object.entries(PermissionFlagsBits).find(([, value]) => value === missingPermission)?.[0] ??
         missingPermission.toString();
 
     return (
@@ -38,16 +36,14 @@ const getMissingPermissionContext = (
     permissions: bigint[]
 ): { missingPermissionName: string | null; affectedChannelNames: string[]; } => {
     for (const permission of permissions) {
-        const permissionBit = BigInt(permission);
-        const channelsMissingPermission = channels.filter((channel) => {
-            const channelPermissions = BigInt(channel?.permissions ?? 0);
-            return (channelPermissions & permissionBit) !== permissionBit;
-        });
+        const channelsMissingPermission = channels.filter((channel) => (
+            (BigInt(channel?.permissions ?? 0) & permission) !== permission
+        ));
 
         if (!channelsMissingPermission.length) continue;
 
         return {
-            missingPermissionName: Object.entries(PermissionFlagsBits).find(([, value]) => value === permissionBit)?.[0] ?? permission.toString(),
+            missingPermissionName: Object.entries(PermissionFlagsBits).find(([, value]) => value === permission)?.[0] ?? permission.toString(),
             affectedChannelNames: channelsMissingPermission.map((channel) => channel?.name ?? "Unnamed channel")
         };
 
