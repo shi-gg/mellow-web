@@ -23,6 +23,8 @@ interface InputOptions<T> {
 
     manual?: boolean;
     debounceMs?: number;
+
+    isEqual?: (a: T, b: T) => boolean;
 }
 
 export type InputProps<T> = InputOptions<T> & HTMLProps<HTMLDivElement> & {
@@ -41,7 +43,7 @@ export function useInput<T>(options: InputOptions<T>) {
 
     const endpoint = options.endpoint || options.url;
     const k = options.k || options.dataName;
-    const { onSave, transform, manual, debounceMs, defaultState } = options;
+    const { onSave, transform, manual, debounceMs, defaultState, isEqual } = options;
 
     const defaultStateKey = JSON.stringify(defaultState);
     const [prevDefaultStateKey, setPrevDefaultStateKey] = useState(defaultStateKey);
@@ -139,7 +141,7 @@ export function useInput<T>(options: InputOptions<T>) {
         value,
         state,
         error,
-        isDirty: value !== savedValue,
+        isDirty: isEqual ? !isEqual(value, savedValue) : value !== savedValue,
         update,
         save,
         reset: () => setValue(savedValue)
