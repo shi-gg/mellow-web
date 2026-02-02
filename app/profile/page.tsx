@@ -95,9 +95,7 @@ export default function Home() {
 
         {isLoading ? (
             <div className="grid grid-cols-1 gap-3.5 w-full mt-3 lg:grid-cols-3 md:grid-cols-2">
-                {Array.from({ length: 1 }).map((_, i) => (
-                    <Skeleton key={i} className="h-22 rounded-xl" style={{ opacity: Math.min(1 / i, 1) }} />
-                ))}
+                <Skeleton className="h-22 rounded-xl" />
             </div>
         ) : (
             <ul className="grid grid-cols-1 gap-3.5 w-full mt-3 lg:grid-cols-3 md:grid-cols-2">
