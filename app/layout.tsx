@@ -108,7 +108,8 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
                 <Script
                     defer
                     data-domain="wamellow.com"
-                    src="https://analytics.wamellow.com/js/script.outbound-links.js"
+                    data-api="/api/event"
+                    src="/static/analytics.js"
                 />
 
                 <Script
