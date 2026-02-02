@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGuildsGetResponse } from "@/typings";
 import { cn } from "@/utils/cn";
+import type { Variants } from "motion/react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -16,18 +17,19 @@ import { HiChartBar, HiRefresh, HiUserAdd, HiViewGridAdd } from "react-icons/hi"
 
 const MAX_GUILDS = 20 as const;
 
-const springAnimation = {
+const springAnimation: Variants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
+    visible: (i: number) => ({
         y: 0,
         opacity: 1,
         transition: {
+            delay: i * 0.1,
             type: "spring",
-            bounce: 0.4,
-            duration: 0.7
+            bounce: 0.6,
+            duration: 0.8
         }
-    }
-} as const;
+    })
+};
 
 export default function Home() {
     const [search, setSearch] = useState<string>("");
@@ -55,6 +57,7 @@ export default function Home() {
     return (<div className="flex flex-col w-full">
         <div className="flex flex-col md:flex-row md:justify-between gap-2">
             <ControlledInput
+                autoFocus
                 thin
                 value={search}
                 setValue={setSearch}
@@ -92,36 +95,21 @@ export default function Home() {
 
         {isLoading ? (
             <div className="grid grid-cols-1 gap-3.5 w-full mt-3 lg:grid-cols-3 md:grid-cols-2">
-                {Array.from({ length: 1 }).map((_, i) => (
-                    <Skeleton key={i} className="h-22 rounded-xl" style={{ opacity: 1 / i }} />
-                ))}
+                <Skeleton className="h-22 rounded-xl" />
             </div>
         ) : (
-            <motion.ul
-                variants={{
-                    hidden: { opacity: 1, scale: 0 },
-                    visible: {
-                        opacity: 1,
-                        scale: 1,
-                        transition: {
-                            delayChildren: size > 20 ? 0.2 : 0.3,
-                            staggerChildren: size > 20 ? 0.1 : 0.2
-                        }
-                    }
-                }}
-                initial={(dataUpdatedAt + 1_000) < time ? "visible" : "hidden"}
-                animate="visible"
-                className="grid grid-cols-1 gap-3.5 w-full mt-3 lg:grid-cols-3 md:grid-cols-2"
-            >
-                {guilds.map((guild) => (
+            <ul className="grid grid-cols-1 gap-3.5 w-full mt-3 lg:grid-cols-3 md:grid-cols-2">
+                {guilds.map((guild, index) => (
                     <Guild
                         key={"guild-" + guild.id}
                         {...guild}
-                        isHugeGuildList={isHuge}
+                        lazy={isHuge}
+                        index={index}
+                        animate={(dataUpdatedAt + 1_000) > time}
                     />
                 ))
                 }
-            </motion.ul>
+            </ul>
         )}
 
         {isHuge && (
@@ -157,23 +145,28 @@ function Guild({
     name,
     icon,
     bot: hasBotInvited,
-    isHugeGuildList
-}: ApiV1UsersMeGuildsGetResponse & { isHugeGuildList: boolean; }) {
+    lazy,
+    index,
+    animate
+}: ApiV1UsersMeGuildsGetResponse & { lazy: boolean; index: number; animate: boolean; }) {
     return (
         <motion.li
+            custom={index}
+            initial={animate ? "hidden" : "visible"}
+            animate="visible"
             className={cn(
-                "dark:bg-wamellow bg-wamellow-100 p-3.5 flex items-center rounded-xl drop-shadow-md overflow-hidden relative duration-100 outline-violet-500 hover:outline-solid group/card",
+                "dark:bg-wamellow bg-wamellow-100 p-3.5 flex items-center rounded-xl drop-shadow-md overflow-hidden relative outline-violet-500 hover:outline-solid group/card opacity-0",
                 !hasBotInvited && "saturate-50 brightness-50"
             )}
             variants={springAnimation}
         >
             <ImageReduceMotion
                 alt=""
-                className="absolute top-[-48px] left-0 w-full z-0 blur-xl opacity-30 pointer-events-none"
+                className="absolute -top-12 left-0 w-full z-0 blur-xl opacity-30 pointer-events-none"
                 size={16}
                 url={`https://cdn.discordapp.com/icons/${id}/${icon}`}
                 forceStatic
-                lazy={isHugeGuildList}
+                lazy={lazy}
             />
 
             <ImageReduceMotion
@@ -181,7 +174,7 @@ function Guild({
                 className="rounded-lg size-15 z-1 relative drop-shadow-md"
                 size={56}
                 url={`https://cdn.discordapp.com/icons/${id}/${icon}`}
-                lazy={isHugeGuildList}
+                lazy={lazy}
             />
 
             <div className="ml-3 text-sm relative bottom-0.5">
