@@ -4,6 +4,7 @@ import ImageReduceMotion from "@/components/image-reduce-motion";
 import { ControlledInput } from "@/components/inputs/controlled-input";
 import { ScreenMessage } from "@/components/screen-message";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGuildsGetResponse } from "@/typings";
 import { cn } from "@/utils/cn";
@@ -89,7 +90,13 @@ export default function Home() {
             </div>
         </div>
 
-        {!isLoading && (
+        {isLoading ? (
+            <div className="grid grid-cols-1 gap-3.5 w-full mt-3 lg:grid-cols-3 md:grid-cols-2">
+                {Array.from({ length: 1 }).map((_, i) => (
+                    <Skeleton key={i} className="h-22 rounded-xl" style={{ opacity: 1 / i }} />
+                ))}
+            </div>
+        ) : (
             <motion.ul
                 variants={{
                     hidden: { opacity: 1, scale: 0 },
@@ -115,8 +122,7 @@ export default function Home() {
                 ))
                 }
             </motion.ul>
-        )
-        }
+        )}
 
         {isHuge && (
             <ScreenMessage
