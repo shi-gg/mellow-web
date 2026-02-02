@@ -1,5 +1,5 @@
 export class Bitfield {
-    constructor(private flags: number) { }
+    constructor(private flags: number) {}
 
     add(flag: number) {
         this.flags |= flag;
