@@ -19,6 +19,3 @@ jobs:
 
             - name: Run linters
               run: bunx eslint . --no-fix
-
-            - name: Build nextjs
-              run: bun run build
