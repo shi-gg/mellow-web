@@ -27,11 +27,11 @@ const nextConfig: NextConfig = {
     rewrites: () => [
         {
             source: "/static/analytics.js",
-            destination: "http://172.17.0.1:7004/js/script.outbound-links.js"
+            destination: `${process.env.INTERNAL_PLAUSIBLE_API || "http://172.17.0.1"}:7004/js/script.outbound-links.js`
         },
         {
             source: "/api/event",
-            destination: "http://172.17.0.1:7004/api/event"
+            destination: `${process.env.INTERNAL_PLAUSIBLE_API || "http://172.17.0.1"}:7004/api/event`
         }
     ],
     images: {
