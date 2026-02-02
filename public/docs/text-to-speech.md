@@ -58,7 +58,7 @@ Discord Nitro members can send messages with up to 4,000 characters, while non-N
 While this feature is free, we would be grateful if you could consider [shooting us a donation](/premium) or [voting on top.gg](/vote). Please note that messages longer than 300 characters are vote locked. Unfortunately, money and growth (sadly) don't grow on trees (money isn't exactly normal paper).
 
 ### 🤚 Blacklist users & roles
-If you want to prevent certain users from using text or chat to speech, you can either use Discord's channel, integration permission system ([watch a tutorial](/disable-commands)), or configure a blacklist role in the wamellow dashboard.
+If you want to prevent certain users from using text or chat to speech, you can use Discord's channel, integration permission system ([watch a tutorial](/disable-commands)), or configure a blacklist role in the wamellow dashboard.
 
 ## Moderation
 You can use Wamellow's native **<:badge_automod:1307719909618225263> AutoMod** to block certain words or phrases for Text-to-Speech by [setting up rules on your server's Moderation tab](/profile?to=moderation).
@@ -239,7 +239,7 @@ A list of available nodes and regions can be found [on the status page](/status)
 <br />
 
 If the voice channel's *Region Override* is set to `Automatic`, it will default to a node with the lowest resource usage.
-If an override is set, it will use the selected region, or one closest to it, if available.
+If an override is set, it will use the selected region if it is available; otherwise, it will use the closest available region.
 
 ## Troubleshooting
 If Wamellow joins the voice channel but doesn't speak, check that it has the `Connect` and `Speak` permissions in the channel settings. If it does, [please report the issue to us](/support).
