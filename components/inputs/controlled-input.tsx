@@ -20,6 +20,7 @@ interface Props {
     multiline?: boolean;
     type?: string;
     thin?: boolean;
+    autoFocus?: boolean;
 
     /** For use with JSON state - specifies which key to update */
     dataName?: string;
@@ -41,6 +42,7 @@ export function ControlledInput({
     multiline,
     type,
     thin,
+    autoFocus,
     dataName
 }: Props) {
     // Get actual value from JSON if dataName is provided
@@ -108,6 +110,7 @@ export function ControlledInput({
                     disabled={disabled}
                     maxLength={max}
                     type={type}
+                    autoFocus={autoFocus}
                 />
             )}
 
