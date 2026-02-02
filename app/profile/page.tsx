@@ -4,6 +4,7 @@ import ImageReduceMotion from "@/components/image-reduce-motion";
 import { ControlledInput } from "@/components/inputs/controlled-input";
 import { ScreenMessage } from "@/components/screen-message";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGuildsGetResponse } from "@/typings";
 import { cn } from "@/utils/cn";
@@ -39,7 +40,8 @@ export default function Home() {
         [data, search]
     );
 
-    const isHuge = Array.isArray(data) && data.length > MAX_GUILDS;
+    const size = Array.isArray(data) ? data.length : 0;
+    const isHuge = size > MAX_GUILDS;
 
     if (error) {
         return (
@@ -50,10 +52,7 @@ export default function Home() {
         );
     }
 
-    if (isLoading || !data) return <></>;
-
     return (<div className="flex flex-col w-full">
-
         <div className="flex flex-col md:flex-row md:justify-between gap-2">
             <ControlledInput
                 thin
@@ -91,7 +90,13 @@ export default function Home() {
             </div>
         </div>
 
-        {!isLoading && (
+        {isLoading ? (
+            <div className="grid grid-cols-1 gap-3.5 w-full mt-3 lg:grid-cols-3 md:grid-cols-2">
+                {Array.from({ length: 1 }).map((_, i) => (
+                    <Skeleton key={i} className="h-22 rounded-xl" style={{ opacity: 1 / i }} />
+                ))}
+            </div>
+        ) : (
             <motion.ul
                 variants={{
                     hidden: { opacity: 1, scale: 0 },
@@ -99,8 +104,8 @@ export default function Home() {
                         opacity: 1,
                         scale: 1,
                         transition: {
-                            delayChildren: data.length > 20 ? 0.2 : 0.3,
-                            staggerChildren: data.length > 20 ? 0.1 : 0.2
+                            delayChildren: size > 20 ? 0.2 : 0.3,
+                            staggerChildren: size > 20 ? 0.1 : 0.2
                         }
                     }
                 }}
@@ -121,11 +126,12 @@ export default function Home() {
 
         {isHuge && (
             <ScreenMessage
+                top="5rem"
                 title="There are too many servers.."
-                description={`To save some performance, use the search to find a guild. Showing ${MAX_GUILDS} out of ~${data.length < 1_000 ? data.length : Math.round(data.length / 1_000) * 1_000}.`}
+                description={`To save some performance, use the search to find a guild. Showing ${MAX_GUILDS} out of ~${size < 1_000 ? size : Math.round(size / 1_000) * 1_000}.`}
             />
         )}
-    </div>);
+    </div >);
 }
 
 function sort(a: ApiV1UsersMeGuildsGetResponse, b: ApiV1UsersMeGuildsGetResponse) {
