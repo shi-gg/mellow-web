@@ -40,7 +40,7 @@ export function CallToAction() {
                         >
                             <Link href="/dashboard">
                                 Dashboard
-                                <HiArrowRight className="mr-1" />
+                                <HiArrowRight className="ml-1" />
                             </Link>
                         </Button>
                     </div>
