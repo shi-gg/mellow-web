@@ -119,7 +119,7 @@ export default function Home() {
         <div className="lg:flex gap-3">
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    label="Enabled"
+                    label="Join roles"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="roleIds"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
@@ -133,7 +133,7 @@ export default function Home() {
 
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    label="Also send in DMs"
+                    label="Channel pings"
                     url={`/guilds/${guild?.id}/modules/welcome`}
                     dataName="pingIds"
                     items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages"])}
