@@ -138,12 +138,7 @@ export default async function Home() {
                     </div>
                 </div>
 
-                {/* TTS Demo - Mobile: below header, Desktop: right side */}
-                <div className="md:hidden mt-8 w-full max-w-sm mx-auto">
-                    <TTSDemo />
-                </div>
-
-                <div className="ml-auto xl:w-1/3 hidden md:flex items-center justify-center rotate-3 scale-110">
+                <div className="mt-8 w-full max-w-sm mx-auto md:mt-0 md:w-auto md:max-w-none md:ml-auto xl:w-1/3 md:flex md:items-center md:justify-center md:rotate-3 md:scale-110 md:relative md:left-16">
                     <TTSDemo />
                 </div>
             </div>
