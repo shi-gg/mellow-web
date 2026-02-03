@@ -183,7 +183,7 @@ export function ChangeStyleModal({
             }}
             onSubmit={() => {
                 const valid = isValidUsername(name);
-                if (!name || !valid) return new Error("Invalid name");
+                if (name !== "" && !valid) return new Error("Invalid name");
 
                 const formData = new FormData();
                 formData.append("json_payload", JSON.stringify({ username: name || null, bio }));
