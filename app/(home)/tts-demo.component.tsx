@@ -16,6 +16,13 @@ const DEMO_MESSAGES = [
 
 const SUPPORTED_LANGS = ["us", "fr", "de", "es", "br", "pt", "id", "it", "jp", "kr"] as const;
 
+const LANG_TO_NAME_MAP = Object
+    .fromEntries(
+        Object
+            .values(actor)
+            .map(([name, langCode]) => [langCode, name])
+    );
+
 enum AnimationPhase {
     Typing = 0,
     Speaking = 1,
@@ -116,23 +123,16 @@ export function TTSDemo() {
                 </div>
 
                 <div className="flex gap-1">
-                    {SUPPORTED_LANGS.map((lang) => {
-                        const name = Object
-                            .entries(actor)
-                            .find(([, [, langCode]]) => langCode === lang)
-                            ?.[1][0] || lang;
-
-                        return (
-                            <Image
-                                key={lang}
-                                src={`/icons/${lang}.webp`}
-                                alt={name}
-                                width={64}
-                                height={64}
-                                className="size-5 rounded-sm opacity-60 hover:opacity-100 transition-opacity"
-                            />
-                        );
-                    })}
+                    {SUPPORTED_LANGS.map((lang) => (
+                        <Image
+                            key={lang}
+                            src={`/icons/${lang}.webp`}
+                            alt={LANG_TO_NAME_MAP[lang] || lang}
+                            width={64}
+                            height={64}
+                            className="size-5 rounded-sm opacity-60 hover:opacity-100 transition-opacity"
+                        />
+                    ))}
                 </div>
             </div>
         </div>
