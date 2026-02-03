@@ -31,11 +31,11 @@ export default function DiscordChannel({
                     {name}
                 </span>
             </span>
-            {children &&
+            {children && (
                 <div className="ml-6 mt-2 flex flex-col gap-3">
                     {children}
                 </div>
-            }
+            )}
         </div>
     );
 }

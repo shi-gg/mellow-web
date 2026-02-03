@@ -7,23 +7,19 @@ import { DiscordMarkdown } from "@/components/discord/markdown";
 import DiscordMessage from "@/components/discord/message";
 import DiscordMessageEmbed from "@/components/discord/message-embed";
 import DiscordUser from "@/components/discord/user";
-import ImageReduceMotion from "@/components/image-reduce-motion";
 import { AvatarGroup, UserAvatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Code } from "@/components/ui/typography";
-import { defaultFetchOptions } from "@/lib/api";
 import CaptchaPic from "@/public/captcha.webp";
 import ArrowPic from "@/public/icons/arroww.webp";
 import LeaderboardPic from "@/public/leaderboard.webp";
 import NotificationsPic from "@/public/notifications-thumbnail.webp";
+import SharkPic from "@/public/shark.webp";
 import SpacePic from "@/public/space.webp";
-import WaifuPic from "@/public/waifu.webp";
 import WelcomePic from "@/public/welcome.webp";
-import type { ApiV1TopguildsGetResponse } from "@/typings";
 import { cn } from "@/utils/cn";
-import { toFixedArrayLength } from "@/utils/fixed-array-length";
 import { actor } from "@/utils/tts";
 import { getCanonicalUrl } from "@/utils/urls";
 import { Montserrat, Patrick_Hand } from "next/font/google";
@@ -34,9 +30,10 @@ import { Suspense } from "react";
 import { BsDiscord, BsYoutube } from "react-icons/bs";
 import { HiArrowNarrowRight, HiArrowRight, HiCash, HiCheck, HiFire, HiLockOpen, HiUserAdd } from "react-icons/hi";
 
-import { Commands } from "./commands.component";
+import { CallToAction } from "./cta.component";
 import { Faq } from "./faq.component";
 import { Ratings } from "./ratings.component";
+import { TTSDemo } from "./tts-demo.component";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 const handwritten = Patrick_Hand({ subsets: ["latin"], weight: "400" });
@@ -66,26 +63,20 @@ const messageProps = (command?: string) => ({
 });
 
 export default async function Home() {
-    const topGuildsPromise = fetch(`${process.env.NEXT_PUBLIC_API}/top-guilds`, defaultFetchOptions)
-        .then((res) => res.json())
-        .catch(() => null) as Promise<ApiV1TopguildsGetResponse[] | null>;
-
     const heads = await headers();
     const isEmbedded = heads.get("sec-fetch-dest") === "iframe";
-
-    const topGuilds = await topGuildsPromise;
 
     return (
         <div className="flex items-center flex-col w-full">
 
-            <div className="flex w-full items-center gap-8 mb-16 md:mb-12 min-h-[500px] h-[calc(100svh-14rem)] md:h-[calc(100dvh-16rem)]">
+            <div className="flex flex-col md:flex-row w-full items-center justify-center md:justify-start gap-8 py-8 md:py-0 mb-16 md:mb-12 min-h-[calc(100svh-14rem)] md:min-h-[500px] md:h-[calc(100dvh-16rem)]">
                 <div className="md:min-w-96 w-full md:w-2/3 xl:w-1/2 flex flex-col space-y-6">
 
-                    <Suspense fallback={<Skeleton className="w-60 h-6! m-0!" isLoading={true} />}>
+                    <Suspense fallback={<Skeleton className="w-52 h-6! m-0! mb-6!" isLoading={true} />}>
                         <Ratings />
                     </Suspense>
 
-                    <h1 className={cn(montserrat.className, "lg:text-7xl md:text-6xl text-5xl font-semibold dark:text-neutral-100 text-neutral-900 break-words")}>
+                    <h1 className={cn(montserrat.className, "lg:text-7xl md:text-6xl text-5xl max-w-md md:max-w-xl font-semibold dark:text-neutral-100 text-neutral-900 break-words")}>
                         <span className="bg-linear-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent h-20 break-keep">
                             Accessibility
                         </span>
@@ -96,24 +87,10 @@ export default async function Home() {
                         </span>
                     </h1>
 
-                    <span className="text-lg font-medium max-w-152 mb-4">
+                    <span className="text-lg font-medium max-w-152 mb-4 hidden md:block">
                         Accessibility where it&apos;s needed the most: Discord Voice Chats.
-                        Social notifications to stay connected and up to date with anyone, anywhere.
-                        Simple, customizable, free, and built in public.
+                        Social notifications to stay connected and up to date, anywhere.
                     </span>
-
-                    <AvatarGroup className="mr-auto md:hidden">
-                        {toFixedArrayLength(topGuilds || [], 8)
-                            ?.map((guild) => (
-                                <UserAvatar
-                                    key={"mobileGuildGrid-" + guild.id}
-                                    alt={guild.name}
-                                    className="-mr-2"
-                                    src={guild.icon ? guild.icon + "?size=128" : "/discord.webp"}
-                                />
-                            ))
-                        }
-                    </AvatarGroup>
 
                     <div className="space-y-4">
                         <Link
@@ -161,42 +138,12 @@ export default async function Home() {
                     </div>
                 </div>
 
-                <div className="ml-auto w-fit xl:w-1/2 hidden md:block">
-                    <div className="flex gap-4 rotate-6 relative left-14 w-fit">
-                        {[0, 1, 2, 3].map((i) => (
-                            <div
-                                key={"guildGridThing-" + i}
-                                className={cn(
-                                    "flex flex-col gap-4",
-                                    i % 2 === 1 ? "mt-4 animate-guilds" : "animate-guilds-2",
-                                    (i === 0 || i === 3) && "hidden xl:flex")
-                                }
-                            >
-                                {toFixedArrayLength(topGuilds || [], 12)
-                                    .slice(i * 3, (i * 3) + 3)
-                                    .map((guild, i2) => (
-                                        <Link
-                                            key={"guildGrid-" + guild.id + i + i2}
-                                            className="relative md:h-32 h-24 md:w-32 w-24 hover:scale-110 duration-200"
-                                            href={getCanonicalUrl("leaderboard", guild.id)}
-                                            prefetch={false}
-                                        >
-                                            <ImageReduceMotion
-                                                alt="server"
-                                                className="rounded-xl bg-wamellow"
-                                                url={(guild.icon || "/discord.webp")?.split(".").slice(0, -1).join(".")}
-                                                size={128}
-                                            />
-                                        </Link>
-                                    ))
-                                }
-                            </div>
-                        ))}
-                    </div>
+                <div className="mt-8 w-full max-w-sm mx-auto md:mt-0 md:w-auto md:max-w-none md:ml-auto xl:w-1/3 md:flex md:items-center md:justify-center md:rotate-3 md:scale-110 md:relative md:left-16">
+                    <TTSDemo />
                 </div>
             </div>
 
-            <div className="animate-scroll rounded-medium rotate-180 md:rounded-3xl md:rotate-0">
+            <div className="animate-scroll rounded-medium rotate-180 rounded-md md:rounded-3xl md:rotate-0">
                 <div className="animate-scroll-wheel" />
             </div>
 
@@ -354,10 +301,10 @@ export default async function Home() {
 
                         <div className="bg-discord-gray w-full md:w-1/2 px-8 py-4 rounded-lg">
                             <DiscordMessage {...messageProps()}>
-                                <DiscordMarkdown mode={"DARK"} text="Hey **@everyone**, Linus Tech Tips just posted a new video!\n[youtube.com/watch?v=tN-arR2UoRk](https://youtube.com/watch?v=tN-arR2UoRk)" />
+                                <DiscordMarkdown mode={"DARK"} text="Hey **@everyone**, I just posted a new video!!\n[youtube.com/watch?v=tN-arR2UoRk](https://youtube.com/watch?v=tN-arR2UoRk)" />
                                 <DiscordMessageEmbed
                                     mode="DARK"
-                                    title="My wife insisted I do this for her"
+                                    title="Lundale server goes brrrrr"
                                     color={0x8A_57_FF}
                                 >
                                     <Image
@@ -422,7 +369,7 @@ export default async function Home() {
                                     height={905 / 3}
                                     itemProp="image"
                                     loading="lazy"
-                                    src={WaifuPic}
+                                    src={SharkPic}
                                     width={640 / 3}
                                 />
                             </DiscordMessage>
@@ -724,9 +671,7 @@ export default async function Home() {
                 content="FUCK EVERYTHING! EXCEPT LUNA, LUNA MUST BE PROTECTED AT ALL COSTS"
             />
 
-            <Suspense>
-                <Commands />
-            </Suspense>
+            <CallToAction />
 
         </div>
     );

@@ -163,7 +163,7 @@ export function Faq({
         )}
 
         <Accordion
-            className="w-full"
+            className="w-full space-y-2"
             type="single"
             collapsible
             defaultValue="0"
@@ -172,25 +172,26 @@ export function Faq({
                 <AccordionItem
                     value={index.toString()}
                     key={index}
+                    className="bg-wamellow/50 rounded-xl border-none px-4 data-[state=open]:bg-wamellow"
                 >
-                    <AccordionTrigger className="text-left">
-                        <div className="flex items-start gap-3">
-                            <div className="mt-1 text-lg">
+                    <AccordionTrigger className="text-left hover:no-underline py-4">
+                        <div className="flex items-start gap-4">
+                            <div className="mt-0.5 p-2 rounded-lg bg-violet-500/10 text-violet-400">
                                 {item.startContent}
                             </div>
                             <div>
-                                <div itemProp="name">
+                                <div itemProp="name" className="font-semibold text-foreground">
                                     {item.title}
                                 </div>
                                 {item.subtitle && (
-                                    <div className="text-sm text-muted-foreground font-normal">
+                                    <div className="text-sm text-muted-foreground font-normal mt-0.5">
                                         {item.subtitle}
                                     </div>
                                 )}
                             </div>
                         </div>
                     </AccordionTrigger>
-                    <AccordionContent className="mb-2 space-y-4">
+                    <AccordionContent className="text-medium pb-4 pl-14 space-y-4 text-muted-foreground">
                         {item.content}
                     </AccordionContent>
                 </AccordionItem>

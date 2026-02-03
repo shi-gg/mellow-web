@@ -42,7 +42,7 @@ export default function DiscordMessageEmbed({
         <div
             className={cn(
                 mode === "DARK" ? "text-neutral-200" : "text-neutral-800",
-                "w-full font-light p-3 rounded-sm border-l-4",
+                "w-full font-light p-3 rounded-sm border-l-4 mt-2",
                 className
             )}
             style={{
@@ -53,7 +53,7 @@ export default function DiscordMessageEmbed({
 
             <div className="flex w-full max-w-full">
                 <div className={thumbnail ? "w-9/12" : "w-full"}>
-                    {author &&
+                    {author && (
                         <div
                             className={cn(
                                 mode === "DARK" ? "text-neutral-100" : "text-neutral-900",
@@ -67,12 +67,13 @@ export default function DiscordMessageEmbed({
                                 embed={true}
                             />
                         </div>
-                    }
-                    {title &&
+                    )}
+                    {title && (
                         <div
                             className={cn(
                                 mode === "DARK" ? "text-neutral-100" : "text-neutral-900",
-                                "font-semibold text-lg mb-2"
+                                "font-semibold text-lg mb-2",
+                                !author && "-mt-1"
                             )}
                         >
                             <DiscordMarkdown
@@ -81,7 +82,7 @@ export default function DiscordMessageEmbed({
                                 embed={true}
                             />
                         </div>
-                    }
+                    )}
                     <div className="text-sm">
                         {children}
                     </div>
