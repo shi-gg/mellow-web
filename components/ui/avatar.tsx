@@ -33,7 +33,7 @@ const AvatarFallback = React.forwardRef<
         {...props}
     />
 ));
-AvatarFallback.displayName = AvatarFallback.displayName;
+AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
 function UserAvatar({
     src,
