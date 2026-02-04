@@ -2,7 +2,7 @@
 
 import { cn } from "@/utils/cn";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import type Image from "next/image";
+import Image from "next/image";
 import * as React from "react";
 
 const Avatar = React.forwardRef<
@@ -19,18 +19,6 @@ const Avatar = React.forwardRef<
     />
 ));
 Avatar.displayName = AvatarPrimitive.Root.displayName;
-
-const AvatarImage = React.forwardRef<
-    React.ElementRef<typeof AvatarPrimitive.Image>,
-    React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
-    <AvatarPrimitive.Image
-        ref={ref}
-        className={cn("aspect-square h-full w-full", className)}
-        {...props}
-    />
-));
-AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const AvatarFallback = React.forwardRef<
     React.ElementRef<typeof AvatarPrimitive.Fallback>,
@@ -52,19 +40,34 @@ function UserAvatar({
     username,
     className,
     alt,
+    priority,
     ...props
 }: {
     src: string;
     username?: string | null;
     alt: string;
+    priority?: boolean;
 } & React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>) {
+    const [isError, setIsError] = React.useState(false);
+
     return (
         <Avatar
             className={cn("rounded-full", className)}
             {...props}
         >
-            <AvatarImage alt={alt} src={src} />
-            <AvatarFallback>{(username || "Wamellow").toLowerCase().slice(0, 2)}</AvatarFallback>
+            {isError ? (
+                <AvatarFallback>{(username || "Wamellow").toLowerCase().slice(0, 2)}</AvatarFallback>
+            ) : (
+                <Image
+                    alt={alt}
+                    src={src}
+                    fill
+                    className="aspect-square h-full w-full object-cover"
+                    priority={priority}
+                    onError={() => setIsError(true)}
+                    sizes="(max-width: 768px) 32px, 64px"
+                />
+            )}
         </Avatar>
     );
 }
@@ -105,4 +108,4 @@ function AvatarBadge({
     );
 }
 
-export { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarImage, UserAvatar };
+export { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, UserAvatar };

@@ -43,6 +43,7 @@ export async function Ratings() {
                     height={230 / 16.428}
                     src={TopggIcon}
                     width={338 / 16.428}
+                    priority
                 />
                 .gg
             </span>

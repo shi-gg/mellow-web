@@ -23,20 +23,20 @@ import { cn } from "@/utils/cn";
 import { actor } from "@/utils/tts";
 import { getCanonicalUrl } from "@/utils/urls";
 import { Montserrat, Patrick_Hand } from "next/font/google";
-import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { BsDiscord, BsYoutube } from "react-icons/bs";
-import { HiArrowNarrowRight, HiArrowRight, HiCash, HiCheck, HiFire, HiLockOpen, HiUserAdd } from "react-icons/hi";
+import { HiArrowNarrowRight, HiArrowRight, HiCash, HiCheck, HiLockOpen, HiUserAdd } from "react-icons/hi";
 
 import { CallToAction } from "./cta.component";
 import { Faq } from "./faq.component";
+import { NsfwBanner } from "./nsfw-banner.component";
 import { Ratings } from "./ratings.component";
 import { TTSDemo } from "./tts-demo.component";
 
-const montserrat = Montserrat({ subsets: ["latin"] });
-const handwritten = Patrick_Hand({ subsets: ["latin"], weight: "400" });
+const montserrat = Montserrat({ subsets: ["latin"], display: "swap" });
+const handwritten = Patrick_Hand({ subsets: ["latin"], weight: "400", display: "swap" });
 
 export const revalidate = 43_200;
 
@@ -62,10 +62,7 @@ const messageProps = (command?: string) => ({
     }
 });
 
-export default async function Home() {
-    const heads = await headers();
-    const isEmbedded = heads.get("sec-fetch-dest") === "iframe";
-
+export default function Home() {
     return (
         <div className="flex items-center flex-col w-full">
 
@@ -83,7 +80,7 @@ export default async function Home() {
                         {" for "}
                         <span className="break-keep inline-flex items-center">
                             Discord
-                            <DiscordAppBadge className="mt-1 scale-[250%] md:scale-[300%] lg:scale-[360%] relative left-12 md:left-14 lg:left-20" />
+                            <DiscordAppBadge variant="large" className="mt-1 ml-4 relative" />
                         </span>
                     </h1>
 
@@ -131,7 +128,7 @@ export default async function Home() {
                         </div>
 
                         <span className={cn("lg:ml-auto flex gap-2 text-neutral-500 font-medium opacity-80 pl-20 lg:pr-20 rotate-2 scale-110 relative pt-0.5", handwritten.className)}>
-                            <Image src={ArrowPic} width={24} height={24} alt="arrow up" className="size-5" draggable={false} />
+                            <Image src={ArrowPic} width={24} height={24} alt="arrow up" className="size-5" draggable={false} priority />
                             Get started here in seconds
                         </span>
 
@@ -341,21 +338,7 @@ export default async function Home() {
                                 Dive into a world of adorable nekos, charming waifus, and much more, all at your fingertips.
                                 Whether it{"'"}s sharing the cutest characters or discovering stunning artwork, bring the joy of anime directly to your community, making your server a hub for all things anime-related.
                             </div>
-                            {!isEmbedded && (
-                                <div className="p-4 pb-3 border border-divider rounded-lg my-8">
-                                    <Badge
-                                        className="mb-2"
-                                        variant="flat"
-                                        radius="rounded"
-                                    >
-                                        <HiFire />
-                                        Supports NSFW
-                                    </Badge>
-                                    <div className="text-base">
-                                        Find spicy nekos, waifus, and more in nsfw marked channels.
-                                    </div>
-                                </div>
-                            )}
+                            <NsfwBanner />
                             <div className="flex gap-2 mt-6">
                                 <Invite />
                             </div>
