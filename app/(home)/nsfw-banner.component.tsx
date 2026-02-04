@@ -6,7 +6,7 @@ import { HiFire } from "react-icons/hi";
 
 export function NsfwBanner() {
     const isEmbedded = useSyncExternalStore(
-        () => () => { },
+        () => () => {},
         () => window.self !== window.top,
         () => false
     );
