@@ -4,7 +4,7 @@ import type { User } from "@/common/user";
 import { userStore } from "@/common/user";
 import { webStore } from "@/common/webstore";
 import { LoginButton } from "@/components/login-button";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -68,12 +68,11 @@ function Dropdown({ user }: { user: User; }) {
                 <button
                     className="ml-auto truncate flex hover:bg-wamellow py-2 px-4 rounded-lg duration-200 items-center data-[state=open]:bg-wamellow outline-none"
                 >
-                    <Avatar className="size-[30px] mr-2">
-                        <AvatarImage
-                            alt={user.username}
-                            src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=96` : "/discord.webp"}
-                        />
-                    </Avatar>
+                    <UserAvatar
+                        className="size-[30px] mr-2"
+                        alt={user.username}
+                        src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=96` : "/discord.webp"}
+                    />
 
                     <p className="mr-1 relative bottom-px truncate block text-primary-foreground font-medium tracking-tight">{user.globalName || user.username}</p>
                     <HiChevronDown />
@@ -81,12 +80,10 @@ function Dropdown({ user }: { user: User; }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent className='w-56 scale-120 relative top-7 right-5' align="end">
                 <DropdownMenuLabel className='flex items-center gap-3'>
-                    <Avatar>
-                        <AvatarImage
-                            alt={user.username}
-                            src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=96` : "/discord.webp"}
-                        />
-                    </Avatar>
+                    <UserAvatar
+                        alt={user.username}
+                        src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=96` : "/discord.webp"}
+                    />
                     <div className='flex flex-col pb-0.5 truncate'>
                         <span className='text-popover-foreground truncate'>{user.globalName || user.username}</span>
                         <span className='text-muted-foreground text-xs truncate'>{user.email}</span>

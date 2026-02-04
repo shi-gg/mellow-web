@@ -112,7 +112,7 @@ export function TTSDemo() {
                 {/* Chat input */}
                 <div className="bg-[#383a40] rounded-lg p-3 w-full border border-white/5 backdrop-blur-sm">
                     <div className="flex items-center gap-2">
-                        <Image src="/luna.webp" alt="" width={64} height={64} className="size-6 rounded-full" />
+                        <Image src="/luna.webp" alt="" width={64} height={64} className="size-6 rounded-full" priority />
                         <div className="flex-1 text-sm text-white min-h-5">
                             {displayedText}
                             {isTyping && (
