@@ -15,13 +15,13 @@ export default function DiscordAppBadge({
         <div
             className={cn(
                 "text-xxs! text-white bg-blurple rounded-sm py-px px-1 h-4 inline-flex items-center",
-                variant === "large" && "h-10 px-3 text-lg! rounded-md",
+                variant === "large" && "h-13 px-4 rounded-2xl",
                 className
             )}
             {...props}
         >
-            <HiCheck className={cn(variant === "large" && "size-6")} />
-            <span className={cn("ml-1 font-semibold", variant === "large" && "ml-2")}>
+            <HiCheck className={cn(variant === "large" && "size-8")} />
+            <span className={cn("ml-1 font-semibold", variant === "large" && "ml-2 text-3xl")}>
                 {children || "APP"}
             </span>
         </div>
