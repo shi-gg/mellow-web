@@ -11,8 +11,6 @@ export interface User {
     avatar: string | null;
     premium?: number | null;
 
-    __fetched: boolean;
-
     extended: ApiV1UsersMeGetResponse | undefined;
 }
 
@@ -23,6 +21,5 @@ export const userStore = create<User | undefined>(() => ({
     username: "",
     avatar: "null",
 
-    __fetched: false,
     extended: undefined
 }));
