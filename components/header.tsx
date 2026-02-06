@@ -33,11 +33,9 @@ export function Header() {
 
     useEffect(() => {
         authorize({ setState })
-            .then((_user) => {
-                userStore.setState({
-                    ...(_user || {}),
-                    __fetched: true
-                });
+            .then((u) => {
+                if (!u) return;
+                userStore.setState(u);
             });
 
         webStore.setState({
@@ -49,10 +47,10 @@ export function Header() {
         return <LoginButton state={state} className="ml-auto" />;
     }
 
-    if (state === State.Loading || !user) {
+    if (state === State.Loading || !user?.id) {
         return (
             <div className="ml-auto flex items-center py-2 px-4">
-                <Skeleton className="rounded-full mr-2 size-[30px]" />
+                <Skeleton className="rounded-full mr-2 size-7" />
                 <Skeleton className="rounded-xl w-20 h-5" />
             </div>
         );
@@ -69,7 +67,7 @@ function Dropdown({ user }: { user: User; }) {
                     className="ml-auto truncate flex hover:bg-wamellow py-2 px-4 rounded-lg duration-200 items-center data-[state=open]:bg-wamellow outline-none"
                 >
                     <UserAvatar
-                        className="size-[30px] mr-2"
+                        className="size-7 mr-2"
                         alt={user.username}
                         src={user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}?size=96` : "/discord.webp"}
                     />
@@ -136,6 +134,7 @@ function Dropdown({ user }: { user: User; }) {
                         className="text-red-400"
                     >
                         <button
+                            className="w-full"
                             onClick={() => {
                                 window.location.href = "/login?logout=true";
                             }}

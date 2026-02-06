@@ -26,7 +26,7 @@ export async function authorize({
         return null;
     }
 
-    if (!res) {
+    if (!res || "status" in res) {
         setState(State.Failure);
         return null;
     }
