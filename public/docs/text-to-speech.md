@@ -121,7 +121,7 @@ You can also change the voice on a per-message basis by setting the `voice` opti
 <br />
 <br />
 
-To change the voice for another bot or app, voice chat moderators can use `/tts set speaker` with the `bot` option (set it to the bot mention or bot ID), for example: `/tts set speaker voice:🇺🇸 English (us) - Jessie (TikTok) bot:@Wamellow#1138`. Before this works, make sure **Allow bots, apps and webhooks** is enabled in your server dashboard.
+To change the voice for another bot or app, users with the `Mute Members` permission can use `/tts set speaker` with the `bot` option (set it to the bot mention or bot ID), for example: `/tts set speaker voice:🇺🇸 English (us) - Jessie (TikTok) bot:@Wamellow#1138`. Before this works, make sure **Allow bots, apps and webhooks** is enabled in your server dashboard.
 
 ### 🌎 Auto Translate
 Automatically translate messages from any language to match your current voice's language for free.
