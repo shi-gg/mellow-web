@@ -79,6 +79,10 @@ To prevent Wamellow from speaking your messages inside of Chat to Speech channel
 - If you want to disable it permanently, you can use `/tts set chat-to-speech`.
 <br />
 <br />
+If you only want to skip specific parts of your message — such as multiline code blocks, spoilers, or emojis — run `/tts set markdown state:Skip`. To have those parts read aloud again, run `/tts set markdown state:Speak out loud`.
+
+<br />
+<br />
 
 **Note:** Any of those methods only apply to you and your own messages, and not to anyone else using chat to speech.
 If you want to disable it for everyone, [read the setup section of these docs](#setup).
@@ -114,6 +118,10 @@ You can change your default language and voice either by running `/tts set speak
 <br />
 
 You can also change the voice on a per-message basis by setting the `voice` option when using `/tts file` or `/tts voice`, i.e.: `/tts voice text:Hello World voice:en_female_samc`. This can also be combined with the auto translate flag.
+<br />
+<br />
+
+To change the voice for another bot or app, voice chat moderators can use `/tts set speaker` with the `bot` option (set it to the bot mention or bot ID), for example: `/tts set speaker voice:🇺🇸 English (us) - Jessie (TikTok) bot:@Wamellow#1138`. Before this works, make sure **Allow bots, apps and webhooks** is enabled in your server dashboard.
 
 ### 🌎 Auto Translate
 Automatically translate messages from any language to match your current voice's language for free.
