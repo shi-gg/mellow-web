@@ -13,7 +13,7 @@ COPY . .
 
 RUN bun run build
 
-FROM base AS runner
+FROM node:alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production \
@@ -26,4 +26,4 @@ COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
 
-CMD ["bun", "./server.js"]
+CMD ["node", "./server.js"]
