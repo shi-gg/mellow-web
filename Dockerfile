@@ -1,4 +1,4 @@
-FROM oven/bun:slim AS base
+FROM oven/bun:alpine AS base
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ COPY . .
 
 RUN bun run build
 
-FROM base AS runner
+FROM node:alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production \
@@ -24,6 +24,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+RUN adduser -D mellow-web
+USER mellow-web
+
 EXPOSE 3000
 
-CMD ["bun", "./server.js"]
+CMD ["node", "./server.js"]
