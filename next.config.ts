@@ -74,12 +74,6 @@ const nextConfig: NextConfig = {
 
             {
                 protocol: "https",
-                hostname: "cdn.waya.one",
-                port: "",
-                pathname: "/r/**"
-            },
-            {
-                protocol: "https",
                 hostname: "images-v2.wamellow.com",
                 port: "",
                 pathname: "/api/greet"
@@ -94,6 +88,12 @@ const nextConfig: NextConfig = {
             {
                 protocol: "https",
                 hostname: "yt3.ggpht.com",
+                port: "",
+                pathname: "/**"
+            },
+            {
+                protocol: "https",
+                hostname: "yt3.googleusercontent.com",
                 port: "",
                 pathname: "/**"
             },
