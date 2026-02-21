@@ -11,6 +11,7 @@ import { TailSpin } from "react-loading-icons";
 import { Badge } from "../ui/badge";
 
 interface Props {
+    label: string;
     link?: string;
     badge?: string;
     resetState?: number;
@@ -21,7 +22,6 @@ export function InputColor({
     className,
 
     label,
-    name,
     link,
     badge,
     description,
@@ -65,7 +65,7 @@ export function InputColor({
         <div className={cn("relative w-full", description && "mb-2", className)}>
             <div className="flex items-center gap-2 mb-1">
                 <span className="sm:text-lg font-medium text-neutral-100">
-                    {label || name}
+                    {label}
                 </span>
 
                 {badge && (
