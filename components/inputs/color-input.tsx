@@ -11,7 +11,6 @@ import { TailSpin } from "react-loading-icons";
 import { Badge } from "../ui/badge";
 
 interface Props {
-    label: string;
     link?: string;
     badge?: string;
     resetState?: number;

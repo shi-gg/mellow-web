@@ -24,7 +24,6 @@ export interface MultiSelectItem<T extends string | number> {
 }
 
 interface Props<T extends string | number> {
-    label: string;
     link?: string;
     badge?: string;
     items: MultiSelectItem<T>[];

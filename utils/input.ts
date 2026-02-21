@@ -24,7 +24,7 @@ interface InputOptions<T> {
 }
 
 export type InputProps<T> = InputOptions<T> & HTMLProps<HTMLDivElement> & {
-    label?: string;
+    label: string;
     description?: string;
     disabled?: boolean;
 };
