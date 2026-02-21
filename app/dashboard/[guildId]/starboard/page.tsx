@@ -130,8 +130,8 @@ export default function Home() {
         <InputNumber
             label="Number of reactions required"
             description="Sets the number of reactions needed to get a message onto the data."
-            url={url}
-            dataName="requiredEmojis"
+            endpoint={url}
+            k="requiredEmojis"
             defaultState={data.requiredEmojis ?? 0}
             disabled={!enabled}
             min={2}
@@ -140,8 +140,8 @@ export default function Home() {
 
         <InputSelect
             label="Channel"
-            url={url}
-            dataName="channelId"
+            endpoint={url}
+            k="channelId"
             items={createSelectableItems(guild?.channels)}
             description="Select the channel where the starboard messages should be send into."
             defaultState={data.channelId}
@@ -153,8 +153,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Emoji"
-                    url={url}
-                    dataName="emoji"
+                    endpoint={url}
+                    k="emoji"
                     items={[
                         { icon: "⭐", name: "Star", value: "⭐" },
                         { icon: "✨", name: "Sparkles", value: "✨" },
@@ -181,8 +181,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Profile display style"
-                    url={url}
-                    dataName="style"
+                    endpoint={url}
+                    k="style"
                     items={[
                         {
                             name: "Username",
@@ -217,8 +217,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Blacklisted channels"
-                    url={url}
-                    dataName="blacklistChannelIds"
+                    endpoint={url}
+                    k="blacklistChannelIds"
                     items={createSelectableItems(guild?.channels)}
                     description="Select channels which should not be able to get into the starboard."
                     defaultState={data.blacklistChannelIds || []}
@@ -230,8 +230,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Blacklisted roles"
-                    url={url}
-                    dataName="blacklistRoleIds"
+                    endpoint={url}
+                    k="blacklistRoleIds"
                     items={createSelectableItems(guild?.roles)}
                     description="Select roles which should not be able to star or be starred."
                     defaultState={data.blacklistRoleIds || []}
@@ -246,8 +246,8 @@ export default function Home() {
             <div className="w-1/2">
                 <InputColor
                     label="Color"
-                    url={url}
-                    dataName="embedColor"
+                    endpoint={url}
+                    k="embedColor"
                     description="Color used for the side of the embed."
                     defaultState={data.embedColor ?? 0}
                     onSave={(o) => edit("embedColor", o)}

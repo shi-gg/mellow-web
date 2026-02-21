@@ -21,7 +21,6 @@ export function InputColor({
     className,
 
     label,
-    name, // @deprecated using label
     link,
     badge,
     description,
@@ -30,9 +29,7 @@ export function InputColor({
     placeholder,
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -47,9 +44,7 @@ export function InputColor({
         reset
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState,
         transform: transform ?? ((v) => v || 0x00_00_00),
@@ -69,7 +64,7 @@ export function InputColor({
         <div className={cn("relative w-full", description && "mb-2", className)}>
             <div className="flex items-center gap-2 mb-1">
                 <span className="sm:text-lg font-medium text-neutral-100">
-                    {label || name}
+                    {label}
                 </span>
 
                 {badge && (

@@ -64,8 +64,8 @@ export default function Home() {
 
         <InputSelect
             label="Channel"
-            url={`/guilds/${guild?.id}/modules/passport`}
-            dataName="channelId"
+            endpoint={`/guilds/${guild?.id}/modules/passport`}
+            k="channelId"
             items={createSelectableItems(guild?.channels)}
             description="Select the channel where verification logs should be send into."
             defaultState={data.channelId}
@@ -77,8 +77,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Unverified role"
-                    url={`/guilds/${guild?.id}/modules/passport`}
-                    dataName="unverifiedRoleId"
+                    endpoint={`/guilds/${guild?.id}/modules/passport`}
+                    k="unverifiedRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                     description="Select what role members should get when joining."
                     defaultState={data.unverifiedRoleId}
@@ -91,10 +91,10 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Verified role"
-                    url={`/guilds/${guild?.id}/modules/passport`}
-                    dataName="successRoleId"
+                    endpoint={`/guilds/${guild?.id}/modules/passport`}
+                    k="successRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
-                    description="Select what role members should get when completing verification."
+                    description="Select what role members should get when completing verification"
                     defaultState={data.successRoleId}
                     disabled={!enabled}
                     onSave={(o) => edit("successRoleId", o as string)}
@@ -106,8 +106,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Failed verification action"
-                    url={`/guilds/${guild?.id}/modules/passport`}
-                    dataName="punishment"
+                    endpoint={`/guilds/${guild?.id}/modules/passport`}
+                    k="punishment"
                     items={[
                         { name: "Ban member", value: 0 },
                         { name: "Kick member", value: 1 },
@@ -123,8 +123,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Punishment role"
-                    url={`/guilds/${guild?.id}/modules/passport`}
-                    dataName="punishmentRoleId"
+                    endpoint={`/guilds/${guild?.id}/modules/passport`}
+                    k="punishmentRoleId"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                     description="Select what role members should get when failing verification."
                     defaultState={data.punishmentRoleId}

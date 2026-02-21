@@ -22,8 +22,8 @@ interface Props {
     children?: React.ReactNode;
 
     name: string;
-    url: string;
-    dataName: string;
+    endpoint: string;
+    k: string;
 
     defaultMessage?: { content?: string | null; embed?: GuildEmbed; };
     isCollapseable?: boolean;
@@ -45,8 +45,8 @@ export default function MessageCreatorEmbed({
     children,
 
     name,
-    url,
-    dataName,
+    endpoint,
+    k,
 
     defaultMessage,
     isCollapseable,
@@ -113,15 +113,15 @@ export default function MessageCreatorEmbed({
 
         if (!body.embed.footer.text) body.embed.footer = { text: null };
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API}${url}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API}${endpoint}`, {
             method: "PATCH",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(dataName.includes(".")
-                ? { [dataName.split(".")[0]]: { [dataName.split(".")[1]]: body } }
-                : { [dataName]: body }
+            body: JSON.stringify(k.includes(".")
+                ? { [k.split(".")[0]]: { [k.split(".")[1]]: body } }
+                : { [k]: body }
             )
         })
             .then((r) => r.json())

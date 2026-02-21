@@ -33,7 +33,6 @@ export function InputSelect<T extends string | number>({
     className,
 
     label,
-    name, // @deprecated - use label instead
     link,
     badge,
     description,
@@ -42,9 +41,7 @@ export function InputSelect<T extends string | number>({
     showClear,
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -58,9 +55,7 @@ export function InputSelect<T extends string | number>({
         update
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState: defaultState ?? null,
         transform,
@@ -87,7 +82,7 @@ export function InputSelect<T extends string | number>({
         <div className={cn("select-none w-full max-w-full relative", description && "mb-2", className)}>
             <div className="flex items-center gap-2 mb-1">
                 <span className="sm:text-lg font-medium text-neutral-100">
-                    {label || name}
+                    {label}
                 </span>
 
                 {badge && (

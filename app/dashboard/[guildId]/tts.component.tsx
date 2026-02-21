@@ -30,8 +30,8 @@ export function TTSSettings() {
             <div className="lg:w-1/2 flex flex-col gap-2">
                 <InputSelect
                     label="Chat to Speech channel"
-                    url={`/guilds/${params.guildId}`}
-                    dataName="tts.channelId"
+                    endpoint={`/guilds/${params.guildId}`}
+                    k="tts.channelId"
                     items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "EmbedLinks"], [ChannelType.GuildText, ChannelType.GuildVoice])}
                     description="Select a channel what channel should be used for tts."
                     defaultState={guild?.tts.channelId}
@@ -40,8 +40,8 @@ export function TTSSettings() {
                 />
                 <InputSelect
                     label="Usage logs"
-                    url={`/guilds/${params.guildId}`}
-                    dataName="tts.logChannelId"
+                    endpoint={`/guilds/${params.guildId}`}
+                    k="tts.logChannelId"
                     items={createSelectableItems(guild?.channels)}
                     description="Select a channel where usage logs should be posted into."
                     defaultState={guild?.tts.logChannelId}
@@ -50,8 +50,8 @@ export function TTSSettings() {
                 />
                 <InputSelect
                     label="Priority role"
-                    url={`/guilds/${params.guildId}`}
-                    dataName="tts.priorityRoleId"
+                    endpoint={`/guilds/${params.guildId}`}
+                    k="tts.priorityRoleId"
                     items={createSelectableItems(guild?.roles)}
                     description="People with this role bypass the queue and speak immediately."
                     defaultState={guild?.tts.priorityRoleId}
@@ -60,8 +60,8 @@ export function TTSSettings() {
                 />
                 <InputSelect
                     label="Blacklist role"
-                    url={`/guilds/${params.guildId}`}
-                    dataName="tts.blacklistRoleId"
+                    endpoint={`/guilds/${params.guildId}`}
+                    k="tts.blacklistRoleId"
                     items={createSelectableItems(guild?.roles)}
                     description="People with this role are not allowed to use tts."
                     defaultState={guild?.tts.blacklistRoleId}
@@ -96,8 +96,8 @@ export function TTSSettings() {
                 <InputNumber
                     label="Max message length"
                     description="The maximum length of a message that can be spoken."
-                    url={`/guilds/${params.guildId}`}
-                    dataName="tts.maxLength"
+                    endpoint={`/guilds/${params.guildId}`}
+                    k="tts.maxLength"
                     defaultState={guild?.tts.maxLength || 4_000}
                     max={4_000}
                     onSave={(value) => edit("maxLength", value)}

@@ -20,8 +20,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Secondary text"
-                    url="/users/@me/rank"
-                    dataName="subText.type"
+                    endpoint="/users/@me/rank"
+                    k="subText.type"
                     description="This text will be displayed bellow the /rank progressbar."
                     items={[
                         {
@@ -53,8 +53,8 @@ export default function Home() {
                 <div className="w-1/2">
                     <InputColor
                         label="Text color"
-                        url="/users/@me/rank"
-                        dataName="textColor"
+                        endpoint="/users/@me/rank"
+                        k="textColor"
                         description="Color used for your username."
                         defaultState={user?.extended?.rank?.textColor ?? 0}
                         onSave={(value) => {
@@ -65,8 +65,8 @@ export default function Home() {
                 <div className="w-1/2">
                     <InputColor
                         label="Bar color"
-                        url="/users/@me/rank"
-                        dataName="barColor"
+                        endpoint="/users/@me/rank"
+                        k="barColor"
                         description="Color used for the progress bar."
                         defaultState={user?.extended?.rank?.barColor ?? 0}
                         onSave={(value) => {
@@ -79,9 +79,9 @@ export default function Home() {
 
         <InputImageUrl
             label="Background"
-            url="/users/@me/rank"
+            endpoint="/users/@me/rank"
             ratio="aspect-4/1"
-            dataName="background"
+            k="background"
             description="Enter a url which should be the background of your /rank card. The recommended resolution is 906x256px."
             defaultState={user?.extended?.rank?.background || ""}
             onSave={(value) => {

@@ -32,9 +32,7 @@ export function InputText({
     resetState,
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -49,9 +47,7 @@ export function InputText({
         reset
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState,
         transform,

@@ -173,8 +173,8 @@ export default function Home() {
                     <InputText
                         key={tag.id}
                         label="Command Name"
-                        url={url + "/" + tag.id}
-                        dataName="name"
+                        endpoint={url + "/" + tag.id}
+                        k="name"
                         description="The name of the custom command."
                         defaultState={tag.name}
                         resetState={tag.name}
@@ -187,13 +187,13 @@ export default function Home() {
                     <InputSelect
                         key={tag.id}
                         label="Permissions"
-                        url={url + "/" + tag.id}
+                        endpoint={url + "/" + tag.id}
                         items={
                             Permissions.sort((a, b) => a.localeCompare(b)).map((p) => (
                                 { name: convertCamelCaseToSpaced(p), value: p }
                             )) || []
                         }
-                        dataName="permission"
+                        k="permission"
                         description="The permissions needed to execute this tag."
                         defaultState={tag.permission}
                         onSave={(option) => editTag("permission", option)}
@@ -205,8 +205,8 @@ export default function Home() {
             <MessageCreatorEmbed
                 key={tag.id}
                 name="Message"
-                url={url + "/" + tag.id}
-                dataName="message"
+                endpoint={url + "/" + tag.id}
+                k="message"
                 defaultMessage={tag.message}
                 onSave={(value) => editTag("message", value)}
             />

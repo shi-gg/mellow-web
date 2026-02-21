@@ -74,7 +74,7 @@ export default function FollowUpdates() {
         >
             <InputSelect
                 label="Channel"
-                dataName="channelId"
+                k="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "ManageWebhooks"])}
                 description="Select a channel where updates should be send into."
                 defaultState={guild?.follownewsChannel?.id}

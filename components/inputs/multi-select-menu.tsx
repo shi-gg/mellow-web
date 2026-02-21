@@ -34,7 +34,6 @@ export function InputMultiSelect<T extends string | number>({
     className,
 
     label,
-    name, // @deprecated - use label instead
     link,
     badge,
     description,
@@ -43,9 +42,7 @@ export function InputMultiSelect<T extends string | number>({
     max = Infinity,
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -61,15 +58,13 @@ export function InputMultiSelect<T extends string | number>({
         save
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState,
         transform,
 
         onSave,
-        manual: true, // Save only when menu closes or after debounce
+        manual: true,
         isEqual: (a, b) => {
             if (a === b) return true;
             if (a.length !== b.length) return false;
@@ -155,7 +150,7 @@ export function InputMultiSelect<T extends string | number>({
         <div className={cn("select-none w-full max-w-full relative", description && "mb-2", className)}>
             <div className="flex items-center gap-2 mb-1">
                 <span className="sm:text-lg font-medium text-neutral-100">
-                    {label || name}
+                    {label}
                 </span>
 
                 {badge && (

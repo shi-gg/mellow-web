@@ -20,8 +20,8 @@ export default function Home() {
                 <div className="lg:w-1/2">
                     <InputSelect
                         label="Default Speaker"
-                        url="/users/@me/text-to-speech"
-                        dataName="voice"
+                        endpoint="/users/@me/text-to-speech"
+                        k="voice"
                         description="This is the default voice for any text to speech conversion."
                         items={voices.map((voice) => ({
                             name: getVoices(voice)[0],
