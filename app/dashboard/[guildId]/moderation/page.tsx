@@ -52,8 +52,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Whitelist channels"
-                    url={url}
-                    dataName="whitelistChannelIds"
+                    endpoint={url}
+                    k="whitelistChannelIds"
                     items={createSelectableItems(guild?.channels, [], [ChannelType.GuildCategory, ChannelType.GuildText, ChannelType.GuildAnnouncement])}
                     description="Select channels where messages should not be moderated in."
                     defaultState={data.whitelistChannelIds}
@@ -67,8 +67,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Whitelist roles"
-                    url={url}
-                    dataName="whitelistRoleIds"
+                    endpoint={url}
+                    k="whitelistRoleIds"
                     items={createSelectableItems(guild?.roles)}
                     description="Select roles by who messages should not be moderated for."
                     defaultState={data.whitelistRoleIds}
@@ -83,8 +83,8 @@ export default function Home() {
 
         <InputText
             label="Keyword filter"
-            url={url}
-            dataName="keywordFilter"
+            endpoint={url}
+            k="keywordFilter"
             description="Separate words or phrases with a comma (dog, cat, tiger) or new line. For each word, use * at the beginning, end, or both for partial matching."
             defaultState={data.keywordFilter.join(", ")}
             max={Infinity}

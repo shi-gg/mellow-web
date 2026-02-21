@@ -34,7 +34,7 @@ export function InputMultiSelect<T extends string | number>({
     className,
 
     label,
-    name, // @deprecated - use label instead
+    name,
     link,
     badge,
     description,
@@ -43,9 +43,7 @@ export function InputMultiSelect<T extends string | number>({
     max = Infinity,
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -61,15 +59,13 @@ export function InputMultiSelect<T extends string | number>({
         save
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState,
         transform,
 
         onSave,
-        manual: true, // Save only when menu closes or after debounce
+        manual: true,
         isEqual: (a, b) => {
             if (a === b) return true;
             if (a.length !== b.length) return false;

@@ -85,8 +85,8 @@ export default function Home() {
         <InputNumber
             label="After how many seconds the message should be deleted"
             description="Set to 0 to disable."
-            url={`/guilds/${guild?.id}/modules/welcome`}
-            dataName="deleteAfter"
+            endpoint={`/guilds/${guild?.id}/modules/welcome`}
+            k="deleteAfter"
             defaultState={data.deleteAfter ?? 0}
             disabled={!enabled}
             onSave={(n) => edit("deleteAfter", n)}
@@ -96,8 +96,8 @@ export default function Home() {
             <InputSelect
                 className="w-2/3 md:w-5/6"
                 label="Channel"
-                url={`/guilds/${guild?.id}/modules/welcome`}
-                dataName="channelId"
+                endpoint={`/guilds/${guild?.id}/modules/welcome`}
+                k="channelId"
                 items={createSelectableItems(guild?.channels)}
                 description="Select the channel where the welcome message should be send into."
                 defaultState={data.channelId}
@@ -120,8 +120,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Join roles"
-                    url={`/guilds/${guild?.id}/modules/welcome`}
-                    dataName="roleIds"
+                    endpoint={`/guilds/${guild?.id}/modules/welcome`}
+                    k="roleIds"
                     items={createSelectableItems(guild?.roles, ["RoleHirachy"])}
                     description="Select roles which members should get."
                     defaultState={data.roleIds}
@@ -134,8 +134,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Channel pings"
-                    url={`/guilds/${guild?.id}/modules/welcome`}
-                    dataName="pingIds"
+                    endpoint={`/guilds/${guild?.id}/modules/welcome`}
+                    k="pingIds"
                     items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages"])}
                     description="Select in what channels user should get ghostpinged."
                     defaultState={data.pingIds}
@@ -150,8 +150,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="First user message reactions"
-                    url={`/guilds/${guild?.id}/modules/welcome`}
-                    dataName="reactions.firstMessageEmojis"
+                    endpoint={`/guilds/${guild?.id}/modules/welcome`}
+                    k="reactions.firstMessageEmojis"
                     items={createSelectableEmojiItems(guild?.emojis)}
                     description="Select emotes which will be reacted with on members first message."
                     defaultState={data.reactions?.firstMessageEmojis}
@@ -169,8 +169,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Welcome message reactions"
-                    url={`/guilds/${guild?.id}/modules/welcome`}
-                    dataName="reactions.welcomeMessageEmojis"
+                    endpoint={`/guilds/${guild?.id}/modules/welcome`}
+                    k="reactions.welcomeMessageEmojis"
                     items={createSelectableEmojiItems(guild?.emojis)}
                     description="Select emotes which will be reacted with on welcome messages."
                     defaultState={data.reactions?.welcomeMessageEmojis}
@@ -188,8 +188,8 @@ export default function Home() {
 
         <MessageCreatorEmbed
             name="Message"
-            url={`/guilds/${guild?.id}/modules/welcome`}
-            dataName="message"
+            endpoint={`/guilds/${guild?.id}/modules/welcome`}
+            k="message"
             defaultMessage={data.message}
             messageAttachmentComponent={(guild!.flags & GuildFlags.WelcomeCard) !== 0 && (
                 <Image
@@ -229,9 +229,9 @@ export default function Home() {
 
                     <InputImageUrl
                         label="Card Avatar"
-                        url={`/guilds/${guild?.id}/modules/welcome`}
+                        endpoint={`/guilds/${guild?.id}/modules/welcome`}
                         ratio="aspect-4/1"
-                        dataName="card.background"
+                        k="card.background"
                         description="Enter a url which should be the background for the image card. The recommended resolution is 906x256px."
                         defaultState={data.card.background || ""}
                         disabled={!enabled || (guild!.flags & GuildFlags.WelcomeCard) === 0}
@@ -249,8 +249,8 @@ export default function Home() {
 
         <MessageCreatorEmbed
             name="Direct Message"
-            url={`/guilds/${guild?.id}/modules/welcome`}
-            dataName="dm.message"
+            endpoint={`/guilds/${guild?.id}/modules/welcome`}
+            k="dm.message"
             defaultMessage={data.dm?.message}
             isCollapseable={true}
             disabled={!enabled}
@@ -308,8 +308,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Button color"
-                    url={`/guilds/${guild?.id}/modules/welcome`}
-                    dataName="button.style"
+                    endpoint={`/guilds/${guild?.id}/modules/welcome`}
+                    k="button.style"
                     items={
                         [
                             ["292b34", "Grey", 2],
@@ -337,8 +337,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputSelect
                     label="Webhook Profile"
-                    url={`/guilds/${guild?.id}/modules/welcome`}
-                    dataName="button.emoji"
+                    endpoint={`/guilds/${guild?.id}/modules/welcome`}
+                    k="button.emoji"
                     items={createSelectableEmojiItems(guild?.emojis)}
                     description="Select an emoji which will be used in the button."
                     defaultState={data.button?.emoji}

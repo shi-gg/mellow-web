@@ -33,7 +33,7 @@ export function InputSelect<T extends string | number>({
     className,
 
     label,
-    name, // @deprecated - use label instead
+    name,
     link,
     badge,
     description,
@@ -42,9 +42,7 @@ export function InputSelect<T extends string | number>({
     showClear,
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -58,9 +56,7 @@ export function InputSelect<T extends string | number>({
         update
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState: defaultState ?? null,
         transform,

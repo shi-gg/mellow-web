@@ -31,9 +31,7 @@ export function InputNumber({
     max = Infinity,
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -49,15 +47,13 @@ export function InputNumber({
         save
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState,
         transform,
 
         onSave,
-        manual: true // Require explicit save
+        manual: true
     });
 
     const [hold, setHold] = useState<"+" | "-">();

@@ -239,8 +239,8 @@ function PremiumGuildSelect({
         <InputMultiSelect
             className="w-full md:w-1/2 lg:w-1/3"
             label="Premium Guilds"
-            url="/users/@me/billing/premium-guilds"
-            dataName="guildIds"
+            endpoint="/users/@me/billing/premium-guilds"
+            k="guildIds"
             items={(data || [])
                 .filter((guild) => guild.bot)
                 .map((guild) => ({

@@ -64,8 +64,8 @@ export default function Home() {
         <InputNumber
             label="After how many seconds the message should be deleted"
             description="Set to 0 to disable"
-            url={`/guilds/${guild?.id}/modules/bye`}
-            dataName="deleteAfter"
+            endpoint={`/guilds/${guild?.id}/modules/bye`}
+            k="deleteAfter"
             defaultState={data.deleteAfter ?? 0}
             disabled={!enabled}
             onSave={(n) => edit("deleteAfter", n)}
@@ -74,8 +74,8 @@ export default function Home() {
         <div className="flex md:gap-4 gap-2">
             <InputSelect
                 label="Channel"
-                url={`/guilds/${guild?.id}/modules/bye`}
-                dataName="channelId"
+                endpoint={`/guilds/${guild?.id}/modules/bye`}
+                k="channelId"
                 items={createSelectableItems(guild?.channels)}
                 description="Select the channel where the farewell message should be send into"
                 defaultState={data.channelId}
@@ -95,8 +95,8 @@ export default function Home() {
 
         <MessageCreatorEmbed
             name="Message"
-            url={`/guilds/${guild?.id}/modules/bye`}
-            dataName="message"
+            endpoint={`/guilds/${guild?.id}/modules/bye`}
+            k="message"
             defaultMessage={data.message}
             messageAttachmentComponent={(guild!.flags & GuildFlags.FarewellCard) !== 0 && (
                 <Image
@@ -136,9 +136,9 @@ export default function Home() {
 
                     <InputImageUrl
                         label="Card Background"
-                        url={`/guilds/${guild?.id}/modules/bye`}
+                        endpoint={`/guilds/${guild?.id}/modules/bye`}
                         ratio="aspect-4/1"
-                        dataName="card.background"
+                        k="card.background"
                         description="Enter a url which should be the background for the image card. The recommended resolution is 906x256px."
                         defaultState={data.card.background || ""}
                         disabled={!enabled || (guild!.flags & GuildFlags.FarewellCard) === 0}

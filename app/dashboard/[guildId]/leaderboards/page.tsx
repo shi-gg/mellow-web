@@ -53,9 +53,9 @@ export default function Home() {
 
                 <InputImageUrl
                     label="Enabled"
-                    url={url}
+                    endpoint={url}
                     ratio="aspect-4/1"
-                    dataName="banner"
+                    k="banner"
                     description="Enter a url which should be the banner of the leaderboard web page. The recommended resolution is 906x256px."
                     defaultState={data.bannerUrl || ""}
                 />
@@ -77,8 +77,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Top messager roles"
-                    url={url}
-                    dataName="roles.messages"
+                    endpoint={url}
+                    k="roles.messages"
                     items={createSelectableItems(guild?.roles)}
                     description="Select roles which should be assigned to the top message members."
                     defaultState={data.roles?.messages || []}
@@ -88,8 +88,8 @@ export default function Home() {
             <div className="lg:w-1/2">
                 <InputMultiSelect
                     label="Blacklisted roles"
-                    url={url}
-                    dataName="roles.voiceminutes"
+                    endpoint={url}
+                    k="roles.voiceminutes"
                     items={createSelectableItems(guild?.roles)}
                     description="Select roles which should be assigned to the top voice members."
                     defaultState={data.roles?.voiceminutes || []}
@@ -101,8 +101,8 @@ export default function Home() {
         <div className="lg:w-1/2">
             <InputMultiSelect
                 label="Blacklisted channels"
-                url={url}
-                dataName="blacklistChannelIds"
+                endpoint={url}
+                k="blacklistChannelIds"
                 items={createSelectableItems(guild?.channels, [], [ChannelType.GuildCategory, ChannelType.GuildText, ChannelType.GuildAnnouncement, ChannelType.GuildVoice])}
                 description="Select channels which should not be counted."
                 defaultState={data.blacklistChannelIds || []}

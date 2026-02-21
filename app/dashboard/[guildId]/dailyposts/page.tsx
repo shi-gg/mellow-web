@@ -138,8 +138,8 @@ export default function Home() {
         <div className="flex md:gap-4 gap-2">
             <InputSelect
                 label="Channel"
-                url={url + "/" + item.id}
-                dataName="channelId"
+                endpoint={url + "/" + item.id}
+                k="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
                 description="Select a channel where dailyposts should be send into."
                 defaultState={item.channelId}
@@ -160,8 +160,8 @@ export default function Home() {
             <InputSelect
                 className="lg:w-1/2 w-full"
                 label="Ping role"
-                url={url + "/" + item.id}
-                dataName="roleId"
+                endpoint={url + "/" + item.id}
+                k="roleId"
                 items={[
                     { name: "@everyone (everyone in server)", value: "everyone" },
                     { name: "@here (everyone online)", value: "here" },
@@ -175,8 +175,8 @@ export default function Home() {
             <InputMultiSelect
                 className="lg:w-1/2 w-full"
                 label="Run at"
-                url={url + "/" + item.id}
-                dataName="runtimeHours"
+                endpoint={url + "/" + item.id}
+                k="runtimeHours"
                 items={hoursArray}
                 defaultState={item.runtimeHours.map(Number)}
                 description="Select one or multiple hours when posts should be made."

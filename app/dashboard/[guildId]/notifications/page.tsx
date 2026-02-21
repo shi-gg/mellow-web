@@ -166,8 +166,8 @@ export default function Home() {
         <div className="flex md:gap-4 gap-2">
             <InputSelect
                 label="Channel"
-                url={url + "/" + item.id}
-                dataName="channelId"
+                endpoint={url + "/" + item.id}
+                k="channelId"
                 items={createSelectableItems(guild?.channels, ["ViewChannel", "SendMessages", "EmbedLinks", item.username ? "ManageWebhooks" : null, item.roleId ? "MentionEveryone" : null])}
                 description="Select a channel where notifications should be send into."
                 defaultState={item.channelId}
@@ -193,8 +193,8 @@ export default function Home() {
             <InputSelect
                 className="md:w-1/2 w-full"
                 label="Ping role"
-                url={url + "/" + item.id}
-                dataName="roleId"
+                endpoint={url + "/" + item.id}
+                k="roleId"
                 items={[
                     { name: "@everyone (everyone in server)", value: "everyone" },
                     { name: "@here (everyone online)", value: "here" },
@@ -210,8 +210,8 @@ export default function Home() {
                 ? <InputMultiSelect
                     className="md:w-1/2 w-full"
                     label="Filter"
-                    url={url + "/" + item.id}
-                    dataName="flags"
+                    endpoint={url + "/" + item.id}
+                    k="flags"
                     items={bitfieldToArray(platformFlags)}
                     description={item.type === NotificationType.Bluesky
                         ? "Select the types of posts to send in addition to regular posts."
@@ -230,8 +230,8 @@ export default function Home() {
                         ? "Blacklist regex"
                         : "Whitelist regex"
                     }
-                    url={url + "/" + item.id}
-                    dataName="regex"
+                    endpoint={url + "/" + item.id}
+                    k="regex"
                     description={flags.has(NotificationFlags.MustNotMatchRegex)
                         ? "Posts that match the provided regex will be ignored."
                         : "Only posts that match the provided regex will be sent."
@@ -249,8 +249,8 @@ export default function Home() {
                     ? "Blacklist regex"
                     : "Whitelist regex"
                 }
-                url={url + "/" + item.id}
-                dataName="regex"
+                endpoint={url + "/" + item.id}
+                k="regex"
                 description={flags.has(NotificationFlags.MustNotMatchRegex)
                     ? "Posts that match the provided regex will be ignored."
                     : "Only posts that match the provided regex will be sent."
@@ -291,8 +291,8 @@ export default function Home() {
         <MessageCreatorEmbed
             key={item.id}
             name="Message"
-            url={url + "/" + item.id}
-            dataName="message"
+            endpoint={url + "/" + item.id}
+            k="message"
             defaultMessage={item.message}
             user={premium && item.username
                 ? {

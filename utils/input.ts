@@ -10,11 +10,7 @@ export enum InputState {
 
 interface InputOptions<T> {
     endpoint?: string;
-    /** @deprecated Use `endpoint` instead. Kept for backward compatibility. */
-    url?: string;
     k?: string;
-    /** @deprecated Use `k` instead. Kept for backward compatibility. */
-    dataName?: string;
 
     defaultState: T;
     transform?: (value: T) => unknown;
@@ -41,9 +37,7 @@ export function useInput<T>(options: InputOptions<T>) {
     const timeout = useRef<NodeJS.Timeout | null>(null);
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-    const endpoint = options.endpoint || options.url;
-    const k = options.k || options.dataName;
-    const { onSave, transform, manual, debounceMs, defaultState, isEqual } = options;
+    const { endpoint, k, onSave, transform, manual, debounceMs, defaultState, isEqual } = options;
 
     const defaultStateKey = JSON.stringify(defaultState);
     const [prevDefaultStateKey, setPrevDefaultStateKey] = useState(defaultStateKey);

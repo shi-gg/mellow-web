@@ -33,9 +33,7 @@ export function InputImageUrl({
     ratio = "aspect-[906/256]",
 
     endpoint,
-    url, // @deprecated - use endpoint instead
     k,
-    dataName, // @deprecated - use k instead
 
     defaultState,
     transform,
@@ -50,15 +48,13 @@ export function InputImageUrl({
         save
     } = useInput({
         endpoint,
-        url,
         k,
-        dataName,
 
         defaultState,
         transform: transform ?? ((v) => v || null),
 
         onSave,
-        manual: true // Only save when image loads successfully
+        manual: true
     });
 
     const [imageState, setImageState] = useState<ImageState>(ImageState.Idle);

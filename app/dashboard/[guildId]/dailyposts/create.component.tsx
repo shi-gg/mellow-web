@@ -91,7 +91,7 @@ export function CreateDailypost({
         >
             <InputSelect
                 label="Channel"
-                dataName="channelId"
+                k="channelId"
                 items={createSelectableItems(channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
                 description="Select a channel where dailyposts should be send into."
                 onSave={(o) => {
