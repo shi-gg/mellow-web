@@ -52,7 +52,7 @@ export default function Home() {
                 />
 
                 <InputImageUrl
-                    label="Enabled"
+                    label="Banner"
                     endpoint={url}
                     ratio="aspect-4/1"
                     k="banner"
@@ -87,7 +87,7 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2">
                 <InputMultiSelect
-                    label="Blacklisted roles"
+                    label="Top voice roles"
                     endpoint={url}
                     k="roles.voiceminutes"
                     items={createSelectableItems(guild?.roles)}
