@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
-import { Montserrat } from "next/font/google";
+import { Lexend } from "next/font/google";
 import Link from "next/link";
 import { HiArrowRight, HiUserAdd } from "react-icons/hi";
 
-const montserrat = Montserrat({ subsets: ["latin"] });
+const lexend = Lexend({ subsets: ["latin"] });
 
 export function CallToAction() {
     return (
@@ -14,7 +14,7 @@ export function CallToAction() {
                 <div className="absolute -bottom-24 -left-24 size-64 bg-pink-400/20 rounded-full blur-3xl" />
 
                 <div className="relative z-10 text-center max-w-2xl mx-auto">
-                    <h2 className={cn(montserrat.className, "text-3xl md:text-4xl font-bold bg-linear-to-r from-white via-violet-200 to-white bg-clip-text text-transparent mb-4")}>
+                    <h2 className={cn(lexend.className, "text-3xl md:text-4xl font-bold bg-linear-to-r from-white via-violet-200 to-white bg-clip-text text-transparent mb-4")}>
                         Ready to get started?
                     </h2>
                     <p className="text-muted-foreground text-lg mb-8">

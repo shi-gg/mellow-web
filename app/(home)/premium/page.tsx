@@ -11,7 +11,7 @@ import NotificationsStylePic from "@/public/docs-assets/notifications-style.webp
 import { cn } from "@/utils/cn";
 import { getBaseUrl, getCanonicalUrl } from "@/utils/urls";
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Lexend } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { BsQuestionLg } from "react-icons/bs";
@@ -21,7 +21,7 @@ import { IoMdInfinite } from "react-icons/io";
 import { GiftBanner } from "./gfit-banner";
 import { Subscribe } from "./subscribe.component";
 
-const montserrat = Montserrat({ subsets: ["latin"] });
+const lexend = Lexend({ subsets: ["latin"] });
 
 const bots = ["1125449347451068437", "985213199248924722", "1097907896987160666"].map((userId) => getUser(userId));
 
@@ -84,7 +84,7 @@ export default function Home() {
         <div className="w-full">
 
             <div className="md:text-5xl text-4xl font-semibold md:mb-6 mb-4 dark:text-neutral-100 text-neutral-900 flex gap-2 items-center w-full">
-                <h1 className={cn("flex gap-4", montserrat.className)}>
+                <h1 className={cn("flex gap-4", lexend.className)}>
                     <span className="hidden md:block">Wamellow</span>
                     <span className="bg-linear-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent break-keep">Premium</span>
                 </h1>
