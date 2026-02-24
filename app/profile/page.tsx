@@ -38,7 +38,12 @@ export default function Home() {
     const { isLoading, data, error, dataUpdatedAt } = useApi<ApiV1UsersMeGuildsGetResponse[]>("/users/@me/guilds");
 
     const guilds = useMemo(
-        () => Array.isArray(data) ? data.sort(sort).filter((guild) => filter(guild, search)).slice(0, MAX_GUILDS) : [],
+        () => Array.isArray(data)
+            ? data
+                .sort(sort)
+                .filter((guild) => filter(guild, search))
+                .slice(0, MAX_GUILDS)
+            : [],
         [data, search]
     );
 
@@ -129,6 +134,7 @@ function sort(a: ApiV1UsersMeGuildsGetResponse, b: ApiV1UsersMeGuildsGetResponse
 }
 
 function filter(guild: ApiV1UsersMeGuildsGetResponse, search: string) {
+    if ("manageable" in guild && !guild.manageable) return false;
     if (!search) return true;
 
     if (guild.name?.toLowerCase().includes(search.toLowerCase())) return true;
