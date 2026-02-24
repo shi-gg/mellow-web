@@ -19,7 +19,7 @@ import { Provider } from "./provider";
 const outfit = Outfit({ subsets: ["latin", "latin-ext"], variable: "--font-outfit" });
 const notosansJP = Noto_Sans_JP({ subsets: ["cyrillic", "vietnamese"], variable: "--font-noto-sans-jp" });
 
-const lexend = Lexend({ subsets: ["latin"] });
+const lexend = Lexend({ weight: "600", subsets: ["latin"] });
 
 // TODO: get automatically from top.gg
 const reviews = {

@@ -2,12 +2,12 @@ import { Section } from "@/components/section";
 import { cn } from "@/utils/cn";
 import { getBaseUrl, getCanonicalUrl } from "@/utils/urls";
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Lexend } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { Commands } from "../commands.component";
 
-const montserrat = Montserrat({ subsets: ["latin"] });
+const lexend = Lexend({ subsets: ["latin"] });
 
 interface Props {
     children: ReactNode;
@@ -52,7 +52,7 @@ export default function RootLayout({
 
     return (<>
         <h1
-            className={cn(montserrat.className, "lg:text-5xl text-4xl font-bold dark:text-neutral-100 text-neutral-900 break-words mb-2")}
+            className={cn(lexend.className, "lg:text-5xl text-4xl font-bold dark:text-neutral-100 text-neutral-900 break-words mb-2")}
         >
             <span className="bg-linear-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent h-20 break-keep">Wamellow</span>
             {" status"}

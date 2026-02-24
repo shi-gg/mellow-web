@@ -22,7 +22,7 @@ import WelcomePic from "@/public/welcome.webp";
 import { cn } from "@/utils/cn";
 import { actor } from "@/utils/tts";
 import { getCanonicalUrl } from "@/utils/urls";
-import { Montserrat, Patrick_Hand } from "next/font/google";
+import { Lexend, Patrick_Hand } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -35,14 +35,14 @@ import { NsfwBanner } from "./nsfw-banner.component";
 import { Ratings } from "./ratings.component";
 import { TTSDemo } from "./tts-demo.component";
 
-const montserrat = Montserrat({ subsets: ["latin"], display: "swap" });
+const lexend = Lexend({ subsets: ["latin"], display: "swap" });
 const handwritten = Patrick_Hand({ subsets: ["latin"], weight: "400", display: "swap" });
 
 export const revalidate = 43_200;
 
 const styles = {
-    h2: cn(montserrat.className, "lg:text-5xl text-4xl bg-linear-to-b bg-clip-text text-transparent from-neutral-200 from-40% to-neutral-300 font-bold mb-4"),
-    h3: cn(montserrat.className, "lg:text-2xl text-xl bg-linear-to-b bg-clip-text text-transparent from-neutral-200 from-40% to-neutral-300 font-semibold")
+    h2: cn(lexend.className, "lg:text-5xl text-4xl bg-linear-to-b bg-clip-text text-transparent from-neutral-200 from-40% to-neutral-300 font-bold mb-4"),
+    h3: cn(lexend.className, "lg:text-2xl text-xl bg-linear-to-b bg-clip-text text-transparent from-neutral-200 from-40% to-neutral-300 font-semibold")
 };
 
 const messageProps = (command?: string) => ({
@@ -73,9 +73,9 @@ export default function Home() {
                         <Ratings />
                     </Suspense>
 
-                    <h1 className={cn(montserrat.className, "lg:text-7xl md:text-6xl text-5xl max-w-md md:max-w-xl font-semibold dark:text-neutral-100 text-neutral-900 break-words")}>
+                    <h1 className={cn(lexend.className, "lg:text-7xl md:text-6xl text-5xl max-w-md md:max-w-xl font-semibold dark:text-neutral-100 text-neutral-900 break-words")}>
                         <span className="bg-linear-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent h-20 break-keep">
-                            Accessibility
+                            Accessibility<br />
                         </span>
                         {" for "}
                         <span className="break-keep inline-flex items-center">
