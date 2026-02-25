@@ -17,7 +17,7 @@ export async function getGift(giftId: string): Promise<ApiV1GiftGetResponse | Ap
         `${process.env.NEXT_PUBLIC_API}/gifts/${giftId}`,
         {
             ...defaultFetchOptions,
-            next: { revalidate: 1 }
+            cache: "no-store"
         }
     );
 
