@@ -22,6 +22,7 @@ export interface ApiV1UsersMeGuildsGetResponse {
     name: string;
     icon: string | null;
     bot: boolean;
+    manageable?: boolean;
 }
 
 export enum GuildFlags {
