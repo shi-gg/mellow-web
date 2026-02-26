@@ -183,7 +183,7 @@ export function ChangeStyleModal({
             }}
             onSubmit={() => {
                 const valid = isValidUsername(name);
-                if (name !== "" && !valid) return new Error("Invalid name");
+                if (name && !valid) return new Error("Invalid name");
 
                 const formData = new FormData();
                 formData.append("json_payload", JSON.stringify({ username: name || null, bio }));
@@ -282,6 +282,7 @@ function FileUpload({
             accept={ALLOWED_FILE_TYPES.join()}
             className="hidden"
             onChange={(e) => {
+                setError(null);
                 setBuf(null);
 
                 const file = e.target.files?.[0];
