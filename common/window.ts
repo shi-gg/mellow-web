@@ -4,6 +4,6 @@ export interface Web {
     width: number;
 }
 
-export const webStore = create<Web>(() => ({
+export const useWindow = create<Web>(() => ({
     width: Infinity
 }));

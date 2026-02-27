@@ -2,7 +2,7 @@
 
 import type { User } from "@/common/user";
 import { userStore } from "@/common/user";
-import { webStore } from "@/common/webstore";
+import { useWindow } from "@/common/window";
 import { LoginButton } from "@/components/login-button";
 import { UserAvatar } from "@/components/ui/avatar";
 import {
@@ -37,10 +37,18 @@ export function Header() {
                 if (!u) return;
                 userStore.setState(u);
             });
+    }, []);
 
-        webStore.setState({
-            width: window?.innerWidth
-        });
+    useEffect(() => {
+        const handleResize = () => {
+            useWindow.setState({
+                width: window?.innerWidth
+            });
+        };
+
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     if (state === State.Failure) {
