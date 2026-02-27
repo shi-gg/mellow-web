@@ -37,8 +37,6 @@ export function Header() {
                 if (!u) return;
                 userStore.setState(u);
             });
-
-
     }, []);
 
     useEffect(() => {
@@ -48,6 +46,7 @@ export function Header() {
             });
         };
 
+        handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
