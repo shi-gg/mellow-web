@@ -3,7 +3,7 @@
         /* Basic Options */
         "incremental": true,
         "module": "ESNext",
-        "target": "ES2024",
+        "target": "ESNext",
         "lib": [
             "dom",
             "dom.iterable",
@@ -24,17 +24,12 @@
         "noImplicitReturns": false,
         "noFallthroughCasesInSwitch": true,
         /* Module Resolution Options */
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "esModuleInterop": true,
-        "baseUrl": ".",
         "declaration": true,
         "skipLibCheck": true,
         "resolveJsonModule": true,
         "noUncheckedIndexedAccess": false,
-        /* Experimental Options */
-        "experimentalDecorators": false,
-        /* Advanced Options */
-        "forceConsistentCasingInFileNames": true,
         /* Other Options */
         "allowJs": true,
         "noEmit": true,
