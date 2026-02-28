@@ -6,27 +6,16 @@ import { Section } from "@/components/section";
 import { GuildFlags } from "@/typings";
 import { transformer } from "@/utils/bitfields";
 import { useParams } from "next/navigation";
-import { HiChartBar } from "react-icons/hi";
 
 import { BotStyle } from "./style.component";
 import { TTSSettings } from "./tts.component";
 import FollowUpdates from "./updates.component";
-import { OverviewLink } from "../../../components/overview-link";
 
 export default function Home() {
     const guild = guildStore((g) => g);
     const params = useParams();
 
     return (<>
-        {(guild!.flags & GuildFlags.PrivateLeaderboard) === 0 && (
-            <OverviewLink
-                title="View Leaderboard"
-                message="Easily access and view the top chatters, voice timers, and inviters from this server in the web."
-                url={`/leaderboard/${params.guildId}`}
-                icon={<HiChartBar />}
-            />
-        )}
-
         <BotStyle />
 
         <FollowUpdates />

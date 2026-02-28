@@ -27,7 +27,7 @@ export default function Notice({
     return (
         <Alert
             variant={type === NoticeType.Info ? "secondary" : "destructive"}
-            className={cn("mb-4", location === "side" && "flex justify-between")}
+            className={cn("mb-4", location === "side" && "flex")}
         >
             {icon || (type === NoticeType.Info
                 ? <HiExclamationCircle className="size-4" />
@@ -39,7 +39,9 @@ export default function Notice({
             </AlertTitle>
 
             {children && (
-                <AlertDescription>
+                <AlertDescription
+                    className={cn(location === "side" && "ml-auto")}
+                >
                     {children}
                 </AlertDescription>
             )}

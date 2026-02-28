@@ -32,12 +32,12 @@ export default async function Home({ params }: Props) {
             itemType="http://schema.org/Article"
             className="w-full lg:w-3/4"
         >
-            {meta?.permissions?.bot &&
+            {meta?.permissions?.bot && (
                 <Notice
                     type={NoticeType.Info}
                     message="Wamellow requires permissions"
                 >
-                    <div className="flex flex-wrap gap-1">
+                    <div className="space-x-1">
                         {meta.permissions.bot.map((perm) => (
                             <Badge
                                 key={perm}
@@ -49,7 +49,7 @@ export default async function Home({ params }: Props) {
                         ))}
                     </div>
                 </Notice>
-            }
+            )}
 
             <BeautifyMarkdown markdown={markdown} />
 
