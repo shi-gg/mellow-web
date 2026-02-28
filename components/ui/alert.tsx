@@ -29,9 +29,9 @@ function Alert({
     );
 }
 
-function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
+function AlertTitle({ className, ...props }: React.ComponentProps<"h5">) {
     return (
-        <div
+        <h5
             data-slot="alert-title"
             className={cn(
                 "font-medium group-has-[>svg]/alert:col-start-2 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
