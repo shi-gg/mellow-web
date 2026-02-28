@@ -7,7 +7,6 @@ import { useState } from "react";
 import { HiFire } from "react-icons/hi";
 
 import Notice, { NoticeType } from "./notice";
-import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Separator } from "./ui/separator";
@@ -190,12 +189,6 @@ function ModalNotice({
                         </Link>
                     </Button>
                 </Notice>
-
-                <div className="absolute -top-2 -right-0.5 z-10">
-                    <Badge className="rotate-3 backdrop-blur-md backdrop-brightness-75">
-                        4€/month!!
-                    </Badge>
-                </div>
             </div>
         );
     }

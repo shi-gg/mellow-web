@@ -361,7 +361,7 @@ export interface ApiV1UsersMeBillingGetResponse {
     cancelAtPeriodEnd: boolean;
     donationQuantity: number;
     paymentMethod: PaymentMethod | null;
-    portalUrl: string;
+    portalUrl: string | null;
     guildIds: string[];
 }
 

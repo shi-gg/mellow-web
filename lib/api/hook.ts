@@ -1,5 +1,5 @@
 import { cacheOptions, getData } from "@/lib/api";
-import { useCallback } from "react";
+import type { QueryClient } from "react-query";
 import { useQuery, useQueryClient } from "react-query";
 
 export type ApiEdit<T> = <K extends keyof T>(key: K, value: T[K]) => void;
@@ -16,16 +16,7 @@ export function useApi<T>(url: string, enabled?: boolean) {
     );
 
     const queryClient = useQueryClient();
-
-    const edit = useCallback(
-        <K extends keyof T>(key: K, value: T[K]) => {
-            queryClient.setQueryData<T>(url, () => ({
-                ...data,
-                [key]: value
-            } as T));
-        },
-        [data, queryClient, url]
-    );
+    const edit = editApiCache<T>(queryClient, url);
 
     if (data && typeof data === "object" && "message" in data && typeof data.message === "string") {
         return { data: undefined, isLoading, error: data.message || "unknown error", edit, ...props };
@@ -38,4 +29,17 @@ export function useApi<T>(url: string, enabled?: boolean) {
         edit,
         ...props
     };
+}
+
+export function editApiCache<T>(queryClient: QueryClient, url: string) {
+    return (key: keyof T, value: T[keyof T]) => (
+        queryClient.setQueryData<T | undefined>(url, (data) => {
+            if (!data) return data;
+
+            return {
+                ...data,
+                [key]: value
+            } as T;
+        })
+    );
 }

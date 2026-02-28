@@ -13,14 +13,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { type ApiEdit, useApi } from "@/lib/api/hook";
-import type { ApiV1UsersMeBillingGetResponse, ApiV1UsersMeGuildsGetResponse } from "@/typings";
+import { type ApiEdit, editApiCache, useApi } from "@/lib/api/hook";
+import { type ApiV1GuildsGetResponse, type ApiV1UsersMeBillingGetResponse, type ApiV1UsersMeGuildsGetResponse, GuildFlags } from "@/typings";
+import { isActive, MAX_PREMIUM_GUILDS } from "@/utils/premium";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { GrAmex } from "react-icons/gr";
 import { HiCreditCard, HiLightningBolt } from "react-icons/hi";
 import { SiDinersclub, SiDiscover, SiJcb, SiMastercard, SiPaypal, SiStripe, SiVisa } from "react-icons/si";
+import { useQueryClient } from "react-query";
 
 export default function Home() {
     const user = userStore((u) => u);
@@ -28,7 +30,7 @@ export default function Home() {
         () => typeof window !== "undefined" && window.location.hash === "#donation"
     );
 
-    const { data, isLoading, error, edit } = useApi<ApiV1UsersMeBillingGetResponse>("/users/@me/billing");
+    const { data, isLoading, error, edit } = useApi<ApiV1UsersMeBillingGetResponse>("/users/@me/billing?with_portal_url=true");
     const [nowInSeconds] = useState(() => Date.now() / 1_000);
 
     const period = useMemo(() => data?.priceId.startsWith("monthly_") ? "month" : "year", [data?.priceId]);
@@ -46,7 +48,7 @@ export default function Home() {
                     icon={<HiLightningBolt />}
                 />
 
-                {data?.status && (
+                {data?.portalUrl && (
                     <Button asChild>
                         <Link href={data.portalUrl} target="_blank">
                             Billing Portal
@@ -117,7 +119,7 @@ export default function Home() {
                 </Box>
                 <Box className="lg:w-1/2" small>
                     <h2 className="font-semibold text-xl text-neutral-300 mb-2">Payment Method</h2>
-                    {isLoading || !data ? (
+                    {isLoading || !data?.portalUrl ? (
                         <Skeleton className="h-12 w-full" />
                     ) : (
                         <div className="flex gap-2 items-center bg-wamellow-100 px-4 py-2 rounded-lg">
@@ -138,6 +140,7 @@ export default function Home() {
                 <PremiumGuildSelect
                     isParentLoading={isLoading || !data}
                     guildIds={data?.guildIds || []}
+                    edit={edit}
                 />
             </div>
 
@@ -165,10 +168,6 @@ function getPeriodEndsIn(endsAt: number, nowInSeconds: number) {
     if (days <= 0) return "Today";
     if (days === 1) return "Tomorrow";
     return `in ${days} days`;
-}
-
-function isActive(status: ApiV1UsersMeBillingGetResponse["status"]): status is "active" | "trialing" | "past_due" {
-    return status === "active" || status === "trialing" || status === "past_due";
 }
 
 function PortalButton({ data }: { data: ApiV1UsersMeBillingGetResponse; }) {
@@ -216,12 +215,31 @@ function getPaymentMethodInfo(method?: ApiV1UsersMeBillingGetResponse["paymentMe
 
 function PremiumGuildSelect({
     isParentLoading,
-    guildIds
+    guildIds,
+    edit
 }: {
     isParentLoading: boolean;
     guildIds: string[];
+    edit: ApiEdit<ApiV1UsersMeBillingGetResponse>;
 }) {
+    const queryClient = useQueryClient();
     const { isLoading, data, error } = useApi<ApiV1UsersMeGuildsGetResponse[]>("/users/@me/guilds");
+
+    const editGuildPremium = useCallback(
+        (guildId: string, action: "add" | "remove") => {
+            queryClient.setQueryData<ApiV1GuildsGetResponse | undefined>(`/guilds/${guildId}`, (guild) => {
+                if (!guild) return guild;
+
+                return {
+                    ...guild,
+                    flags: action === "add"
+                        ? ((guild?.flags || 0) | GuildFlags.Premium)
+                        : ((guild?.flags || 0) & ~GuildFlags.Premium)
+                } satisfies ApiV1GuildsGetResponse;
+            });
+        },
+        [queryClient]
+    );
 
     if (isLoading || isParentLoading) {
         return (
@@ -258,6 +276,16 @@ function PremiumGuildSelect({
             }
             description="Select guilds where you want to enable premium features."
             defaultState={guildIds}
+            max={MAX_PREMIUM_GUILDS}
+            onSave={(newGuildIds) => {
+                edit("guildIds", newGuildIds);
+
+                editApiCache<ApiV1UsersMeBillingGetResponse>(queryClient, "/users/@me/billing?with_portal_url=false")("guildIds", newGuildIds);
+
+                for (const guildId of newGuildIds) editGuildPremium(guildId, "add");
+                for (const guildId of guildIds.filter((guildId) => !newGuildIds.includes(guildId))) editGuildPremium(guildId, "remove");
+
+            }}
         />
     );
 }

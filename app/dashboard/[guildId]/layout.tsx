@@ -1,6 +1,7 @@
 "use client";
 
 import { guildStore } from "@/common/guilds";
+import { userStore } from "@/common/user";
 import ImageReduceMotion from "@/components/image-reduce-motion";
 import { ListTab } from "@/components/list";
 import { ScreenMessage, SupportButton } from "@/components/screen-message";
@@ -13,9 +14,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { HiBell, HiChartBar, HiChevronLeft, HiCode, HiEye, HiHome, HiPaperAirplane, HiStar, HiUserAdd, HiUsers, HiViewGridAdd } from "react-icons/hi";
 import { useQuery } from "react-query";
+
+import { PremiumReminder } from "./premium-reminder.component";
 
 function useGuildData<T extends unknown[]>(
     url: string,
@@ -31,7 +34,8 @@ function useGuildData<T extends unknown[]>(
                 const isError = !data || "message" in data;
                 onLoad(isError ? [] as unknown as T : data, isError);
             },
-            ...cacheOptions
+            ...cacheOptions,
+            refetchOnMount: true
         }
     );
 }
@@ -44,12 +48,8 @@ export default function RootLayout({
     const cookies = useCookies();
     const params = useParams();
 
-    const [loaded, setLoaded] = useState<string[]>([]);
-
-    const guildId = guildStore((g) => g?.id);
-    const guildName = guildStore((g) => g?.name);
-    const guildIcon = guildStore((g) => g?.icon);
-    const guildMemberCount = guildStore((g) => g?.memberCount);
+    const guild = guildStore();
+    const user = userStore();
 
     const session = useMemo(() => cookies.get("session"), [cookies]);
 
@@ -72,7 +72,6 @@ export default function RootLayout({
         params.guildId,
         (data) => {
             guildStore.setState((state) => ({ ...state, channels: data }));
-            setLoaded((loaded) => loaded.includes("channels") ? loaded : [...loaded, "channels"]);
         }
     );
 
@@ -81,7 +80,6 @@ export default function RootLayout({
         params.guildId,
         (data) => {
             guildStore.setState((state) => ({ ...state, roles: data }));
-            setLoaded((loaded) => loaded.includes("roles") ? loaded : [...loaded, "roles"]);
         }
     );
 
@@ -90,10 +88,10 @@ export default function RootLayout({
         params.guildId,
         (data) => {
             guildStore.setState((state) => ({ ...state, emojis: data }));
-            setLoaded((loaded) => loaded.includes("emojis") ? loaded : [...loaded, "emojis"]);
         }
     );
 
+    const isLoaded = guild?.id && "channels" in guild && "roles" in guild && "emojis" in guild;
     const error = data && "message" in data ? data.message : undefined;
 
     useEffect(() => {
@@ -103,9 +101,9 @@ export default function RootLayout({
 
     return (
         <div className="flex flex-col w-full">
-            {guildName && (
+            {guild?.name && (
                 <Head>
-                    <title>{guildName}{"'"}s Dashboard</title>
+                    <title>{guild.name}{"'"}s Dashboard</title>
                 </Head>
             )}
 
@@ -123,13 +121,13 @@ export default function RootLayout({
 
                 <div className="text-lg flex gap-5">
                     <Skeleton
-                        isLoading={!guildId}
+                        isLoading={!guild?.id}
                         className="rounded-xl size-14 ring-offset-(--background-rgb) ring-2 ring-offset-2 ring-violet-400/40 shrink-0 relative top-1 left-1"
                     >
                         <ImageReduceMotion
                             alt="this server's icon"
                             className="rounded-xl"
-                            url={`https://cdn.discordapp.com/icons/${guildId}/${guildIcon}`}
+                            url={`https://cdn.discordapp.com/icons/${guild?.id}/${guild?.icon}`}
                             size={128}
                         />
                     </Skeleton>
@@ -140,13 +138,15 @@ export default function RootLayout({
                             <Skeleton className="rounded-xl w-10 h-3.5" />
                         </div>
                         :
-                        <div className="flex flex-col mt-[6px]">
-                            <div className="text-2xl dark:text-neutral-200 text-neutral-800 font-medium">{guildName || "Unknown Server"}</div>
-                            <div className="text-xs font-semibold flex items-center gap-1">  <HiUsers /> {intl.format(guildMemberCount || 0)}</div>
+                        <div className="flex flex-col mt-1.5">
+                            <div className="text-2xl dark:text-neutral-200 text-neutral-800 font-medium">{guild?.name || "Unknown Server"}</div>
+                            <div className="text-xs font-semibold flex items-center gap-1">  <HiUsers /> {intl.format(guild?.memberCount || 0)}</div>
                         </div>
                     }
                 </div>
             </div>
+
+            {user?.premium && guild && <PremiumReminder guild={guild} />}
 
             <Suspense>
                 <ListTab
@@ -193,7 +193,7 @@ export default function RootLayout({
                         }
                     ]}
                     url={`/dashboard/${params.guildId}`}
-                    disabled={!guildId || Boolean(error)}
+                    disabled={!guild?.id || Boolean(error)}
                 />
             </Suspense>
 
@@ -218,7 +218,7 @@ export default function RootLayout({
                     </>}
                 />
                 :
-                (guildId && loaded.length === 3) ? children : <></>
+                isLoaded ? children : <></>
             }
 
         </div>
