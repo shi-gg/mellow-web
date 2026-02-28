@@ -282,8 +282,8 @@ function PremiumGuildSelect({
 
                 editApiCache<ApiV1UsersMeBillingGetResponse>(queryClient, "/users/@me/billing?with_portal_url=false")("guildIds", newGuildIds);
 
-                for (const guildId of newGuildIds) editGuildPremium(guildId, "remove");
-                for (const guildId of guildIds.filter((guildId) => !newGuildIds.includes(guildId))) editGuildPremium(guildId, "add");
+                for (const guildId of newGuildIds) editGuildPremium(guildId, "add");
+                for (const guildId of guildIds.filter((guildId) => !newGuildIds.includes(guildId))) editGuildPremium(guildId, "remove");
 
             }}
         />

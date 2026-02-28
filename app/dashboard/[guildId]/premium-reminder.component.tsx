@@ -52,7 +52,7 @@ export function PremiumReminder({ guild }: { guild: ApiV1GuildsGetResponse; }) {
         }
 
         edit("guildIds", newGuildIds);
-        editApiCache<ApiV1GuildsGetResponse>(queryClient, `/guilds/${params.guildId}`)("flags", guild.flags & GuildFlags.Premium);
+editApiCache<ApiV1GuildsGetResponse>(queryClient, `/guilds/${params.guildId}`)("flags", guild.flags | GuildFlags.Premium);
         editApiCache<ApiV1UsersMeBillingGetResponse>(queryClient, "/users/@me/billing?with_portal_url=true")("guildIds", newGuildIds);
         setIsLoading(false);
     };
