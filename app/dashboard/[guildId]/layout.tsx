@@ -146,7 +146,7 @@ export default function RootLayout({
                 </div>
             </div>
 
-            {user?.premium && guild && <PremiumReminder guild={guild} />}
+            {user?.premium !== 0 && guild && <PremiumReminder guild={guild} />}
 
             <Suspense>
                 <ListTab
