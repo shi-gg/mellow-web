@@ -110,9 +110,9 @@ function Dropdown({ user }: { user: User; }) {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href={user.premium !== 0 ? "/profile/billing" : "/premium"}>
+                        <Link href={user.premium === 0 ? "/premium" : "/profile/billing"}>
                             <HiSparkles />
-                            {user.premium !== 0 ? "Billing" : "Premium"}
+                            {user.premium === 0 ? "Premium" : "Billing"}
                         </Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
