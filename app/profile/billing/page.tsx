@@ -36,7 +36,7 @@ export default function Home() {
     const period = useMemo(() => data?.priceId.startsWith("monthly_") ? "month" : "year", [data?.priceId]);
     const basePrice = useMemo(() => period === "year" ? YEARLY_PRICES[0] : MONTHLY_PRICES[0], [period]);
 
-    if ((isLoading && !user?.premium) || (!isLoading && !data) || (data && !isActive(data.status))) {
+    if ((isLoading && user?.premium === 0) || (!isLoading && !data) || (data && !isActive(data.status))) {
         return (
             <div className="space-y-4">
                 {error && error !== "Not Found" && <Notice message={error} />}

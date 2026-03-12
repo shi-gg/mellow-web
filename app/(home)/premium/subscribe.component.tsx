@@ -17,7 +17,7 @@ const PERIODS = ["month", "year"] as const;
 export function Subscribe({ header }: { header?: boolean; }) {
     const search = useSearchParams();
 
-    const premium = userStore((u) => u?.premium || false);
+    const premium = userStore((u) => u?.premium !== 0);
     const [donation, setDonation] = useState(0);
     const [period, setPeriod] = useState<"month" | "year">("month");
 
