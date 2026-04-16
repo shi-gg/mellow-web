@@ -24,23 +24,23 @@ export default function Comment({
                 <span className="flex items-center gap-3">
                     <Image
                         alt="users's profile picture"
-                        className="w-12 h-12 rounded-full"
+                        className="size-12 rounded-full"
                         height={64}
                         src={avatar}
                         width={64}
                     />
                     <div>
-                        <span className="text-xl font-medium dark:text-neutral-200 text-neutral-800">
+                        <p className="text-xl font-semibold text-foreground -mb-0.5">
                             {username}
-                        </span> <br />
-                        <span className="dark:text-neutral-300 text-neutral-700">
+                        </p>
+                        <p className="text-muted-foreground">
                             {bio}
-                        </span>
+                        </p>
                     </div>
                 </span>
-                <HiChevronRight className="w-8 h-8" />
+                <HiChevronRight className="size-8 text-muted-foreground" />
             </div>
-            <span className={cn(handwritten.className, "text-2xl break-words")}>
+            <span className={cn(handwritten.className, "text-2xl wrap-break-words")}>
                 „{content}“
             </span>
         </div>
