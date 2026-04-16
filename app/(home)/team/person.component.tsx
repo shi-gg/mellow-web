@@ -22,7 +22,7 @@ export async function Person({
     return (
         <Component
             className={cn(
-                "flex items-center gap-3 h-14 px-2 pl-[5px] pr-4 hover:bg-wamellow rounded-full cursor-default",
+                "flex items-center gap-3 h-14 px-2 pl-1.25 pr-4 hover:bg-wamellow rounded-full cursor-default",
                 social && "duration-100 outline-violet-500 hover:outline-solid cursor-pointer"
             )}
             href={social}
@@ -37,8 +37,8 @@ export async function Person({
             />
 
             <div className="mr-2">
-                <div className="text-lg text-neutral-200 font-medium -mb-1.5">{user.globalName || user.username}</div>
-                <span className="opacity-75">{user.username}</span>
+                <div className="text-lg text-neutral-200 font-semibold -mb-1.5">{user.globalName || user.username}</div>
+                <span className="text-muted-foreground">{user.username}</span>
             </div>
         </Component>
     );

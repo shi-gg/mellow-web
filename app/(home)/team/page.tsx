@@ -3,12 +3,20 @@ import { getBaseUrl, getCanonicalUrl } from "@/utils/urls";
 import type { Metadata } from "next";
 import { BsDiscord, BsGithub } from "react-icons/bs";
 
-import { members, repos } from "./constants";
+import { getBillingDonators } from "./api";
+import { developers, repos, TeamType } from "./constants";
 import { DiscordServer } from "./discord.component";
 import { Person } from "./person.component";
 import { Repository } from "./repository.component";
 
 export const revalidate = 3_600;
+
+function formatTeamName(team: string) {
+    return team
+        .split("-")
+        .map((str) => str.replace(/^\w/, (char) => char.toUpperCase()))
+        .join(" ");
+}
 
 export const generateMetadata = (): Metadata => {
     const title = "Team";
@@ -43,7 +51,20 @@ export const generateMetadata = (): Metadata => {
     };
 };
 
-export default function Home() {
+export default async function Home() {
+    const donors = await getBillingDonators()
+        .then((donors) => (
+            Array.isArray(donors)
+                ? donors.map((id) => ({
+                    id,
+                    team: TeamType.Donator
+                }))
+                : []
+        ));
+
+    const members = [...developers, ...donors];
+    const teams = filterDuplicates(members.map((member) => member.team));
+
     return (
         <div>
             <h2 className="text-2xl font-medium text-neutral-200">Team 👋</h2>
@@ -52,13 +73,13 @@ export default function Home() {
             </div>
 
             <div className="relative mb-10">
-                {filterDuplicates(members.map((member) => member.team)).map((team) => (
+                {teams.map((team) => (
                     <div
                         key={team}
                         className="py-3"
                     >
                         <h3 className="text-lg font-medium text-neutral-200">
-                            {team.split("-").map((str) => str.replace(/^\w/, (char) => char.toUpperCase())).join(" ")}
+                            {formatTeamName(team)}
                         </h3>
 
                         <div className="mt-2 flex flex-wrap gap-3">
@@ -68,7 +89,7 @@ export default function Home() {
                                     <Person
                                         key={member.id}
                                         id={member.id}
-                                        social={"social" in member ? member.social as string : undefined}
+                                        social={"social" in member ? member.social : undefined}
                                     />
                                 ))
                             }
