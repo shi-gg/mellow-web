@@ -23,7 +23,7 @@ export default function Comment({
             <div className="flex gap-4 items-center mb-2">
                 <span className="flex items-center gap-3">
                     <Image
-                        alt="users's profile picture"
+                        alt={`${username}'s profile picture`}
                         className="size-12 rounded-full"
                         height={64}
                         src={avatar}
