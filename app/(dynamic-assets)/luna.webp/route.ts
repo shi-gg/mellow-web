@@ -15,7 +15,8 @@ export async function GET() {
         avatar,
         {
             headers: {
-                "Cache-Control": "public, s-maxage=691200, immutable"
+                "Cache-Control": "public, s-maxage=691200, immutable",
+                "Content-Type": "image/webp"
             }
         }
     );
