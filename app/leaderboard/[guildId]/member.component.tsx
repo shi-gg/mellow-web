@@ -142,7 +142,7 @@ export default async function Member({
                 />
             </form>
 
-        </div >
+        </div>
     );
 
 }

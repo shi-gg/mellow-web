@@ -130,7 +130,7 @@ export default async function RootLayout({ params, children }: Props) {
             </div>
 
             <Footer className="mt-24" />
-        </div >
+        </div>
     );
 }
 

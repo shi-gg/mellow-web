@@ -124,7 +124,7 @@ export default function Home() {
                 description={`To save some performance, use the search to find a guild. Showing ${MAX_GUILDS} out of ~${size < 1_000 ? size : Math.round(size / 1_000) * 1_000}.`}
             />
         )}
-    </div >);
+    </div>);
 }
 
 function sort(a: ApiV1UsersMeGuildsGetResponse, b: ApiV1UsersMeGuildsGetResponse) {

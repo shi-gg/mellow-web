@@ -34,6 +34,6 @@ export default function Home() {
                 icon={<HiUserRemove />}
             />
 
-        </div >
+        </div>
     );
 }
