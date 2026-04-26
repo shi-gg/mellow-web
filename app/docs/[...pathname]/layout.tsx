@@ -156,6 +156,7 @@ function NavButton({
                 )}
                 href={`/docs/${file}`}
                 size="sm"
+                aria-current={active ? "page" : undefined}
             >
                 <span className="mr-0.5">
                     {icon}
