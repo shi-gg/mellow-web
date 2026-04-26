@@ -125,7 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
 
                 <body
                     className={cn(
-                        "relative top-0 w-full flex justify-center overflow-x-hidden xl:overflow-visible!",
+                        "relative top-0 w-full flex justify-center overflow-x-clip xl:overflow-visible!",
                         outfit.variable,
                         notosansJP.variable
                     )}

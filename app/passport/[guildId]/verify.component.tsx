@@ -103,7 +103,7 @@ export function Verify({ guild, isLoggedIn }: Props) {
                 </Button>
             </div>
 
-        </div >
+        </div>
     );
 
 }
