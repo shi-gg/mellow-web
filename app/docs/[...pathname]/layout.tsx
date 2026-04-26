@@ -1,7 +1,8 @@
 import { Footer } from "@/components/footer";
-import { LinkButton } from "@/components/ui/button";
+import { Button, LinkButton } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import metadata from "@/public/docs/meta.json";
+import { cn } from "@/utils/cn";
 import { getBaseUrl, getCanonicalUrl } from "@/utils/urls";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -53,10 +54,11 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 
 export default async function RootLayout({ params, children }: Props) {
     const { pathname } = await params;
-    const meta = metadata.pages.find((page) => page.file === `${pathname.join("/").toLowerCase()}.md`);
+    const currentFile = `${pathname.join("/").toLowerCase()}.md`;
+    const meta = metadata.pages.find((page) => page.file === currentFile);
 
     const title = meta?.file === "index.md"
-        ? "Wamellow"
+        ? "🏡 Wamellow"
         : meta?.name;
 
     return (
@@ -70,13 +72,14 @@ export default async function RootLayout({ params, children }: Props) {
             </div>
 
             <div className="flex flex-col lg:flex-row gap-6 mt-5 min-h-[63vh]">
-                <nav className="w-full lg:w-1/4 space-y-2">
+                <nav className="w-full lg:w-1/4 space-y-2 md:sticky md:top-6 md:self-start">
 
                     <ul className="space-y-1 mb-4 bg-wamellow p-2 rounded-md border border-wamellow-alpha">
                         {metadata.pages.map((page, i) =>
                             <NavButton
                                 key={"nav-" + page.file + i}
                                 page={page}
+                                active={page.file === currentFile}
                             />
                         )}
                     </ul>
@@ -107,13 +110,18 @@ export default async function RootLayout({ params, children }: Props) {
                         <HiViewGridAdd />
                         Dashboard
                     </LinkButton>
-                    <Link
-                        className="flex items-center gap-1.5 hover:text-violet-400 duration-100"
-                        href={"https://github.com/shi-gg/mellow-web/blob/master/public/docs"}
-                        target="_blank"
+                    <Button
+                        asChild
+                        variant="link"
+                        className="pl-2"
                     >
-                        <BsGithub /> Contribute
-                    </Link>
+                        <Link
+                            href="https://github.com/shi-gg/mellow-web/blob/master/public/docs"
+                            target="_blank"
+                        >
+                            <BsGithub className="size-4!" /> Suggest edits
+                        </Link>
+                    </Button>
                 </nav>
 
                 <Separator className="lg:hidden" />
@@ -122,14 +130,16 @@ export default async function RootLayout({ params, children }: Props) {
             </div>
 
             <Footer className="mt-24" />
-        </div>
+        </div >
     );
 }
 
 function NavButton({
-    page
+    page,
+    active
 }: {
     page: typeof metadata.pages[0];
+    active?: boolean;
 }) {
     const file = page.file.replace(/\.md$/, "");
     const icon = page.name.split(" ").shift() || "";
@@ -138,11 +148,16 @@ function NavButton({
     return (
         <li>
             <LinkButton
-                className="w-full justify-start! bg-transparent h-[30px]"
+                className={cn(
+                    "w-full justify-start! h-8",
+                    active
+                        ? "bg-wamellow"
+                        : "bg-transparent"
+                )}
                 href={`/docs/${file}`}
                 size="sm"
             >
-                <span className="mr-[2px]">
+                <span className="mr-0.5">
                     {icon}
                 </span>
                 {name}
