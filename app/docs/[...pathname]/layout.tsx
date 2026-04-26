@@ -71,8 +71,8 @@ export default async function RootLayout({ params, children }: Props) {
                 {meta?.description}
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-6 mt-5 min-h-[63vh]">
-                <nav className="w-full lg:w-1/4 space-y-2 md:sticky md:top-6 md:self-start">
+            <div className="flex flex-col md:flex-row gap-6 mt-5 min-h-[63vh]">
+                <nav className="w-full md:w-1/4 space-y-2 md:sticky md:top-6 md:self-start">
 
                     <ul className="space-y-1 mb-4 bg-wamellow p-2 rounded-md border border-wamellow-alpha">
                         {metadata.pages.map((page, i) =>
@@ -124,7 +124,7 @@ export default async function RootLayout({ params, children }: Props) {
                     </Button>
                 </nav>
 
-                <Separator className="lg:hidden" />
+                <Separator className="md:hidden" />
 
                 {children}
             </div>
