@@ -46,7 +46,7 @@ export default function Home() {
                     />
                     <InputSwitch
                         label="Markdown features"
-                        description="Whenever code-blocks, spoilers and emojis should be spoken in Chat to Speech."
+                        description="Whether code-blocks, spoilers, and emojis should be spoken in Chat to Speech."
                         inverted
                         endpoint="/users/@me"
                         k="flags"
