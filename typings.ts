@@ -294,7 +294,10 @@ export interface ApiV1GuildsModulesPassportGetResponse {
 
 export enum UserFlags {
     Premium = 1 << 0,
+
     ChatToSpeechIgnore = 1 << 4,
+    ChatToSpeechIgnoreWeirdMarkdown = 1 << 7,
+
     LeaderboardAlternateStyle = 1 << 5
 }
 
