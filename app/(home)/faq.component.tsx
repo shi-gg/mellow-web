@@ -148,7 +148,7 @@ export function Faq({
     return (<>
         <script
             type="application/ld+json"
-            /* eslint-disable @eslint-react/dom-no-dangerously-set-innerhtml */
+            /* eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml */
             dangerouslySetInnerHTML={{
                 __html: JSON.stringify(schema)
             }}
@@ -167,7 +167,7 @@ export function Faq({
             className="w-full space-y-2"
             type="single"
             collapsible
-            defaultValue="0"
+            defaultValue={data[0]?.title}
         >
             {data.map((item) => (
                 <AccordionItem
