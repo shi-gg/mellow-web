@@ -63,8 +63,8 @@ export default function LeaderboardStyle() {
                             : "dark:border-violet-400/60 dark:hover:border-violet-400 border-violet-600/60 hover:border-violet-600"
                     )}
                 >
-                    {Array.from({ length: 10 }).fill("").map((_, i) =>
-                        <div key={i} className="flex gap-2">
+                    {Array.from({ length: 10 }, (_, i) =>
+                        <div key={`compact-style-${i + 1}`} className="flex gap-2">
                             <div
                                 className={cn(
                                     "duration-200 h-6 w-6 aspect-square rounded-full",
@@ -99,8 +99,8 @@ export default function LeaderboardStyle() {
                             : "dark:border-neutral-700 hover:border-neutral-500 border-neutral-300 "
                     )}
                 >
-                    {Array.from({ length: 8 }).fill("").map((_, i) =>
-                        <div key={i} className="flex gap-2">
+                    {Array.from({ length: 8 }, (_, i) =>
+                        <div key={`alternate-style-${i + 1}`} className="flex gap-2">
                             <div
                                 className={cn(
                                     "duration-200 h-4 w-4 aspect-square rounded-full",

@@ -18,6 +18,7 @@ export function DiscordMarkdown({
     return (
         <div
             className={cn("discord-md", mode === "LIGHT" && "discord-md-light")}
+            /* eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml */
             dangerouslySetInnerHTML={{ __html: md.toHTML(sanitizedHtml, { embed }) }}
         />
     );

@@ -103,7 +103,7 @@ export default function Home() {
                 defaultState={data.channelId}
                 disabled={!enabled}
                 showClear
-                onSave={(o) => edit("channelId", o as string)}
+                onSave={(o) => edit("channelId", o)}
             />
 
             <Fetch

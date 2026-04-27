@@ -1,6 +1,7 @@
 import Box from "@/components/box";
 import { Badge } from "@/components/ui/badge";
 import { defaultFetchOptions } from "@/lib/api";
+import type { ApiError } from "@/typings";
 import { intl } from "@/utils/numbers";
 import { HiFire, HiInformationCircle } from "react-icons/hi";
 
@@ -10,14 +11,17 @@ interface Commands {
     uses: number;
 }
 
+async function getCommands() {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API}/commands`, defaultFetchOptions);
+    return response.json().catch(() => null) as Promise<Commands[] | ApiError | null>;
+}
+
 export async function Commands({
     limit = 6
 }: {
     limit?: number;
 }) {
-    const commands = await fetch(`${process.env.NEXT_PUBLIC_API}/commands`, defaultFetchOptions)
-        .then((res) => res.json())
-        .catch(() => null) as Commands[] | null;
+    const commands = await getCommands();
 
     return (
         <Box

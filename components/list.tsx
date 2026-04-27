@@ -3,7 +3,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import decimalToRgb from "@/utils/decimalToRgb";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 import { Button } from "./ui/button";
@@ -23,13 +23,32 @@ interface ListProps {
 
 export function ListTab({ tabs, url, searchParamName, disabled }: ListProps) {
     const [position, setPosition] = useState(0);
-    const [scrollMetrics, setScrollMetrics] = useState<{ canScroll: boolean; maxScroll: number; }>({ canScroll: false, maxScroll: 0 });
+    const [tabsListElement, setTabsListElement] = useState<HTMLDivElement | null>(null);
 
     const path = usePathname();
     const params = useSearchParams();
     const router = useRouter();
 
-    const ref = useRef<HTMLDivElement | null>(null);
+    const setTabsListRef = useCallback((node: HTMLDivElement | null) => {
+        setTabsListElement(node);
+        if (node) {
+            setPosition(node.scrollLeft);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!tabsListElement) return;
+
+        const observer = new ResizeObserver(() => {
+            setPosition(tabsListElement.scrollLeft);
+        });
+
+        observer.observe(tabsListElement);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [tabsListElement]);
 
     function handleChange(key: string) {
         if (!searchParamName) {
@@ -46,53 +65,23 @@ export function ListTab({ tabs, url, searchParamName, disabled }: ListProps) {
     }
 
     function scroll(direction: "left" | "right") {
-        if (!ref.current) return;
+        if (!tabsListElement) return;
 
-        const scrollAmount = ref.current.clientWidth * 0.8;
+        const scrollAmount = tabsListElement.clientWidth * 0.8;
 
-        ref.current.scrollBy({
+        tabsListElement.scrollBy({
             top: 0,
             left: direction === "right" ? scrollAmount : -scrollAmount,
             behavior: "smooth"
         });
     }
 
-    function setScrollPosition() {
-        if (!ref.current) return;
-        const { scrollLeft } = ref.current;
-        setPosition(scrollLeft);
-    }
-
-    useEffect(() => {
-        const element = ref.current;
-        if (!element) return;
-
-        const updateMetrics = () => {
-            const canScroll = element.scrollWidth > element.clientWidth;
-            const maxScroll = Math.max(element.scrollWidth - (element.clientWidth + 10), 0);
-            setScrollMetrics((prev) => {
-                if (prev.canScroll === canScroll && prev.maxScroll === maxScroll) return prev;
-                return { canScroll, maxScroll };
-            });
-            setPosition(element.scrollLeft);
-        };
-
-        const handleScroll = () => {
-            setScrollPosition();
-            updateMetrics();
-        };
-
-        const resizeObserver = new ResizeObserver(updateMetrics);
-
-        element.addEventListener("scroll", handleScroll);
-        resizeObserver.observe(element);
-        updateMetrics();
-
-        return () => {
-            element.removeEventListener("scroll", handleScroll);
-            resizeObserver.disconnect();
-        };
-    }, []);
+    const maxScroll = tabsListElement
+        ? Math.max(tabsListElement.scrollWidth - (tabsListElement.clientWidth + 10), 0)
+        : 0;
+    const canScroll = tabsListElement
+        ? tabsListElement.scrollWidth > tabsListElement.clientWidth
+        : false;
 
     const currentValue = searchParamName
         ? params.get(searchParamName)
@@ -106,8 +95,9 @@ export function ListTab({ tabs, url, searchParamName, disabled }: ListProps) {
                 onValueChange={handleChange}
             >
                 <TabsList
-                    ref={ref}
+                    ref={setTabsListRef}
                     className="bg-inherit border-b-2 border-wamellow p-0 w-full justify-start rounded-none overflow-y-auto overflow-x-auto scrollbar-none"
+                    onScroll={(event) => setPosition(event.currentTarget.scrollLeft)}
                 >
                     {tabs.map((tab) => (
                         <TabsTrigger
@@ -123,7 +113,7 @@ export function ListTab({ tabs, url, searchParamName, disabled }: ListProps) {
                 </TabsList>
             </Tabs>
 
-            {scrollMetrics.canScroll && position > 0 && (
+            {canScroll && position > 0 && (
                 <Button
                     className="absolute bottom-2 left-0 backdrop-blur-lg"
                     onClick={() => scroll("left")}
@@ -133,7 +123,7 @@ export function ListTab({ tabs, url, searchParamName, disabled }: ListProps) {
                 </Button>
             )}
 
-            {scrollMetrics.canScroll && position < scrollMetrics.maxScroll && (
+            {canScroll && position < maxScroll && (
                 <Button
                     className="absolute bottom-2 right-0 backdrop-blur-lg"
                     onClick={() => scroll("right")}
@@ -159,16 +149,16 @@ export function ListFeature({ items }: FeatureProps) {
 
     return (
         <div className="grid gap-6 grid-cols-2">
-            {items.map((item, i) => {
+            {items.map((item) => {
 
                 const rgb = decimalToRgb(item.color);
 
                 return (
                     <div
                         className="flex items-center gap-3"
-                        key={"featurelist-" + item.description.replace(/ +/g, "") + i}
+                        key={`featurelist-${item.title}-${item.description}-${item.color}`}
                     >
-                        <div className="rounded-full h-12 aspect-square p-[10px] svg-max" style={{ backgroundColor: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`, color: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)` }}>
+                        <div className="rounded-full h-12 aspect-square p-2.5 svg-max" style={{ backgroundColor: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`, color: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b}, 1)` }}>
                             {item.icon}
                         </div>
                         <span className="text-neutral-300">{item.description}</span>
@@ -178,5 +168,4 @@ export function ListFeature({ items }: FeatureProps) {
             })}
         </div>
     );
-
 }

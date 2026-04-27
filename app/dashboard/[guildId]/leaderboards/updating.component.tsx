@@ -267,7 +267,7 @@ export default function UpdatingLeaderboardCard({
                     defaultState={leaderboard?.emoji || undefined}
                     showClear
                     onSave={(o) => {
-                        setEmoji(o as string);
+                        setEmoji(o);
                     }}
                 />
 

@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function DiscordWidget({ guild, disabled }: Props) {
-    const [isEnabled, setEnabled] = useState<boolean>(false);
+    const [isEnabled, setIsEnabled] = useState<boolean>(false);
 
     const url = `https://discord.com/api/guilds/${guild.id}/widget.json` as const;
 
@@ -26,7 +26,7 @@ export default function DiscordWidget({ guild, disabled }: Props) {
         {
             enabled: Boolean(guild.id) && !disabled,
             ...cacheOptions,
-            onSuccess: (data) => setEnabled(!("code" in data)),
+            onSuccess: (data) => setIsEnabled(!("code" in data)),
             refetchOnMount: true
         }
     );
@@ -73,7 +73,7 @@ export default function DiscordWidget({ guild, disabled }: Props) {
         <DiscordWidgetButton
             guildId={guild.id}
             isEnabled={isEnabled}
-            setEnabled={setEnabled}
+            setEnabled={setIsEnabled}
         />
     </>);
 }

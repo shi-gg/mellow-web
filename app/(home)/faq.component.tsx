@@ -148,6 +148,7 @@ export function Faq({
     return (<>
         <script
             type="application/ld+json"
+            /* eslint-disable-next-line @eslint-react/dom-no-dangerously-set-innerhtml */
             dangerouslySetInnerHTML={{
                 __html: JSON.stringify(schema)
             }}
@@ -166,12 +167,12 @@ export function Faq({
             className="w-full space-y-2"
             type="single"
             collapsible
-            defaultValue="0"
+            defaultValue={data[0]?.title}
         >
-            {data.map((item, index) => (
+            {data.map((item) => (
                 <AccordionItem
-                    value={index.toString()}
-                    key={index}
+                    value={item.title}
+                    key={item.title}
                     className="bg-wamellow/50 rounded-xl border-none px-4 data-[state=open]:bg-wamellow"
                 >
                     <AccordionTrigger className="text-left hover:no-underline py-4">

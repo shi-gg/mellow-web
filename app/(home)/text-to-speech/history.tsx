@@ -27,6 +27,8 @@ const springAnimation = {
     }
 } as const;
 
+const LOADING_OPACITY = [1, 0.5, 0.25] as const;
+
 export function History({
     history,
     error,
@@ -64,8 +66,8 @@ export function History({
     if (isLoading) {
         return (
             <div className="flex flex-col gap-3">
-                {Array.from({ length: 3 }).map((_, i) => (
-                    <Skeleton key={i} className="h-36 w-full rounded-lg" style={{ opacity: 1 / (i * 2) }} />
+                {LOADING_OPACITY.map((opacity) => (
+                    <Skeleton key={opacity} className="h-36 w-full rounded-lg" style={{ opacity }} />
                 ))}
             </div>
         );
@@ -129,6 +131,7 @@ function HistoryItem({
     ensureUrl: (item: HistoryItem) => string;
 }) {
     const createdAt = new Date(item.createdAt);
+    const [today] = useState(() => new Date());
 
     return (
         <motion.div
@@ -143,7 +146,7 @@ function HistoryItem({
                         : "Voice"}
                 </Badge>
                 <span className="text-xs text-neutral-400 ml-auto">
-                    {createdAt.getDate() === new Date().getDate() && createdAt.getMonth() === new Date().getMonth() && createdAt.getFullYear() === new Date().getFullYear()
+                    {createdAt.getDate() === today.getDate() && createdAt.getMonth() === today.getMonth() && createdAt.getFullYear() === today.getFullYear()
                         ? getTimeAgo(createdAt)
                         : getDateString(createdAt, "f")
                     }

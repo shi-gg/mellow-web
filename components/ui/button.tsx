@@ -1,5 +1,5 @@
 import { cn } from "@/utils/cn";
-import { Slot } from "@radix-ui/react-slot";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import * as React from "react";
@@ -47,40 +47,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, variant, size, asChild = false, children, disabled = false, loading = false, icon, ...props }, ref) => {
         const Comp = asChild ? Slot : "button";
 
-        const content = (
-            <>
-                {loading
-                    ? <LoadingCircle />
-                    : icon
-                }
-                {children}
-            </>
-        );
-
-        if (asChild) {
-            return (
-                <Comp
-                    className={cn(buttonVariants({ variant, size, className }))}
-                    data-disabled={disabled || loading}
-                    ref={ref}
-                    {...props}
-                >
-                    {icon
-                        ? React.cloneElement(children as React.ReactElement, {}, content)
-                        : children
-                    }
-                </Comp>
-            );
-        }
-
         return (
             <Comp
                 className={cn(buttonVariants({ variant, size, className }))}
-                disabled={disabled || loading}
+                disabled={asChild ? undefined : disabled || loading}
+                data-disabled={asChild ? disabled || loading : undefined}
                 ref={ref}
                 {...props}
             >
-                {content}
+                {loading ? <LoadingCircle /> : icon}
+                <Slottable>{children}</Slottable>
             </Comp>
         );
     }
