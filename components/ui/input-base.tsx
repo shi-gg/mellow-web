@@ -7,6 +7,7 @@ import { useComposedRefs } from "@radix-ui/react-compose-refs";
 import { Primitive } from "@radix-ui/react-primitive";
 import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
+import { use } from "react";
 
 export type InputBaseContextProps = Pick<
     InputBaseProps,
@@ -24,7 +25,7 @@ const InputBaseContext = React.createContext<InputBaseContextProps>({
 });
 
 function useInputBase() {
-    const context = React.useContext(InputBaseContext);
+    const context = use(InputBaseContext);
     if (!context) {
         throw new Error("useInputBase must be used within a <InputBase />.");
     }
@@ -58,7 +59,7 @@ function InputBase({
     }, [onClick]);
 
     return (
-        <InputBaseContext.Provider
+        <InputBaseContext
             value={{
                 autoFocus,
                 controlRef,
@@ -79,7 +80,7 @@ function InputBase({
                 )}
                 {...props}
             />
-        </InputBaseContext.Provider>
+        </InputBaseContext>
     );
 }
 

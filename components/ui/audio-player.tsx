@@ -18,8 +18,8 @@ import type {
 } from "react";
 import {
     createContext,
+    use,
     useCallback,
-    useContext,
     useEffect,
     useMemo,
     useRef,
@@ -80,7 +80,7 @@ interface AudioPlayerApi<TData = unknown> {
 const AudioPlayerContext = createContext<AudioPlayerApi | null>(null);
 
 export function useAudioPlayer<TData = unknown>(): AudioPlayerApi<TData> {
-    const api = useContext(AudioPlayerContext) as AudioPlayerApi<TData> | null;
+    const api = use(AudioPlayerContext) as AudioPlayerApi<TData> | null;
     if (!api) {
         throw new Error(
             "useAudioPlayer cannot be called outside of AudioPlayerProvider"
@@ -109,7 +109,7 @@ export function AutoPlay({ url }: { url: string; }) {
 const AudioPlayerTimeContext = createContext<number | null>(null);
 
 export const useAudioPlayerTime = () => {
-    const time = useContext(AudioPlayerTimeContext);
+    const time = use(AudioPlayerTimeContext);
     if (time === null) {
         throw new Error(
             "useAudioPlayerTime cannot be called outside of AudioPlayerProvider"
@@ -131,13 +131,13 @@ export function AudioPlayerProvider<TData = unknown>({
     const [time, setTime] = useState<number>(0);
     const [duration, setDuration] = useState<number | undefined>(undefined);
     const [error, setError] = useState<MediaError | null>(null);
-    const [activeItem, _setActiveItem] = useState<AudioPlayerItem<TData> | null>(
+    const [activeItem, setActiveItem] = useState<AudioPlayerItem<TData> | null>(
         null
     );
     const [paused, setPaused] = useState(true);
-    const [playbackRate, setPlaybackRateState] = useState<number>(1);
+    const [playbackRate, setPlaybackRate] = useState<number>(1);
 
-    const setActiveItem = useCallback(
+    const updateActiveItem = useCallback(
         (item: AudioPlayerItem<TData> | null) => {
             if (!audioRef.current) return;
 
@@ -222,11 +222,14 @@ export function AudioPlayerProvider<TData = unknown>({
         audioRef.current.currentTime = time;
     }, []);
 
-    const setPlaybackRate = useCallback((rate: number) => {
-        if (!audioRef.current) return;
-        audioRef.current.playbackRate = rate;
-        setPlaybackRateState(rate);
-    }, []);
+    const updatePlaybackRate = useCallback(
+        (rate: number) => {
+            if (!audioRef.current) return;
+            audioRef.current.playbackRate = rate;
+            setPlaybackRate(rate);
+        },
+        []
+    );
 
     const isItemActive = useCallback(
         (id: string | number | null) => {
@@ -237,14 +240,14 @@ export function AudioPlayerProvider<TData = unknown>({
 
     useAnimationFrame(() => {
         if (audioRef.current) {
-            _setActiveItem(itemRef.current);
+            setActiveItem(itemRef.current);
             setReadyState(audioRef.current.readyState);
             setNetworkState(audioRef.current.networkState);
             setTime(audioRef.current.currentTime);
             setDuration(audioRef.current.duration);
             setPaused(audioRef.current.paused);
             setError(audioRef.current.error);
-            setPlaybackRateState(audioRef.current.playbackRate);
+            setPlaybackRate(audioRef.current.playbackRate);
         }
     });
 
@@ -263,11 +266,11 @@ export function AudioPlayerProvider<TData = unknown>({
             activeItem,
             playbackRate,
             isItemActive,
-            setActiveItem,
+            setActiveItem: updateActiveItem,
             play,
             pause,
             seek,
-            setPlaybackRate
+            setPlaybackRate: updatePlaybackRate
         }),
         [
             audioRef,
@@ -278,21 +281,21 @@ export function AudioPlayerProvider<TData = unknown>({
             activeItem,
             playbackRate,
             isItemActive,
-            setActiveItem,
+            updateActiveItem,
             play,
             pause,
             seek,
-            setPlaybackRate
+            updatePlaybackRate
         ]
     );
 
     return (
-        <AudioPlayerContext.Provider value={api as AudioPlayerApi}>
-            <AudioPlayerTimeContext.Provider value={time}>
+        <AudioPlayerContext value={api as AudioPlayerApi}>
+            <AudioPlayerTimeContext value={time}>
                 <audio ref={audioRef} className="hidden" crossOrigin="anonymous" />
                 {children}
-            </AudioPlayerTimeContext.Provider>
-        </AudioPlayerContext.Provider>
+            </AudioPlayerTimeContext>
+        </AudioPlayerContext>
     );
 }
 

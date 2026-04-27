@@ -75,9 +75,9 @@ export default async function RootLayout({ params, children }: Props) {
                 <nav className="w-full md:w-1/4 space-y-2 md:sticky md:top-6 md:self-start">
 
                     <ul className="space-y-1 mb-4 bg-wamellow p-2 rounded-md border border-wamellow-alpha">
-                        {metadata.pages.map((page, i) =>
+                        {metadata.pages.map((page) =>
                             <NavButton
-                                key={"nav-" + page.file + i}
+                                key={"nav-" + page.file}
                                 page={page}
                                 active={page.file === currentFile}
                             />

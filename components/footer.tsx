@@ -13,6 +13,9 @@ import { SiDiscord, SiKofi } from "react-icons/si";
 
 import { Badge } from "./ui/badge";
 
+const START_YEAR = new Date(1_635_609_600_000).getFullYear();
+const CURRENT_YEAR = new Date().getFullYear();
+
 export async function Footer(props: HTMLProps<HTMLDivElement>) {
 
     // do not change
@@ -37,7 +40,7 @@ export async function Footer(props: HTMLProps<HTMLDivElement>) {
                         <span className="flex gap-1 items-center">
                             <BiCopyright />
                             <span>
-                                <Link href="/" className="hover:underline">Wamellow {new Date(1_635_609_600_000).getFullYear()} - {new Date().getFullYear()}</Link>,
+                                <Link href="/" className="hover:underline">Wamellow {START_YEAR} - {CURRENT_YEAR}</Link>,
                                 not affiliated with Discord Inc.
                             </span>
                         </span>

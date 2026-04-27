@@ -7,6 +7,8 @@ import Link from "next/link";
 export async function Ratings() {
     const reviews = await getReviews();
     const score = Math.round(reviews.averageScore);
+    const filledStars = Array.from({ length: Math.max(score, 0) }, (_, star) => star + 1);
+    const emptyStars = Array.from({ length: Math.max(5 - score, 0) }, (_, star) => score + star + 1);
 
     return (
         <Link
@@ -18,8 +20,8 @@ export async function Ratings() {
             <div className="flex gap-1">
                 {score ?
                     <div className="flex gap-1">
-                        {Array.from({ length: score }).fill(0).map((_, i) =>
-                            <StarIcon key={i} className="w-6 h-6 stroke-violet-500 fill-violet-400/20" />
+                        {filledStars.map((star) =>
+                            <StarIcon key={star} className="w-6 h-6 stroke-violet-500 fill-violet-400/20" />
                         )}
                     </div>
                     :
@@ -27,8 +29,8 @@ export async function Ratings() {
                 }
                 {5 - score ?
                     <div className="flex gap-1">
-                        {Array.from({ length: Math.max(5 - score, 0) }).fill(0).map((_, i) =>
-                            <StarIcon key={i} className="w-6 h-6 stroke-violet-500 fill-transparent opacity-40" />
+                        {emptyStars.map((star) =>
+                            <StarIcon key={star} className="w-6 h-6 stroke-violet-500 fill-transparent opacity-40" />
                         )}
                     </div>
                     :

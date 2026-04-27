@@ -93,6 +93,7 @@ export default function RootLayout({
 
     const isLoaded = guild?.id && "channels" in guild && "roles" in guild && "emojis" in guild;
     const error = data && "message" in data ? data.message : undefined;
+    const isTabsDisabled = isLoading || !data || "message" in data;
 
     useEffect(() => {
         if (!data || "message" in data) return;
@@ -193,7 +194,7 @@ export default function RootLayout({
                         }
                     ]}
                     url={`/dashboard/${params.guildId}`}
-                    disabled={!guild?.id || Boolean(error)}
+                    disabled={isTabsDisabled}
                 />
             </Suspense>
 

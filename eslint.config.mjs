@@ -1,12 +1,12 @@
 import next from "@next/eslint-plugin-next";
 import stylistic from "@stylistic/eslint-plugin";
 import eslintPluginImport from "eslint-plugin-import-x";
-import react from "eslint-plugin-react";
 import reactCompiler from "eslint-plugin-react-compiler";
 import reactHooks from "eslint-plugin-react-hooks";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import tseslint from "typescript-eslint";
+import react from "@eslint-react/eslint-plugin";
 
 export default tseslint.config(
     ...tseslint.configs.recommended,
@@ -22,9 +22,6 @@ export default tseslint.config(
             }
         },
         plugins: {
-            react,
-            "react-hooks": reactHooks,
-            "@next/next": next,
             "react-compiler": reactCompiler,
 
             "@stylistic": stylistic,
@@ -33,15 +30,13 @@ export default tseslint.config(
             "simple-import-sort": simpleImportSort,
             unicorn: eslintPluginUnicorn
         },
+        extends: [
+            reactHooks.configs.flat.recommended,
+            next.configs.recommended,
+            next.configs["core-web-vitals"],
+            react.configs["recommended-typescript"],
+        ],
         rules: {
-            ...react.configs.recommended.rules,
-            ...react.configs['jsx-runtime'].rules,
-            ...reactHooks.configs.recommended.rules,
-            ...next.configs.recommended.rules,
-            ...next.configs["core-web-vitals"].rules,
-
-            "react/prop-types": "off",
-
             // stylistic Rules
             "@stylistic/array-bracket-newline": ["error", "consistent"],
             "@stylistic/array-bracket-spacing": "error",
@@ -175,7 +170,6 @@ export default tseslint.config(
             "import/no-empty-named-blocks": "error",
             "import/no-extraneous-dependencies": "error",
             "import/no-relative-packages": "error",
-            "import/no-unused-modules": "error",
             "import/no-self-import": "error",
             "import/no-useless-path-segments": "error",
             "import/no-cycle": ["error", { maxDepth: Infinity }],
@@ -240,6 +234,8 @@ export default tseslint.config(
             "unicorn/prefer-type-error": "error",
             "unicorn/require-number-to-fixed-digits-argument": "error",
             "unicorn/throw-new-error": "error",
+            "@eslint-react/naming-convention-ref-name": "off",
+            "@eslint-react/no-forward-ref": "off",
             "no-dupe-else-if": "error",
             "no-template-curly-in-string": "error",
             "no-unexpected-multiline": "error",
@@ -279,11 +275,6 @@ export default tseslint.config(
             radix: "error",
             yoda: "error"
         },
-        settings: {
-            react: {
-                version: "detect", // Automatically detects the React version
-            },
-        }
     },
     {
         ignores: ["node_modules", ".next", "**/gt4.ts", "next-env.d.ts"]

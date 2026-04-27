@@ -50,8 +50,8 @@ export default function Home() {
             {imprint
                 .replaceAll("'", "\n")
                 .split("\n")
-                .map((item, index) => (
-                    <div className={cn(item.endsWith(";") && "mb-2.5")} key={index}>
+                .map((item) => (
+                    <div className={cn(item.endsWith(";") && "mb-2.5")} key={item}>
                         {item.replace(/;/g, "")}
                     </div>
                 ))

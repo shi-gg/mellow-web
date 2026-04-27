@@ -2,6 +2,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    allowedDevOrigins: ["local.wamellow.com"],
     output: "standalone",
     reactStrictMode: true,
     experimental: {

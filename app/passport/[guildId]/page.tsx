@@ -14,7 +14,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { BsDiscord } from "react-icons/bs";
-import { HiChartBar, HiCheck, HiExclamation, HiLightningBolt, HiLockClosed, HiStar, HiUsers, HiX } from "react-icons/hi";
+import { HiChartBar, HiCheck, HiInformationCircle, HiLightningBolt, HiLockClosed, HiStar, HiUsers, HiX } from "react-icons/hi";
 
 import { getPassport } from "./api";
 import { Verify } from "./verify.component";
@@ -80,7 +80,7 @@ export default async function Home({ params }: Props) {
                 variant="secondary"
             >
                 <AlertTitle className="flex gap-3">
-                    <HiExclamation className="size-4" />
+                    <HiInformationCircle className="size-5 relative left-1" />
                     This is a demo server to test out passport verification.
                 </AlertTitle>
 
@@ -166,7 +166,7 @@ export default async function Home({ params }: Props) {
             </div>
 
             <div>
-                <div className="hidden md:block w-full h-min overflow-hidden rounded-xl bg-wamellow py-4 px-5">
+                <div className="hidden md:block w-full h-min overflow-hidden rounded-xl bg-wamellow py-4 px-5 mb-6">
 
                     <div className="mb-4 text-neutral-100 font-semibold text-xl">Modern, Simple, Wamellow 👋</div>
                     <ListFeature

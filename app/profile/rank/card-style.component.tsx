@@ -144,9 +144,9 @@ export default function CardSyle() {
                 </div>
 
                 <div className="absolute blur-xs gap-4 grid grid-cols-6 left-4 lg:grid-cols-6 md:blur-none md:bottom-4 md:left-0 md:opacity-100 md:relative md:scale-100 md:top-0 md:w-1/2 opacity-45 rotate-1 scale-105 top-6 w-full">
-                    {Array.from({ length: 18 }).fill(0).map((_, i) =>
+                    {Array.from({ length: 18 }, (_, i) =>
                         <Emoji
-                            key={"emoji-" + i}
+                            key={`emoji-${i + 1}`}
                             index={i}
                             emojiId={user?.extended?.rank?.emoji || null}
                         />

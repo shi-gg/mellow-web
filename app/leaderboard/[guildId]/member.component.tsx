@@ -22,6 +22,13 @@ interface Props {
     pagination: ApiV1GuildsTopmembersPaginationGetResponse;
 }
 
+function getBadgeColors(index: number) {
+    if (index === 1) return "bg-[#ffe671] text-[#ff9e03] border-2 border-[#1c1b1f]";
+    if (index === 2) return "bg-[#c1e5fb] text-[#6093ba] border-2 border-[#1c1b1f]";
+    if (index === 3) return "bg-[#f8c396] text-[#c66e04] border-2 border-[#1c1b1f]";
+    return "bg-[#1c1b1f]";
+}
+
 export default async function Member({
     index,
     type,
@@ -59,12 +66,7 @@ export default async function Member({
             <AvatarBadge
                 className={cn(
                     "size-6 font-bold",
-                    (() => {
-                        if (index === 1) return "bg-[#ffe671] text-[#ff9e03] border-2 border-[#1c1b1f]";
-                        if (index === 2) return "bg-[#c1e5fb] text-[#6093ba] border-2 border-[#1c1b1f]";
-                        if (index === 3) return "bg-[#f8c396] text-[#c66e04] border-2 border-[#1c1b1f]";
-                        return "bg-[#1c1b1f]";
-                    })()
+                    getBadgeColors(index)
                 )}
                 content={
                     <span className="text-sm">
@@ -100,9 +102,9 @@ export default async function Member({
             {member.emoji && (
                 <div className="w-full hidden sm:block relative mr-6 -ml-48 md:-ml-6 lg:ml-6">
                     <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-3 lg:grid-cols-6 w-full gap-2 absolute -bottom-9 rotate-1">
-                        {Array.from({ length: 12 }).fill(0).map((_, i) =>
+                        {Array.from({ length: 12 }, (_, i) =>
                             <Emoji
-                                key={"emoji-" + member.id + i}
+                                key={`emoji-${member.id}-${i + 1}`}
                                 index={i}
                                 emojiUrl={emojiUrl}
                             />
