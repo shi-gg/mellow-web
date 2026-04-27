@@ -17,7 +17,7 @@ export default function Home() {
     return (
         <div>
             <div className="lg:flex gap-6 mt-5">
-                <div className="lg:w-1/2">
+                <div className="lg:w-1/2 flex flex-col gap-2">
                     <InputSelect
                         label="Default Speaker"
                         endpoint="/users/@me/text-to-speech"
@@ -42,6 +42,18 @@ export default function Home() {
                         transform={(value) => transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnore)}
                         onSave={(value) => {
                             userStore.setState(deepMerge<User>(user, { extended: { flags: transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnore) } }));
+                        }}
+                    />
+                    <InputSwitch
+                        label="Markdown features"
+                        description="Whenever code-blocks, spoilers and emojis should be spoken in Chat to Speech."
+                        inverted
+                        endpoint="/users/@me"
+                        k="flags"
+                        defaultState={(user.extended!.flags & UserFlags.ChatToSpeechIgnoreWeirdMarkdown) !== 0}
+                        transform={(value) => transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnoreWeirdMarkdown)}
+                        onSave={(value) => {
+                            userStore.setState(deepMerge<User>(user, { extended: { flags: transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnoreWeirdMarkdown) } }));
                         }}
                     />
                 </div>
