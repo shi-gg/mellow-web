@@ -83,7 +83,7 @@ export function RedditNotificationModal({
                 items={createSelectableItems(channels)}
                 description="Select a channel where notifications should be send into."
                 onSave={(o) => {
-                    setChannelId(o as string);
+                    setChannelId(o);
                 }}
             />
 

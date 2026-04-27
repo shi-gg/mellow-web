@@ -95,7 +95,7 @@ export function CreateDailypost({
                 items={createSelectableItems(channels, ["ViewChannel", "SendMessages", "AttachFiles"])}
                 description="Select a channel where dailyposts should be send into."
                 onSave={(o) => {
-                    setChannelId(o as string);
+                    setChannelId(o);
                 }}
             />
 

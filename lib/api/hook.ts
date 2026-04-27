@@ -39,7 +39,7 @@ export function editApiCache<T>(queryClient: QueryClient, url: string) {
             return {
                 ...data,
                 [key]: value
-            } as T;
+            };
         })
     );
 }
