@@ -295,7 +295,7 @@ export default function Home() {
 
         <InputSwitch
             label="Ping new member"
-            description="Whenever the mention in the greet message should ping the member."
+            description="Whether the mention in the greeting message should ping the member."
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
             defaultState={(guild!.flags & GuildFlags.WelcomeButtonPing) !== 0}
