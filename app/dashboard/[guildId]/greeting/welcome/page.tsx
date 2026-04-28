@@ -295,7 +295,7 @@ export default function Home() {
 
         <InputSwitch
             label="Ping new member"
-            description="Whenever the mention in the greet message should ping or not."
+            description="Whether the mention in the greeting message should ping the member."
             endpoint={`/guilds/${guild?.id}`}
             k="flags"
             defaultState={(guild!.flags & GuildFlags.WelcomeButtonPing) !== 0}
@@ -325,7 +325,7 @@ export default function Home() {
                     }
                     description="Select the color of the button."
                     defaultState={data.button?.style || 1}
-                    disabled={!enabled || (guild!.flags & GuildFlags.WelcomeButtonPing) === 0}
+                    disabled={!enabled}
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
@@ -336,13 +336,13 @@ export default function Home() {
             </div>
             <div className="lg:w-1/2">
                 <InputSelect
-                    label="Webhook Profile"
+                    label="Button emoji"
                     endpoint={`/guilds/${guild?.id}/modules/welcome`}
                     k="button.emoji"
                     items={createSelectableEmojiItems(guild?.emojis)}
                     description="Select an emoji which will be used in the button."
                     defaultState={data.button?.emoji}
-                    disabled={!enabled || (guild!.flags & GuildFlags.WelcomeButtonPing) === 0}
+                    disabled={!enabled}
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
@@ -353,7 +353,7 @@ export default function Home() {
             </div>
         </div>
 
-        <div className="h-[138px]" />
+        <div className="h-34" />
     </>);
 }
 
