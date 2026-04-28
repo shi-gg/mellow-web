@@ -325,7 +325,7 @@ export default function Home() {
                     }
                     description="Select the color of the button."
                     defaultState={data.button?.style || 1}
-                    disabled={!enabled || (guild!.flags & GuildFlags.WelcomeEnabled) === 0}
+                    disabled={!enabled}
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
@@ -342,7 +342,7 @@ export default function Home() {
                     items={createSelectableEmojiItems(guild?.emojis)}
                     description="Select an emoji which will be used in the button."
                     defaultState={data.button?.emoji}
-                    disabled={!enabled || (guild!.flags & GuildFlags.WelcomeEnabled) === 0}
+                    disabled={!enabled}
                     onSave={(o) => {
                         edit("button", {
                             ...data.button,
