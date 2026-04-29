@@ -29,6 +29,7 @@ export enum GuildFlags {
     Premium = 1 << 0,
     PrivateLeaderboard = 1 << 1,
     EmbedDiscordLinks = 1 << 2,
+    TranscribeVoiceMessages = 1 << 25,
 
     WelcomeEnabled = 1 << 4,
     FarewellEnabled = 1 << 5,

@@ -43,5 +43,15 @@ export default function Home() {
             transform={(value) => transformer(value, guild!.flags, GuildFlags.EmbedDiscordLinks)}
             onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.EmbedDiscordLinks) })}
         />
+
+        <InputSwitch
+            label="Automatically Transcribe Voice Messages"
+            description="Automatically transcribe voice messages when they are sent."
+            endpoint={`/guilds/${params.guildId}`}
+            k="flags"
+            defaultState={(guild!.flags & GuildFlags.TranscribeVoiceMessages) !== 0}
+            transform={(value) => transformer(value, guild!.flags, GuildFlags.TranscribeVoiceMessages)}
+            onSave={(value) => guildStore.setState({ flags: transformer(value, guild!.flags, GuildFlags.TranscribeVoiceMessages) })}
+        />
     </>);
 }
