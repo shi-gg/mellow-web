@@ -138,7 +138,7 @@ Each platform has specific technical constraints that may affect notification de
 
 In addition to the overall limit of 30 notifications per server (1,000 with [premium](/premium)), each platform has specific restrictions:
 - **YouTube**: 30 channels maximum (1,000 with [premium](/premium))
-- **Twitch**: 30 channels maximum (100 with [premium](/premium))
+- **Twitch**: 30 channels maximum (1,000 with [premium](/premium))
 - **Bluesky**: 30 users maximum (100 with [premium](/premium))
 - **Reddit**: 4 subreddits maximum (10 with [premium](/premium))
 
