@@ -53,7 +53,7 @@ function Typewriter({ text, onComplete }: { text: string; onComplete: () => void
         <>
             {text.slice(0, charIndex)}
             {charIndex < text.length && (
-                <span className="inline-block w-0.5 h-4 bg-white ml-0.5 animate-blink" />
+                <span className="inline-block w-0.5 h-4 relative top-1 bg-neutral-300 rounded-full ml-0.5 animate-blink" />
             )}
         </>
     );
@@ -107,7 +107,7 @@ function TTSDemoInterface() {
             <div className="bg-[#383a40] rounded-lg p-3 w-full border border-white/5 backdrop-blur-sm">
                 <div className="flex items-center gap-2">
                     <Image src="/luna.webp" alt="" width={64} height={64} className="size-6 rounded-full" priority />
-                    <div className="flex-1 text-sm text-white min-h-5">
+                    <div className="flex-1 text-sm text-white">
                         {phase === AnimationPhase.Typing ? (
                             <Typewriter
                                 key={messageIndex}
