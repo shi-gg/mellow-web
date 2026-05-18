@@ -13,6 +13,8 @@ import Image from "next/image";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { HiOutlineUpload, HiPencil, HiX } from "react-icons/hi";
 
+const FILTERED_CHARS_REGEX = /@|#|:|```|discord|clyde/i;
+
 const ALLOWED_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp", "image/gif", "image/apng"];
 const MAX_FILE_SIZE = 8 * 1_024 * 1_024;
 
@@ -120,7 +122,7 @@ function isValidUsername(value: string | null): boolean {
     if (!value) return false;
     if (value.length < 2 || value.length > 32) return false;
     if (["everyone", "here"].includes(value.toLowerCase())) return false;
-    if (/@|#|:|```|discord|clyde/i.test(value)) return false;
+    if (FILTERED_CHARS_REGEX.test(value)) return false;
     return true;
 }
 
@@ -298,10 +300,12 @@ function FileUpload({
                     return;
                 }
 
-                file.arrayBuffer().then((buffer) => {
-                    setBuf(buffer);
-                    onUpload(buffer);
-                });
+                void file
+                    .arrayBuffer()
+                    .then((buffer) => {
+                        setBuf(buffer);
+                        onUpload(buffer);
+                    });
             }}
             ref={ref}
             type="file"

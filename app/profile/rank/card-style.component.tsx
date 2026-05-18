@@ -4,7 +4,7 @@ import { Shiggy } from "@/components/shiggy";
 import { Button } from "@/components/ui/button";
 import type { ApiV1UsersMeRankEmojiDeleteResponse, ApiV1UsersMeRankEmojiPutResponse } from "@/typings";
 import { cn } from "@/utils/cn";
-import { deepMerge } from "@/utils/deepMerge";
+import { deepMerge } from "@/utils/deep-merge";
 import sleep from "@/utils/sleep";
 import type { ApiError } from "next/dist/server/api-utils";
 import Image from "next/image";

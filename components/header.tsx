@@ -32,7 +32,7 @@ export function Header() {
     const user = userStore((s) => s);
 
     useEffect(() => {
-        authorize({ setState })
+        void authorize({ setState })
             .then((u) => {
                 if (!u) return;
                 userStore.setState(u);

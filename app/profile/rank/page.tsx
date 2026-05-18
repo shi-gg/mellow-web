@@ -5,7 +5,7 @@ import { InputColor } from "@/components/inputs/color-input";
 import { InputImageUrl } from "@/components/inputs/image-url-input";
 import { InputSelect } from "@/components/inputs/select-menu";
 import { Section } from "@/components/section";
-import { deepMerge } from "@/utils/deepMerge";
+import { deepMerge } from "@/utils/deep-merge";
 
 import CardSyle from "./card-style.component";
 import LeaderboardStyle from "./leaderboard-style.component";

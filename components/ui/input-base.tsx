@@ -130,6 +130,7 @@ function InputBaseAdornment({
     children,
     ...props
 }: InputBaseAdornmentProps) {
+    // eslint-disable-next-line no-nested-ternary
     const Comp = asChild ? Slot : typeof children === "string" ? "p" : "div";
 
     return (

@@ -13,6 +13,8 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import type { ApiV1StatusGetResponse } from "./api";
 
+const SNOWFLAKE_REGEX = /^\d{15,21}$/;
+
 export function Side({
     status
 }: {
@@ -21,7 +23,7 @@ export function Side({
     const [guildId, setGuildId] = useState<string>("");
 
     const clusterId = useMemo(
-        () => /^\d{15,20}$/.test(guildId)
+        () => SNOWFLAKE_REGEX.test(guildId)
             ? getClusterId(guildId || "", status.clusters.length)
             : null,
         [guildId, status.clusters.length]
@@ -63,7 +65,7 @@ export function Side({
                     placeholder="Paste your Server Id"
                     value={guildId}
                     setValue={setGuildId}
-                    description={/^\d{15,20}$/.test(guildId) ? `Your guild is on cluster #${clusterId}.` : ""}
+                    description={SNOWFLAKE_REGEX.test(guildId) ? `Your guild is on cluster #${clusterId}.` : ""}
                 />
 
                 <p className="text-muted-foreground text-sm -mt-2 px-0.5">

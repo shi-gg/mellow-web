@@ -327,7 +327,7 @@ export const AudioPlayerProgress = ({
             }}
             onPointerUp={(e) => {
                 if (wasPlayingRef.current) {
-                    player.play();
+                    void player.play();
                 }
                 otherProps.onPointerUp?.(e);
             }}
@@ -341,7 +341,7 @@ export const AudioPlayerProgress = ({
                     if (player.isPlaying) {
                         player.pause();
                     } else {
-                        player.play();
+                        void player.play();
                     }
                 }
                 otherProps.onKeyDown?.(e);
@@ -480,7 +480,7 @@ export function AudioPlayerButton<TData = unknown>({
                 playing={player.isPlaying}
                 onPlayingChange={(shouldPlay) => {
                     if (shouldPlay) {
-                        player.play();
+                        void player.play();
                     } else {
                         player.pause();
                     }
@@ -496,7 +496,7 @@ export function AudioPlayerButton<TData = unknown>({
             playing={player.isItemActive(item.id) && player.isPlaying}
             onPlayingChange={(shouldPlay) => {
                 if (shouldPlay) {
-                    player.play(item);
+                    void player.play(item);
                 } else {
                     player.pause();
                 }

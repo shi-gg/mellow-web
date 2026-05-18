@@ -8,7 +8,7 @@ export function deepMerge<T>(target: T | undefined, source: RecursivePartial<T>)
     }
 
     for (const key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
+        if (Object.hasOwn(source, key)) {
             const targetValue = target[key];
             const sourceValue = source[key];
 

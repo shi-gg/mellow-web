@@ -79,7 +79,7 @@ export function useHistory() {
             }
         };
 
-        loadHistory();
+        void loadHistory();
 
         const cache = urlCache.current;
         return () => {

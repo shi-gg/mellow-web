@@ -9,12 +9,14 @@ import { DiscordServer } from "./discord.component";
 import { Person } from "./person.component";
 import { Repository } from "./repository.component";
 
+const FIRST_WORD_CHAR_REGEX = /^\w/;
+
 export const revalidate = 3_600;
 
 function formatTeamName(team: string) {
     return team
         .split("-")
-        .map((str) => str.replace(/^\w/, (char) => char.toUpperCase()))
+        .map((str) => str.replace(FIRST_WORD_CHAR_REGEX, (char) => char.toUpperCase()))
         .join(" ");
 }
 

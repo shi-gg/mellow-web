@@ -9,6 +9,8 @@ import Link from "next/link";
 import { BsDiscord, BsGithub } from "react-icons/bs";
 import { HiUserAdd, HiViewGridAdd } from "react-icons/hi";
 
+const MARKDOWN_EXT_REGEX = /\.md$/;
+
 interface Props {
     params: Promise<{ pathname: string[]; }>;
     children: React.ReactNode;
@@ -141,7 +143,7 @@ function NavButton({
     page: typeof metadata.pages[0];
     active?: boolean;
 }) {
-    const file = page.file.replace(/\.md$/, "");
+    const file = page.file.replace(MARKDOWN_EXT_REGEX, "");
     const icon = page.name.split(" ").shift() || "";
     const name = page.name.replace(icon, "");
 

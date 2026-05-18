@@ -1,3 +1,5 @@
+const CAMEL_CASE_REGEX = /[a-z][A-Z]/g;
+
 export class Bitfield {
     constructor(private flags: number) {}
 
@@ -38,7 +40,7 @@ export function bitfieldToArray(bitfield: Record<string | number, string | numbe
     return Object.entries(bitfield)
         .filter(([_, value]) => typeof value === "number")
         .map(([name, value]) => ({
-            name: name.replace(/[a-z][A-Z]/g, (s) => s[0] + " " + s[1]),
+            name: name.replace(CAMEL_CASE_REGEX, (s) => s[0] + " " + s[1]),
             value
         }));
 }

@@ -24,7 +24,7 @@ export function CopyToClipboardButton({
     const [saved, setSaved] = useState<boolean>(false);
 
     function handleCopy(t: string) {
-        navigator.clipboard.writeText(t);
+        void navigator.clipboard.writeText(t);
         setSaved(true);
 
         if (timeoutRef.current) clearInterval(timeoutRef.current);

@@ -22,6 +22,9 @@ import { HiExternalLink } from "react-icons/hi";
 
 import { useExample } from "./hooks";
 
+const SEPARATOR_REGEX = /-|_/g;
+const SNOWFLAKE_REGEX = /\d{15,20}/;
+
 export default function Home() {
     const guild = guildStore((g) => g);
     const params = useParams();
@@ -168,7 +171,7 @@ export default function Home() {
                                     width={64}
                                 />
                             ),
-                            name: c.name.replace(/-|_/g, " "),
+                            name: c.name.replace(SEPARATOR_REGEX, " "),
                             value: c.id
                         })) || []
                     ]}
@@ -305,7 +308,7 @@ export default function Home() {
 }
 
 function Emoji({ emoji }: { emoji: string; }) {
-    if (!/\d{15,20}/.test(emoji)) {
+    if (!SNOWFLAKE_REGEX.test(emoji)) {
         return emoji;
     }
 

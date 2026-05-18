@@ -7,6 +7,8 @@ import { CopyToClipboardButton } from "./copy-to-clipboard";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
+const FIRST_WORD_CHAR_REGEX = /^\w/;
+
 const PLATFORMS = ["twitter", "bluesky"] as const;
 
 export function Share({
@@ -63,7 +65,7 @@ function ShareButton({
             </TooltipTrigger>
 
             <TooltipContent>
-                Share on {platform.replace(/^\w/, (char) => char.toUpperCase())}
+                Share on {platform.replace(FIRST_WORD_CHAR_REGEX, (char) => char.toUpperCase())}
             </TooltipContent>
         </Tooltip>
     );

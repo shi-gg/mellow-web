@@ -128,9 +128,8 @@ export default function Home() {
 }
 
 function sort(a: ApiV1UsersMeGuildsGetResponse, b: ApiV1UsersMeGuildsGetResponse) {
-    return a.bot === b.bot
-        ? 0
-        : (a.bot ? -1 : 1);
+    if (a.bot === b.bot) return 0;
+    return a.bot ? -1 : 1;
 }
 
 function filter(guild: ApiV1UsersMeGuildsGetResponse, search: string) {

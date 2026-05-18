@@ -13,6 +13,8 @@ import { useCookies } from "next-client-cookies";
 import { useState } from "react";
 import { HiExternalLink, HiPencil, HiTrash } from "react-icons/hi";
 
+const FIRST_WORD_CHAR_REGEX = /^\w/;
+
 interface Props {
     guild: Guild;
     lb: ApiV1GuildsModulesLeaderboardUpdatingPostResponse | undefined;
@@ -109,7 +111,7 @@ export default function UpdatingLeaderboardCard({
 
         <Modal
             className="flex flex-col gap-3"
-            title={`${type.replace(/^\w/, (match) => match.toUpperCase())} leaderboard`}
+            title={`${type.replace(FIRST_WORD_CHAR_REGEX, (match) => match.toUpperCase())} leaderboard`}
             isOpen={modal === ModalType.CreateAndEdit && Boolean(guild)}
             isDisabled={!channelId}
             onClose={() => {
@@ -206,7 +208,7 @@ export default function UpdatingLeaderboardCard({
                     <InputText
                         label="Mode"
                         description="The title of the embed"
-                        defaultState={`☕ ${type.replace(/^\w/, (match) => match.toUpperCase())} leaderboard`}
+                        defaultState={`☕ ${type.replace(FIRST_WORD_CHAR_REGEX, (match) => match.toUpperCase())} leaderboard`}
                         max={256}
                         onSave={(v) => {
                             setEmbed({
@@ -248,7 +250,7 @@ export default function UpdatingLeaderboardCard({
                     label="Show nickname"
                     items={
                         ["mention", "username", "nickname", "id"].map((key) => ({
-                            name: key.replace(/^\w/, (char) => char.toUpperCase()),
+                            name: key.replace(FIRST_WORD_CHAR_REGEX, (char) => char.toUpperCase()),
                             value: key
                         }))
                     }
@@ -286,7 +288,7 @@ export default function UpdatingLeaderboardCard({
             className="flex flex-col gap-3"
             buttonName="Delete"
             variant="destructive"
-            title={`Delete ${type.replace(/^\w/, (match) => match.toUpperCase())} leaderboard`}
+            title={`Delete ${type.replace(FIRST_WORD_CHAR_REGEX, (match) => match.toUpperCase())} leaderboard`}
             isOpen={modal === ModalType.Delete && Boolean(guild)}
             onClose={() => {
                 setModal(undefined);

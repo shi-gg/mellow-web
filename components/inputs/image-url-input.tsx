@@ -101,7 +101,7 @@ export function InputImageUrl({
     const handleImageLoad = () => {
         setImageState(ImageState.Success);
         // Image loaded successfully, now save
-        save();
+        void save();
     };
 
     const handleImageError = () => {

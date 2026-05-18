@@ -11,6 +11,8 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
+const DIGITS_ONLY_REGEX = /^\d*$/;
+
 interface Props {
     link?: string;
     badge?: string;
@@ -151,7 +153,7 @@ export function InputNumber({
                         )}
                         onChange={(e) => {
                             const val = e.target.value;
-                            if (/^\d*$/.test(val)) {
+                            if (DIGITS_ONLY_REGEX.test(val)) {
                                 update(val ? Number.parseInt(val, 10) : min);
                             }
                         }}
