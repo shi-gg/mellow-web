@@ -198,30 +198,46 @@ export default function RootLayout({
                 />
             </Suspense>
 
-            {error ?
-                <ScreenMessage
-                    title={error.includes("permssions")
-                        ? "You cannot access this page.."
-                        : undefined
-                    }
-                    description={error}
-                    buttons={<>
-                        <Button
-                            asChild
-                            variant="secondary"
-                        >
-                            <Link href="/profile">
-                                <HiViewGridAdd />
-                                Go back to Dashboard
-                            </Link>
-                        </Button>
-                        <SupportButton />
-                    </>}
-                />
-                :
-                isLoaded ? children : <></>
-            }
+            <DashboardBody error={error} isLoaded={Boolean(isLoaded)}>
+                {children}
+            </DashboardBody>
 
         </div>
+    );
+}
+
+function DashboardBody({
+    error,
+    isLoaded,
+    children
+}: {
+    error: string | undefined;
+    isLoaded: boolean;
+    children: React.ReactNode;
+}) {
+    if (!error) {
+        return isLoaded ? children : <></>;
+    }
+
+    return (
+        <ScreenMessage
+            title={error.includes("permssions")
+                ? "You cannot access this page.."
+                : undefined
+            }
+            description={error}
+            buttons={<>
+                <Button
+                    asChild
+                    variant="secondary"
+                >
+                    <Link href="/profile">
+                        <HiViewGridAdd />
+                        Go back to Dashboard
+                    </Link>
+                </Button>
+                <SupportButton />
+            </>}
+        />
     );
 }

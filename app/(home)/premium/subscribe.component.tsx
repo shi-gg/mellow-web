@@ -10,6 +10,8 @@ import { useSearchParams } from "next/navigation";
 import { type HTMLProps, useState } from "react";
 import { HiArrowDown, HiArrowUp, HiLightningBolt, HiOutlineInformationCircle } from "react-icons/hi";
 
+const FIRST_WORD_CHAR_REGEX = /^\w/;
+
 export const MONTHLY_PRICES = [4, 8, 12, 18, 25] as const;
 export const YEARLY_PRICES = [40, 50, 60, 80, 100] as const;
 const PERIODS = ["month", "year"] as const;
@@ -106,7 +108,7 @@ export function Subscribe({ header }: { header?: boolean; }) {
                             setDonation(nearest - targetBase);
                         }}
                     >
-                        {p.replace(/^\w/, (char) => char.toUpperCase())}ly
+                        {p.replace(FIRST_WORD_CHAR_REGEX, (char) => char.toUpperCase())}ly
                         {p === "year" && (
                             <Badge
                                 variant="flat"

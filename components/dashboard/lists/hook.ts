@@ -98,6 +98,12 @@ export function useList<T extends { id: string; }>({ url }: UseDataQueryOptions)
         addItem,
         removeItem,
         isLoading,
-        error: error as string || (data && "message" in data ? JSON.stringify(data.message) : (error ? `${error}` : undefined))
+        error: (() => {
+            const errStr = error as string;
+            if (errStr) return errStr;
+            if (data && "message" in data) return JSON.stringify(data.message);
+            if (error) return `${error}`;
+            return undefined;
+        })()
     };
 }

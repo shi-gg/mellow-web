@@ -19,6 +19,8 @@ import { useQuery, useQueryClient } from "react-query";
 import { CreateTag, Style } from "./create.component";
 import { DeleteTag } from "./delete.component";
 
+const UPPERCASE_LETTER_REGEX = /([A-Z])/g;
+
 export default function Home() {
     const guild = guildStore((g) => g);
     const pathname = usePathname();
@@ -241,6 +243,6 @@ export default function Home() {
 }
 
 function convertCamelCaseToSpaced(input: string): string {
-    const spacedString = input.replace(/([A-Z])/g, " $1");
+    const spacedString = input.replace(UPPERCASE_LETTER_REGEX, " $1");
     return spacedString.charAt(0).toUpperCase() + spacedString.slice(1);
 }

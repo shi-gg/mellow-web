@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { HiExternalLink } from "react-icons/hi";
 
+const SEMICOLON_REGEX = /;/g;
+
 export const revalidate = false;
 
 const imprint = Buffer.from(process.env.IMPRINT_BASE64!, "base64").toString();
@@ -52,7 +54,7 @@ export default function Home() {
                 .split("\n")
                 .map((item) => (
                     <div className={cn(item.endsWith(";") && "mb-2.5")} key={item}>
-                        {item.replace(/;/g, "")}
+                        {item.replace(SEMICOLON_REGEX, "")}
                     </div>
                 ))
             }

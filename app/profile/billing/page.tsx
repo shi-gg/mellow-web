@@ -24,6 +24,8 @@ import { HiCreditCard, HiLightningBolt } from "react-icons/hi";
 import { SiDinersclub, SiDiscover, SiJcb, SiMastercard, SiPaypal, SiStripe, SiVisa } from "react-icons/si";
 import { useQueryClient } from "react-query";
 
+const FIRST_WORD_CHAR_REGEX = /^\w/;
+
 export default function Home() {
     const user = userStore((u) => u);
     const [changeDonationModalOpen, setChangeDonationModalOpen] = useState(
@@ -79,7 +81,7 @@ export default function Home() {
                         )}
                     </h2>
                     <p className="text-muted-foreground">
-                        You have all premium features for <span className="font-semibold text-neutral-300">EUR {totalAmount} / {period.replace(/^\w/, (c) => c.toUpperCase())}</span>!
+                        You have all premium features for <span className="font-semibold text-neutral-300">EUR {totalAmount} / {period.replace(FIRST_WORD_CHAR_REGEX, (c) => c.toUpperCase())}</span>!
                     </p>
                 </div>
                 <div className="flex gap-1 mt-4 md:mt-0">
@@ -94,28 +96,13 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row gap-4">
                 <Box className="lg:w-1/2 text-sm" small>
                     <h2 className="font-semibold text-xl text-neutral-300 mb-2">Billing Cycle</h2>
-                    {isLoading || !data ? (
-                        <Skeleton className="h-12 w-full" />
-                    ) : data.cancelAtPeriodEnd ? (
-                        <p>
-                            The subscription will expire on <span className="font-semibold text-neutral-300">{formatDate(data.currentPeriodEnd)}</span> and you will not be charged again.
-                        </p>
-                    ) : (
-                        <p>
-                            The subscription will renew on <span className="font-semibold text-neutral-300">{formatDate(data.currentPeriodEnd)}</span>, for a total of <span className="font-semibold text-neutral-300">EUR {totalAmount}</span>.
-                            <br />
-                            You{"'"}re paying <span className="font-semibold text-neutral-300">EUR {basePrice} Premium</span> and <span className="font-semibold text-neutral-300">EUR {(data.donationQuantity || 0).toFixed(2)} Donation{(data.donationQuantity || 0) === 1 ? "" : "s"}</span>
-                            {" "}
-                            (<Button
-                                className="text-sm p-0 m-0 h-3 text-violet-400"
-                                onClick={() => setChangeDonationModalOpen(true)}
-                                variant="link"
-                                size="sm"
-                            >
-                                change
-                            </Button>).
-                        </p>
-                    )}
+                    <BillingCycleContent
+                        isLoading={isLoading}
+                        data={data}
+                        totalAmount={totalAmount}
+                        basePrice={basePrice}
+                        setChangeDonationModalOpen={setChangeDonationModalOpen}
+                    />
                 </Box>
                 <Box className="lg:w-1/2" small>
                     <h2 className="font-semibold text-xl text-neutral-300 mb-2">Payment Method</h2>
@@ -159,6 +146,49 @@ export default function Home() {
     );
 }
 
+function BillingCycleContent({
+    isLoading,
+    data,
+    totalAmount,
+    basePrice,
+    setChangeDonationModalOpen
+}: {
+    isLoading: boolean;
+    data?: ApiV1UsersMeBillingGetResponse;
+    totalAmount: string;
+    basePrice: number;
+    setChangeDonationModalOpen: (open: boolean) => void;
+}) {
+    if (isLoading || !data) {
+        return <Skeleton className="h-12 w-full" />;
+    }
+
+    if (data.cancelAtPeriodEnd) {
+        return (
+            <p>
+                The subscription will expire on <span className="font-semibold text-neutral-300">{formatDate(data.currentPeriodEnd)}</span> and you will not be charged again.
+            </p>
+        );
+    }
+
+    return (
+        <p>
+            The subscription will renew on <span className="font-semibold text-neutral-300">{formatDate(data.currentPeriodEnd)}</span>, for a total of <span className="font-semibold text-neutral-300">EUR {totalAmount}</span>.
+            <br />
+            You{"'"}re paying <span className="font-semibold text-neutral-300">EUR {basePrice} Premium</span> and <span className="font-semibold text-neutral-300">EUR {(data.donationQuantity || 0).toFixed(2)} Donation{(data.donationQuantity || 0) === 1 ? "" : "s"}</span>
+            {" "}
+            (<Button
+                className="text-sm p-0 m-0 h-3 text-violet-400"
+                onClick={() => setChangeDonationModalOpen(true)}
+                variant="link"
+                size="sm"
+            >
+                change
+            </Button>).
+        </p>
+    );
+}
+
 function formatDate(seconds: number) {
     return new Date(seconds * 1_000).toLocaleDateString();
 }
@@ -172,7 +202,7 @@ function getPeriodEndsIn(endsAt: number, nowInSeconds: number) {
 
 function PortalButton({ data }: { data: ApiV1UsersMeBillingGetResponse; }) {
     const path = getPortalPath(data);
-    const label = path?.split("/").pop()?.replace(/^\w/, (c) => c.toUpperCase()) || "Manage";
+    const label = path?.split("/").pop()?.replace(FIRST_WORD_CHAR_REGEX, (c) => c.toUpperCase()) || "Manage";
 
     return (
         <Button asChild className="w-full md:w-auto">
@@ -373,7 +403,7 @@ function ChangeDonationAmountModal({
                 <div className="flex justify-between items-center">
                     <div>
                         <h2 className="text-lg font-medium text-neutral-100">
-                            {period.replace(/^\w/, (c) => c.toUpperCase())}ly Total
+                            {period.replace(FIRST_WORD_CHAR_REGEX, (c) => c.toUpperCase())}ly Total
                         </h2>
                         <p className="text-sm text-neutral-500">The total amount you will be charged {period}ly.</p>
                     </div>

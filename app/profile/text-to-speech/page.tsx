@@ -6,7 +6,7 @@ import { InputSwitch } from "@/components/inputs/switch";
 import { TTSFaq } from "@/components/tts-faq";
 import { UserFlags } from "@/typings";
 import { transformer } from "@/utils/bitfields";
-import { deepMerge } from "@/utils/deepMerge";
+import { deepMerge } from "@/utils/deep-merge";
 import { type actor, getVoices, voices } from "@/utils/tts";
 
 export default function Home() {

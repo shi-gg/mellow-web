@@ -88,7 +88,7 @@ export function InputMultiSelect<T extends string | number>({
             clearTimeout(debounceRef.current);
         }
         debounceRef.current = setTimeout(() => {
-            save();
+            void save();
         }, 5_000);
     }, [save]);
 
@@ -124,7 +124,7 @@ export function InputMultiSelect<T extends string | number>({
         e.stopPropagation();
         const newValue = value.filter((v) => v !== itemValue);
         update(newValue);
-        save(newValue);
+        void save(newValue);
     };
 
     const handleOpenChange = (isOpen: boolean) => {
@@ -138,7 +138,7 @@ export function InputMultiSelect<T extends string | number>({
             }
 
             if (isDirty) {
-                save();
+                void save();
             }
         }
     };

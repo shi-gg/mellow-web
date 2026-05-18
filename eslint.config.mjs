@@ -9,9 +9,8 @@ export default tseslint.config(
     { ignores: ['dist/**', 'eslint.config.mjs', 'node_modules', '.next', '**/gt4.ts', 'next-env.d.ts', 'postcss.config.js'] },
     base,
     recommended,
-    strict,
     {
-        files: ["**/*.tsx"],
+        files: ["**/*.ts", "**/*.tsx"],
         languageOptions: {
             parserOptions: {
                 project: ["./tsconfig.eslint.json", "./tsconfig.json"],
@@ -34,6 +33,7 @@ export default tseslint.config(
             "@eslint-react/naming-convention-ref-name": "off",
             "@eslint-react/no-forward-ref": "off",
             "import/extensions": "off",
+            "new-cap": "off",
         },
     },
 )

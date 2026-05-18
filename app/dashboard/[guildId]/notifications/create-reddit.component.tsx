@@ -11,10 +11,12 @@ import { useState } from "react";
 
 const URL_CHANNEL_REGEX = /^https?:\/\/((www|m|old|oauth)\.)?reddit\.com\/r\/(?=.{3,21}$)[A-Za-z]\w*\/?$/;
 const CHANNE_HANDLE = /^((\/)?r\/)?(?=.{3,21}$)[A-Za-z]\w*$/;
+const TRAILING_SLASH_REGEX = /\/$/;
+const SUBREDDIT_PREFIX_REGEX = /^(\/)?r\//;
 
 function validateAccount(input: string) {
-    if (URL_CHANNEL_REGEX.test(input)) return input.split("/r/")[1].replace(/\/$/, "");
-    if (CHANNE_HANDLE.test(input)) return input.replace(/^(\/)?r\//, "");
+    if (URL_CHANNEL_REGEX.test(input)) return input.split("/r/")[1].replace(TRAILING_SLASH_REGEX, "");
+    if (CHANNE_HANDLE.test(input)) return input.replace(SUBREDDIT_PREFIX_REGEX, "");
     return null;
 }
 

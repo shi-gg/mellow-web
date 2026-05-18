@@ -11,6 +11,11 @@ import { createSelectableItems } from "@/utils/create-selectable-items";
 import { ChannelType } from "discord-api-types/v10";
 import { useParams } from "next/navigation";
 
+const UNDERSCORE_GLOBAL_REGEX = /_/g;
+const WORD_START_REGEX = /(^| +)\w/g;
+const UNDERSCORE_REGEX = /_/;
+const COMMA_NEWLINE_REGEX = /,|\n/;
+
 const AUTOMOD_TYPES = Object
     .values(AutomodType)
     .filter((type) => typeof type === "string");
@@ -36,8 +41,8 @@ export default function Home() {
         {AUTOMOD_TYPES.map((type) => (
             <InputSwitch
                 key={type}
-                label={`Block ${type.replace(/_/g, " ").replace(/(^| +)\w/g, (c) => c.toUpperCase())}`}
-                description={`Prevent ${type.replace(/_/, " ")} links from being sent.`}
+                label={`Block ${type.replace(UNDERSCORE_GLOBAL_REGEX, " ").replace(WORD_START_REGEX, (c) => c.toUpperCase())}`}
+                description={`Prevent ${type.replace(UNDERSCORE_REGEX, " ")} links from being sent.`}
                 endpoint={`${url}/${type}`}
                 k="enabled"
                 defaultState={data.status[type] || false}
@@ -89,7 +94,7 @@ export default function Home() {
             defaultState={data.keywordFilter.join(", ")}
             max={Infinity}
             onSave={(value) => {
-                edit("keywordFilter", (value)?.split(/,|\n/).map((word) => word.trim()) || []);
+                edit("keywordFilter", (value)?.split(COMMA_NEWLINE_REGEX).map((word) => word.trim()) || []);
             }}
         />
     </>);

@@ -125,7 +125,7 @@ export function useInput<T>(options: InputOptions<T>) {
             if (debounceMs) {
                 debounceRef.current = setTimeout(() => save(val), debounceMs);
             } else {
-                save(val);
+                void save(val);
             }
         },
         [manual, debounceMs, save]

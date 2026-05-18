@@ -2,7 +2,7 @@ import { type User, userStore } from "@/common/user";
 import { type ApiError, type ApiV1UsersMeGetResponse, UserFlags } from "@/typings";
 import { Bitfield } from "@/utils/bitfields";
 import { cn } from "@/utils/cn";
-import { deepMerge } from "@/utils/deepMerge";
+import { deepMerge } from "@/utils/deep-merge";
 import { useState } from "react";
 
 export default function LeaderboardStyle() {

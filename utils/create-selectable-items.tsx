@@ -3,6 +3,8 @@ import { ChannelType, PermissionFlagsBits } from "discord-api-types/v10";
 import Image from "next/image";
 import { HiAtSymbol, HiHashtag, HiMenuAlt2, HiNewspaper, HiVolumeUp } from "react-icons/hi";
 
+const SEPARATOR_REGEX = /-|_/g;
+
 type Item = ApiV1GuildsChannelsGetResponse | ApiV1GuildsRolesGetResponse;
 type PermissionNames = keyof typeof PermissionFlagsBits | "RoleHirachy";
 
@@ -56,7 +58,7 @@ export function createSelectableEmojiItems(emojis: ApiV1GuildsEmojisGetResponse[
                     height={64}
                     width={64}
                 />,
-                name: c.name.replace(/-|_/g, " "),
+                name: c.name.replace(SEPARATOR_REGEX, " "),
                 value: c.id
             }))
     ];
