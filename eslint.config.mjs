@@ -1,4 +1,4 @@
-import { base, recommended, strict } from '@mwlica/eslint';
+import { base, recommended } from '@mwlica/eslint';
 import next from "@next/eslint-plugin-next";
 import reactCompiler from "eslint-plugin-react-compiler";
 import reactHooks from "eslint-plugin-react-hooks";
