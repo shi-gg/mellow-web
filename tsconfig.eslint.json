@@ -1,0 +1,18 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "exactOptionalPropertyTypes": true,
+        "typeRoots": [
+            "./node_modules/@eslint-types",
+            "./node_modules/@types"
+        ],
+        "allowJs": true,
+        "checkJs": true,
+        "noEmit": true
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mjs"
+    ]
+}
