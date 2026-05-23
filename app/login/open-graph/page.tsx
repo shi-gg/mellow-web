@@ -40,6 +40,6 @@ export const generateMetadata = (): Metadata => {
 };
 
 export default async function Home() {
-    if (isDiscord(await headers())) redirect("/login");
+    if (!isDiscord(await headers())) redirect("/login");
     return <></>;
 }
