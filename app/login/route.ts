@@ -1,4 +1,5 @@
 import { defaultCookieOptions } from "@/lib/cookies";
+import { isDiscord } from "@/utils/discord";
 import { getCanonicalUrl } from "@/utils/urls";
 import { PermissionFlagsBits } from "discord-api-types/v10";
 import { cookies } from "next/headers";
@@ -30,7 +31,7 @@ const permissions = [
 ];
 
 export async function GET(request: Request) {
-    if (request.headers.get("user-agent")?.includes("Discordbot/2.0")) redirect("/login/open-graph");
+    if (isDiscord(request.headers.get("user-agent"))) redirect("/login/open-graph");
 
     const { searchParams } = new URL(request.url);
     const jar = await cookies();

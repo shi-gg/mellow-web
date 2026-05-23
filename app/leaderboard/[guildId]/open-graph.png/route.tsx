@@ -24,6 +24,9 @@ const fonts = {
     extraBold: await readFile(new URL("../../../../assets/Poppins-ExtraBold.ttf", import.meta.url))
 };
 
+const noisePng = await readFile(new URL("../../../../public/noise.png", import.meta.url));
+const noiseDataUrl = `data:image/png;base64,${noisePng.toString("base64")}`;
+
 export async function GET(request: NextRequest, { params }: Props) {
     const { guildId } = await params;
 
@@ -37,13 +40,25 @@ export async function GET(request: NextRequest, { params }: Props) {
 
     return new ImageResponse(
         (
-            <div tw="bg-[#07050c] p-18 flex flex-col w-full h-full text-6xl text-white">
+            <div
+                tw="p-18 flex flex-col w-full h-full text-6xl text-white"
+                style={{ backgroundImage: "linear-gradient(165deg, #1f1140 0%, #07050c 75%)" }}
+            >
+                <img
+                    src={noiseDataUrl}
+                    alt=""
+                    tw="absolute top-0 left-0 w-full h-full opacity-5"
+                    width={2_409}
+                    height={2_409}
+                    style={{ objectFit: "cover" }}
+                />
+
                 <div tw="flex mb-6">
-                    <span tw="text-3xl bg-[#2c2146] text-[#895af6] opacity-80 pt-2 px-4 rounded-xl pb-2" style={{ fontWeight: 500 }}>
+                    <span tw="text-3xl bg-[#2c2146] text-[#895af6] opacity-80 pt-2 px-4 rounded-xl pb-2 font-medium">
                         Leaderboard
                     </span>
                 </div>
-                <div tw="flex mb-3 items-center">
+                <div tw="flex mb-5 items-center">
                     <img
                         alt=""
                         src={guildExists && guild.icon ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png` : getCanonicalUrl("discord.png")}
@@ -52,8 +67,7 @@ export async function GET(request: NextRequest, { params }: Props) {
                         height={20 * 4}
                     />
                     <div
-                        className="break-keep"
-                        style={{ fontWeight: 800, fontSize: "5rem" }}
+                        tw="font-extrabold text-[5rem]"
                     >
                         {truncate(guildExists ? guild.name : "unknown", 19)}
                     </div>
@@ -62,28 +76,28 @@ export async function GET(request: NextRequest, { params }: Props) {
                 <div tw="text-3xl text-gray-500 mb-42" style={{ fontWeight: 500 }}>
                     {guildExists && guild?.description
                         ? guild.description
-                        : "Explore the vibrant community dynamics"
+                        : "Explore the community leaderboard"
                     }
                 </div>
 
                 {Array.isArray(members) &&
                     <div tw="flex justify-between">
                         {members.slice(0, 3).map((member) => (
-                            <div key={member.id} tw="flex flex-col">
-                                <div tw="flex items-center mb-2 text-5xl" style={{ fontWeight: 600 }}>
+                            <div key={member.id} tw="flex flex-col w-1/3">
+                                <div tw="flex items-center text-5xl mb-2.5 font-semibold">
                                     <img
                                         alt=""
                                         src={member?.avatar ? `https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.png` : getCanonicalUrl("discord.png")}
-                                        tw="h-14 w-14 rounded-full mb-2.5 mr-4"
+                                        tw="h-14 w-14 rounded-full mr-3"
                                         width={14 * 4}
                                         height={14 * 4}
                                     />
-                                    {truncate(member.globalName || member.username || "unknown", 10)}
+                                    {intl.format(member.activity.messages)}
+                                    <Icon tw="mb-2 ml-px" type={type as "messages"} />
                                 </div>
 
-                                <div tw="text-3xl text-gray-400 flex text-3xl" style={{ fontWeight: 500 }}>
-                                    <span tw="mr-2">{intl.format(member.activity.messages)}</span>
-                                    <Icon type={type as "messages"} />
+                                <div tw="text-3xl text-gray-200 flex text-3xl font-medium">
+                                    {truncate(member.globalName || member.username || "unknown", 14)}
                                 </div>
                             </div>
                         ))}
