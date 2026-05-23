@@ -1,8 +1,6 @@
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
+const DISCORD_BOT_USER_AGENT = "Discordbot";
 
-const DISCORD_BOT_USER_AGENT = "Discordbot/2.0;";
-
-export function isDiscord(header: string | null | undefined | ReadonlyHeaders) {
+export function isDiscord(header: string | null | undefined | Headers) {
     if (!header) return false;
 
     if (header && typeof header === "object" && "get" in header) {
