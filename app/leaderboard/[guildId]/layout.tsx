@@ -35,7 +35,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
     const cacheQuery = `${date.getDate()}${date.getHours()}`;
 
     const images = {
-        url: getCanonicalUrl("leaderboard", guildId, `open-graph.png?cachfeaa=${cacheQuery}`),
+        url: getCanonicalUrl("leaderboard", guildId, `open-graph.png?cache=${cacheQuery}`),
         alt: description,
         height: 630,
         width: 1_200

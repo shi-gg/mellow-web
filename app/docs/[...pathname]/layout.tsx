@@ -28,7 +28,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
         : `${meta?.name} docs`;
 
     const images = {
-        url: getCanonicalUrl("docs", "open-graph", `${pathname.join("/")}.png?cache=${Date.now()}`),
+        url: getCanonicalUrl("docs", "open-graph", `${pathname.join("/")}.png`),
         alt: meta?.description,
         height: 630,
         width: 1_200
