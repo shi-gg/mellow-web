@@ -97,9 +97,9 @@ export default function Side({
                     <AccordionItem value="3">
                         <AccordionTrigger>About {guild && "name" in guild ? guild?.name : "this server"}</AccordionTrigger>
                         <AccordionContent className="mb-2">
-                            {guild && "description" in guild && guild?.description && (
+                            {guild && "description" in guild && (guild as { description?: string | null; }).description && (
                                 <p className="mb-6">
-                                    {guild.description}
+                                    {guild.description as string}
                                 </p>
                             )}
 

@@ -3,8 +3,10 @@ import { Button, LinkButton } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import metadata from "@/public/docs/meta.json";
 import { cn } from "@/utils/cn";
-import { getBaseUrl, getCanonicalUrl } from "@/utils/urls";
+import { isDiscord } from "@/utils/discord";
+import { getCanonicalUrl } from "@/utils/urls";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { BsDiscord, BsGithub } from "react-icons/bs";
 import { HiUserAdd, HiViewGridAdd } from "react-icons/hi";
@@ -20,17 +22,37 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
     const { pathname } = await params;
     const meta = metadata.pages.find((page) => page.file === `${pathname.join("/").toLowerCase()}.md`);
 
+    const url = getCanonicalUrl("docs", ...pathname);
     const title = meta?.file === "index.md"
         ? "Documentation"
         : `${meta?.name} docs`;
 
-    const url = getCanonicalUrl("docs", ...pathname);
     const images = {
-        url: meta?.image || `${getBaseUrl()}/waya-v3.webp?v=2`,
+        url: getCanonicalUrl("docs", "open-graph", `${pathname.join("/")}.png?cache=${Date.now()}`),
         alt: meta?.description,
-        heigth: 1_008,
-        width: 1_935
+        height: 630,
+        width: 1_200
     };
+
+    if (isDiscord(await headers())) {
+        return {
+            title,
+            description: undefined,
+            openGraph: {
+                title,
+                description: undefined,
+                url,
+                type: "article",
+                images
+            },
+            twitter: {
+                card: "summary_large_image",
+                title,
+                description: undefined,
+                images
+            }
+        };
+    }
 
     return {
         title,

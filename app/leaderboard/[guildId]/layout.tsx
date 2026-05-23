@@ -3,9 +3,11 @@ import ImageReduceMotion from "@/components/image-reduce-motion";
 import { ListTab } from "@/components/list";
 import { getGuild } from "@/lib/api";
 import paintPic from "@/public/paint.webp";
+import { isDiscord } from "@/utils/discord";
 import { intl } from "@/utils/numbers";
 import { getCanonicalUrl } from "@/utils/urls";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Image from "next/image";
 import { HiAnnotation, HiLink, HiUsers, HiVolumeUp } from "react-icons/hi";
 
@@ -32,6 +34,33 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
     const date = new Date();
     const cacheQuery = `${date.getDate()}${date.getHours()}`;
 
+    const images = {
+        url: getCanonicalUrl("leaderboard", guildId, `open-graph.png?cachfeaa=${cacheQuery}`),
+        alt: description,
+        height: 630,
+        width: 1_200
+    };
+
+    if (isDiscord(await headers())) {
+        return {
+            title,
+            description: undefined,
+            openGraph: {
+                title,
+                description: undefined,
+                url,
+                type: "article",
+                images
+            },
+            twitter: {
+                card: "summary_large_image",
+                title,
+                description: undefined,
+                images
+            }
+        };
+    }
+
     return {
         title,
         description,
@@ -43,21 +72,13 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
             description,
             url,
             type: "profile",
-            images: {
-                url: getCanonicalUrl("leaderboard", guildId, `open-graph.png?ca=${cacheQuery}`),
-                width: 1_200,
-                height: 630,
-                type: "image/png"
-            }
+            images
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: {
-                url: getCanonicalUrl("leaderboard", guildId, `open-graph.png?ca=${cacheQuery}`),
-                alt: title
-            }
+            images
         },
         robots: guild && "id" in guild ? "index, follow" : "noindex"
     };

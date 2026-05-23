@@ -1,3 +1,4 @@
+import { isDiscord } from "@/utils/discord";
 import { getCanonicalUrl } from "@/utils/urls";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
@@ -39,6 +40,6 @@ export const generateMetadata = (): Metadata => {
 };
 
 export default async function Home() {
-    if (!(await headers()).get("user-agent")?.includes("Discordbot/2.0")) redirect("/login");
+    if (isDiscord(await headers())) redirect("/login");
     return <></>;
 }

@@ -6,6 +6,7 @@ import type { SVGProps } from "react";
 
 type Props = SVGProps<SVGSVGElement> & {
     type: "messages" | "voiceminutes" | "invites";
+    tw?: string;
 };
 
 export default function Icon({
