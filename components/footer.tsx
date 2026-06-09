@@ -9,7 +9,7 @@ import { BiCopyright, BiLogoGithub, BiLogoGmail, BiLogoReddit, BiLogoYoutube } f
 import { BsDiscord } from "react-icons/bs";
 import { FaBluesky } from "react-icons/fa6";
 import { HiBookOpen, HiCloud, HiCube, HiGlobe, HiHand, HiLibrary, HiMusicNote, HiUserAdd } from "react-icons/hi";
-import { SiDiscord, SiKofi } from "react-icons/si";
+import { SiDiscord, SiKofi, SiOnlyfans } from "react-icons/si";
 
 import { Badge } from "./ui/badge";
 
@@ -98,8 +98,11 @@ function Socials() {
             <Link href="https://youtube.com/@wamellow" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow on YouTube">
                 <BiLogoYoutube />
             </Link>
-            <Link href="https://bsky.app/profile/shi.gg" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow on Twitter (X.com)">
+            <Link href="https://bsky.app/profile/shi.gg" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow on Bluesky (bsky.app)">
                 <FaBluesky className="p-0.5" />
+            </Link>
+            <Link href="https://media.wamellow.com/rick.mp3" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow on OnlyFans">
+                <SiOnlyfans className="p-0.5" />
             </Link>
             <Link href="https://github.com/shi-gg" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Wamellow's developers on GitHub">
                 <BiLogoGithub />
@@ -110,7 +113,7 @@ function Socials() {
             <Link href="mailto:support@wamellow.com" className="text-white/75 hover:text-white duration-200 size-6" aria-label="Contact Wamellow via email">
                 <BiLogoGmail />
             </Link>
-            <Link href="https://ko-fi.com/mwlica" className="text-white/75 hover:text-white duration-200 h-[22px] w-[22px]" aria-label="Support Wamellow's developers monetarily on Kofi">
+            <Link href="https://ko-fi.com/mwlica" className="text-white/75 hover:text-white duration-200 size-5.5" aria-label="Support Wamellow's developers monetarily on Kofi">
                 <SiKofi />
             </Link>
             <Link href="/vote" className="text-[#ff3366] duration-200 size-6" aria-label="Vote for Wamellow on top.gg">
