@@ -9,9 +9,27 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { BsDiscord, BsGithub } from "react-icons/bs";
-import { HiUserAdd, HiViewGridAdd } from "react-icons/hi";
+import { HiExternalLink, HiUserAdd, HiViewGridAdd } from "react-icons/hi";
 
 const MARKDOWN_EXT_REGEX = /\.md$/;
+
+const RESOURCES = [
+    {
+        name: "Support",
+        href: "/support",
+        icon: <BsDiscord className="size-4" />
+    },
+    {
+        name: "Invite",
+        href: "/invite",
+        icon: <HiUserAdd className="size-4" />
+    },
+    {
+        name: "Dashboard",
+        href: "/profile",
+        icon: <HiViewGridAdd className="size-4" />
+    }
+];
 
 interface Props {
     params: Promise<{ pathname: string[]; }>;
@@ -88,17 +106,14 @@ export default async function RootLayout({ params, children }: Props) {
     return (
         <div className="w-full">
 
-            <h1 className="text-2xl font-medium text-neutral-100 mb-1">
+            <h1 className="text-2xl font-medium text-neutral-100">
                 {title} Documentation
             </h1>
-            <div>
-                {meta?.description}
-            </div>
 
             <div className="flex flex-col md:flex-row gap-6 mt-5 min-h-[63vh]">
                 <nav className="w-full md:w-1/4 space-y-2 md:sticky md:top-6 md:self-start">
 
-                    <ul className="space-y-1 mb-4 bg-wamellow p-2 rounded-md border border-wamellow-alpha">
+                    <ul className="space-y-1 mb-2 bg-wamellow p-2 rounded-lg">
                         {metadata.pages.map((page) =>
                             <NavButton
                                 key={"nav-" + page.file}
@@ -108,32 +123,23 @@ export default async function RootLayout({ params, children }: Props) {
                         )}
                     </ul>
 
-                    <LinkButton
-                        className="w-full justify-start!"
-                        href="/support"
-                        target="_blank"
-                        variant="blurple"
-                    >
-                        <BsDiscord />
-                        Join Support
-                    </LinkButton>
-                    <LinkButton
-                        className="w-full justify-start!"
-                        href="/invite"
-                        target="_blank"
-                        variant="secondary"
-                    >
-                        <HiUserAdd />
-                        Invite Wamellow
-                    </LinkButton>
-                    <LinkButton
-                        className="w-full justify-start!"
-                        href="/profile"
-                        target="_blank"
-                    >
-                        <HiViewGridAdd />
-                        Dashboard
-                    </LinkButton>
+                    <ul className="space-y-1 bg-wamellow p-2 rounded-lg">
+                        {RESOURCES.map((page) =>
+                            <li key={"nav-" + page.href}>
+                                <LinkButton
+                                    className="w-full justify-start! h-8 bg-transparent pr-2"
+                                    href={page.href}
+                                    target="_blank"
+                                    size="sm"
+                                >
+                                    <span className="mr-0.5">{page.icon}</span>
+                                    {page.name}
+                                    <HiExternalLink className="size-4! ml-auto" />
+                                </LinkButton>
+                            </li>
+                        )}
+                    </ul>
+
                     <Button
                         asChild
                         variant="link"
