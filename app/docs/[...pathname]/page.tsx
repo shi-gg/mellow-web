@@ -39,12 +39,12 @@ export default async function Home({ params }: Props) {
                 >
                     <HiExclamationCircle className="size-4" />
 
-                    <AlertTitle >
+                    <AlertTitle>
                         Wamellow requires permissions
                     </AlertTitle>
 
                     <AlertDescription
-                        className="space-x-1"
+                        className="flex flex-wrap gap-1 gap-y-3 my-1.5"
                     >
                         {meta.permissions.bot.map((perm) => (
                             <Badge
