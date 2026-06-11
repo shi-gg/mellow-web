@@ -1,10 +1,11 @@
 import { Faq } from "@/app/(home)/faq.component";
 import BeautifyMarkdown from "@/components/markdown";
-import Notice, { NoticeType } from "@/components/notice";
 import { ScreenMessage } from "@/components/screen-message";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import metadata from "@/public/docs/meta.json";
 import { readFile } from "fs/promises";
+import { HiExclamationCircle } from "react-icons/hi";
 
 interface Props {
     params: Promise<{ pathname: string[]; }>;
@@ -33,22 +34,28 @@ export default async function Home({ params }: Props) {
             className="w-full lg:w-3/4"
         >
             {meta?.permissions?.bot && (
-                <Notice
-                    type={NoticeType.Info}
-                    message="Wamellow requires permissions"
+                <Alert
+                    className="mb-2"
                 >
-                    <div className="space-x-1">
+                    <HiExclamationCircle className="size-4" />
+
+                    <AlertTitle>
+                        Wamellow requires permissions
+                    </AlertTitle>
+
+                    <AlertDescription
+                        className="flex flex-wrap gap-1 gap-y-3 my-1.5"
+                    >
                         {meta.permissions.bot.map((perm) => (
                             <Badge
                                 key={perm}
                                 className="-my-1"
-                                variant="flat"
                             >
                                 {perm}
                             </Badge>
                         ))}
-                    </div>
-                </Notice>
+                    </AlertDescription>
+                </Alert>
             )}
 
             <BeautifyMarkdown markdown={markdown} />
