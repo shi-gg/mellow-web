@@ -95,11 +95,11 @@ export default function DiscordMessageEmbed({
                 {thumbnail && <img src={replaceTemplatesToUrl(thumbnail)} alt="" className="ml-auto w-20 rounded-md bg-wamellow" width={80} height={80} loading="lazy" decoding="async" />}
             </div>
 
-            {image && <img src={replaceTemplatesToUrl(image)} alt="" className="ml-auto rounded-md h-full w-full mt-4 bg-wamellow" width={400} height={225} loading="lazy" decoding="async" />}
+            {image && <img src={replaceTemplatesToUrl(image)} alt="" className="rounded-md h-full w-full mt-4 bg-wamellow" width={400} height={225} loading="lazy" decoding="async" />}
 
             {footer?.text &&
                 <div className="flex gap-1 items-center mt-3">
-                    {footer.icon_url && <img src={replaceTemplatesToUrl(footer.icon_url)} alt="" className="rounded-full h-5 w-5" width={20} height={20} loading="lazy" decoding="async" />}
+                    {footer.icon_url && <img src={replaceTemplatesToUrl(footer.icon_url)} alt="" className="rounded-full size-5 bg-wamellow" width={20} height={20} loading="lazy" decoding="async" />}
                     <span className="text-xs">
                         <DiscordMarkdown
                             mode={mode}
