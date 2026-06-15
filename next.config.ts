@@ -112,6 +112,18 @@ const nextConfig: NextConfig = {
             },
             {
                 protocol: "https",
+                hostname: "static-cdn.jtvnw.net",
+                port: "",
+                pathname: "/ttv-static/404_preview-1920x1080.jpg"
+            },
+            {
+                protocol: "https",
+                hostname: "static-cdn.jtvnw.net",
+                port: "",
+                pathname: "/ttv-static/404_boxart-188x250.jpg"
+            },
+            {
+                protocol: "https",
                 hostname: "cdn.bsky.app",
                 port: "",
                 pathname: "/img/avatar/plain/**"
