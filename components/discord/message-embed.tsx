@@ -64,7 +64,7 @@ export default function DiscordMessageEmbed({
                                 "font-semibold text-semibold mb-2 flex gap-2 items-center"
                             )}
                         >
-                            {author.icon_url && <img src={author.icon_url} alt="" className="rounded-full h-6 w-6" width={24} height={24} decoding="async" />}
+                            {author.icon_url && <img src={replaceTemplatesToUrl(author.icon_url)} alt="" className="rounded-full size-6 bg-wamellow" width={24} height={24} decoding="async" />}
                             <DiscordMarkdown
                                 mode={mode}
                                 text={author.text}
