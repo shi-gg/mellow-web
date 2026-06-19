@@ -3,10 +3,10 @@
 import { guildStore } from "@/common/guilds";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/utils/cn";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import { useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
 

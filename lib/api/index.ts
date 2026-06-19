@@ -5,7 +5,7 @@ export interface ApiRequestOptions {
 }
 
 export const cacheOptions = {
-    cacheTime: 1_000 * 60 * 60,
+    gcTime: 1_000 * 60 * 60,
     refetchOnWindowFocus: false,
     refetchOnMount: false
 };
