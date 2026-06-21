@@ -14,18 +14,18 @@ interface Props {
     className?: string;
 
     author?: {
-        icon_url?: string;
+        icon_url?: string | null;
         text: string;
-    };
+    } | null;
 
-    title?: string;
-    color: number;
-    thumbnail?: string;
-    image?: string;
+    title?: string | null;
+    color?: number | null;
+    thumbnail?: string | null;
+    image?: string | null;
 
     footer?: {
-        icon_url?: string;
-        text: string;
+        icon_url?: string | null;
+        text?: string | null;
     };
 }
 
@@ -34,7 +34,7 @@ export default function DiscordMessageEmbed({
     className,
     author,
     title,
-    color,
+    color = 0x00_00_00,
     thumbnail,
     image,
     footer,
@@ -46,7 +46,7 @@ export default function DiscordMessageEmbed({
         <div
             className={cn(
                 mode === "DARK" ? "text-neutral-200" : "text-neutral-800",
-                "w-full font-light p-3 rounded-sm border-l-4 mt-2",
+                "w-full font-light p-3 rounded-lg border-l-4 my-2",
                 className
             )}
             style={{
