@@ -154,7 +154,7 @@ function BillingCycleContent({
     setChangeDonationModalOpen
 }: {
     isLoading: boolean;
-    data?: ApiV1UsersMeBillingGetResponse;
+    data: ApiV1UsersMeBillingGetResponse | null;
     totalAmount: string;
     basePrice: number;
     setChangeDonationModalOpen: (open: boolean) => void;
