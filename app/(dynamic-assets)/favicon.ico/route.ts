@@ -36,7 +36,7 @@ export async function GET() {
         {
             headers: {
                 "Content-Type": "image/png",
-                "Cache-Control": "public, s-max-age=691200, immutable"
+                "Cache-Control": "public, immutable, no-transform, max-age=691200"
             }
         }
     );

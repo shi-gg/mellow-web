@@ -12,8 +12,6 @@ export const revalidate = 3_600;
 
 const fonts = {
     regular: await readFile(new URL("../../../../assets/Poppins-Regular.ttf", import.meta.url)),
-    medium: await readFile(new URL("../../../../assets/Poppins-Medium.ttf", import.meta.url)),
-    semiBold: await readFile(new URL("../../../../assets/Poppins-SemiBold.ttf", import.meta.url)),
     extraBold: await readFile(new URL("../../../../assets/Poppins-ExtraBold.ttf", import.meta.url)),
     lexend: await readFile(new URL("../../../../assets/Lexend-Bold.ttf", import.meta.url))
 };
@@ -58,7 +56,7 @@ export async function GET(_request: NextRequest, { params }: Props) {
                 />
 
                 <div tw="flex mb-6">
-                    <span tw="text-3xl bg-[#2c2146] text-[#895af6] opacity-80 pt-2 px-4 rounded-xl pb-2" style={{ fontWeight: 500 }}>
+                    <span tw="text-3xl bg-[#2c2146] text-[#895af6] opacity-80 pt-2 px-4 rounded-xl pb-2 font-medium">
                         Documentation
                     </span>
                 </div>
@@ -72,7 +70,7 @@ export async function GET(_request: NextRequest, { params }: Props) {
                     </div>
                 </div>
 
-                <div tw="text-4xl text-gray-500 mt-3" style={{ fontWeight: 500 }}>
+                <div tw="text-4xl text-gray-500 mt-3 font-medium">
                     {description}
                 </div>
 
@@ -86,24 +84,15 @@ export async function GET(_request: NextRequest, { params }: Props) {
         {
             width: 1_200,
             height: 630,
+            headers: {
+                "Cache-Control": "public, no-transform, max-age=691200, stale-while-revalidate=600"
+            },
             fonts: [
                 {
                     name: "Poppins",
                     data: fonts.regular,
                     style: "normal",
                     weight: 400
-                },
-                {
-                    name: "Poppins",
-                    data: fonts.medium,
-                    style: "normal",
-                    weight: 500
-                },
-                {
-                    name: "Poppins",
-                    data: fonts.semiBold,
-                    style: "normal",
-                    weight: 600
                 },
                 {
                     name: "Poppins",
