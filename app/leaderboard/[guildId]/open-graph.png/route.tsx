@@ -18,7 +18,6 @@ interface Props {
 export const revalidate = 3_600; // 1 hour
 
 const fonts = {
-    regular: await readFile(new URL("../../../../assets/Poppins-Regular.ttf", import.meta.url)),
     medium: await readFile(new URL("../../../../assets/Poppins-Medium.ttf", import.meta.url)),
     semiBold: await readFile(new URL("../../../../assets/Poppins-SemiBold.ttf", import.meta.url)),
     extraBold: await readFile(new URL("../../../../assets/Poppins-ExtraBold.ttf", import.meta.url))
@@ -73,7 +72,7 @@ export async function GET(request: NextRequest, { params }: Props) {
                     </div>
                 </div>
 
-                <div tw="text-3xl text-gray-500 mb-42" style={{ fontWeight: 500 }}>
+                <div tw="text-3xl text-gray-500 mb-42 font-medium">
                     {guildExists && guild?.description
                         ? guild.description
                         : "Explore the community leaderboard"
@@ -109,13 +108,10 @@ export async function GET(request: NextRequest, { params }: Props) {
         {
             width: 1_200,
             height: 630,
+            headers: {
+                "Cache-Control": "public, no-transform, max-age=3600, stale-while-revalidate=600"
+            },
             fonts: [
-                {
-                    name: "Poppins",
-                    data: fonts.regular,
-                    style: "normal",
-                    weight: 400
-                },
                 {
                     name: "Poppins",
                     data: fonts.medium,

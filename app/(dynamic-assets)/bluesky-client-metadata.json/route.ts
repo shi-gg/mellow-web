@@ -41,7 +41,7 @@ export function GET() {
         },
         {
             headers: {
-                "Cache-Control": "public, s-maxage=691200, immutable"
+                "Cache-Control": "public, immutable, no-transform, max-age=691200"
             }
         }
     );
