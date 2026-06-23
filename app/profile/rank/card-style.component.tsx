@@ -44,9 +44,7 @@ export function CardSyle() {
         const formData = new FormData();
         formData.append("file[0]", file);
 
-        const res = await client.put<ApiV1UsersMeRankEmojiPutResponse>("/users/@me/rank/emoji", {
-            body: formData
-        });
+        const res = await client.put<ApiV1UsersMeRankEmojiPutResponse>("/users/@me/rank/emoji", formData);
 
         if (res.error || !res.data) {
             setState(State.Idle);
