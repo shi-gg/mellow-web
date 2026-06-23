@@ -17,13 +17,13 @@ export function useApi<T>(url: string, enabled?: boolean) {
     const edit = editApiCache<T>(queryClient, url);
 
     if (data && typeof data === "object" && "message" in data && typeof data.message === "string") {
-        return { data: undefined, isLoading, error: data.message || "unknown error", edit, ...props };
+        return { data: null, isLoading, error: data.message || "unknown error", edit, ...props };
     }
 
     return {
         data: data as T,
         isLoading,
-        error: error ? `${error}` : undefined,
+        error: error ? `${error}` : null,
         edit,
         ...props
     };

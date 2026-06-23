@@ -17,10 +17,11 @@ export class ApiClient {
             method,
             body: !body || body instanceof FormData ? body : JSON.stringify(body),
             headers
-        });
+        })
+            .catch(() => null);
 
-        if (!response.headers.get("Content-Type")?.toLowerCase()?.startsWith("application/json")) {
-            return { data: null, error: response.statusText };
+        if (!response || !response.headers.get("Content-Type")?.toLowerCase()?.startsWith("application/json")) {
+            return { data: null, error: response?.statusText || "Network error" };
         }
 
         const data = await response.json() as T | ApiError;
