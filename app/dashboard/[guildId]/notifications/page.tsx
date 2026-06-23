@@ -19,12 +19,12 @@ import { type ApiV1GuildsModulesNotificationsGetResponse, BlueskyNotificationFla
 import { arrayToBitfield, Bitfield, bitfieldToArray, transformer } from "@/utils/bitfields";
 import { createSelectableItems } from "@/utils/create-selectable-items";
 import { getCanonicalUrl } from "@/utils/urls";
+import { useQuery } from "@tanstack/react-query";
 import { LoaderCircleIcon } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { type ReactNode, useMemo } from "react";
 import { HiChat, HiViewGridAdd } from "react-icons/hi";
-import { useQuery } from "react-query";
 
 import { hasBlueskyPost } from "./api";
 import { DeleteNotification } from "./delete.component";
@@ -311,14 +311,12 @@ function TestButton(
     { type, creatorId, children }: { type: NotificationType; creatorId: string; children: ReactNode; }
 ) {
 
-    const { data, isLoading } = useQuery(
-        [type, creatorId],
-        () => hasBlueskyPost(creatorId),
-        {
-            ...cacheOptions,
-            enabled: type === NotificationType.Bluesky
-        }
-    );
+    const { data, isLoading } = useQuery({
+        queryKey: [type, creatorId],
+        queryFn: () => hasBlueskyPost(creatorId),
+        ...cacheOptions,
+        enabled: type === NotificationType.Bluesky
+    });
 
     if (type === NotificationType.Bluesky && (data === false || isLoading)) {
         return (

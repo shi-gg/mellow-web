@@ -1,7 +1,7 @@
 import { cacheOptions, getData } from "@/lib/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { useQuery, useQueryClient } from "react-query";
 
 interface UseDataQueryOptions {
     url: string;
@@ -15,14 +15,12 @@ export function useList<T extends { id: string; }>({ url }: UseDataQueryOptions)
 
     const queryClient = useQueryClient();
 
-    const { data, isLoading, error } = useQuery(
-        url,
-        () => getData<T[]>(url),
-        {
-            enabled: Boolean(params.guildId),
-            ...cacheOptions
-        }
-    );
+    const { data, isLoading, error } = useQuery({
+        queryKey: [url],
+        queryFn: () => getData<T[]>(url),
+        enabled: Boolean(params.guildId),
+        ...cacheOptions
+    });
 
     const itemId = search.get("id") as string;
     const item = (Array.isArray(data) ? data : []).find((i) => i.id === itemId);
@@ -46,7 +44,7 @@ export function useList<T extends { id: string; }>({ url }: UseDataQueryOptions)
         <K extends keyof T>(key: K, value: T[K]) => {
             if (!item || !Array.isArray(data)) return;
 
-            queryClient.setQueryData<T[]>(url, () => [
+            queryClient.setQueryData<T[]>([url], () => [
                 ...(data?.filter((t) => t.id !== item.id) || []),
                 { ...item, [key]: value }
             ]);
@@ -58,7 +56,7 @@ export function useList<T extends { id: string; }>({ url }: UseDataQueryOptions)
         <K extends keyof T>(payload: Record<K, T[K]>) => {
             if (!item || !Array.isArray(data)) return;
 
-            queryClient.setQueryData<T[]>(url, () => [
+            queryClient.setQueryData<T[]>([url], () => [
                 ...(data?.filter((t) => t.id !== item.id) || []),
                 { ...item, ...payload }
             ]);
@@ -70,7 +68,7 @@ export function useList<T extends { id: string; }>({ url }: UseDataQueryOptions)
         (newItem: T) => {
             if (!Array.isArray(data)) return;
 
-            queryClient.setQueryData<T[]>(url, () => [
+            queryClient.setQueryData<T[]>([url], () => [
                 ...(data || []),
                 newItem
             ]);
@@ -82,7 +80,7 @@ export function useList<T extends { id: string; }>({ url }: UseDataQueryOptions)
         (id: string) => {
             if (!Array.isArray(data)) return;
 
-            queryClient.setQueryData<T[]>(url, () =>
+            queryClient.setQueryData<T[]>([url], () =>
                 data?.filter((t) => t.id !== id) || []
             );
         },
@@ -99,10 +97,8 @@ export function useList<T extends { id: string; }>({ url }: UseDataQueryOptions)
         removeItem,
         isLoading,
         error: (() => {
-            const errStr = error as string;
-            if (errStr) return errStr;
+            if (error) return error.message;
             if (data && "message" in data) return JSON.stringify(data.message);
-            if (error) return `${error}`;
             return undefined;
         })()
     };

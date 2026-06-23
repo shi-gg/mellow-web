@@ -17,12 +17,12 @@ import { type ApiEdit, editApiCache, useApi } from "@/lib/api/hook";
 import { type ApiV1GuildsGetResponse, type ApiV1UsersMeBillingGetResponse, type ApiV1UsersMeGuildsGetResponse, GuildFlags } from "@/typings";
 import { isActive, MAX_PREMIUM_GUILDS } from "@/utils/premium";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { GrAmex } from "react-icons/gr";
 import { HiCreditCard, HiLightningBolt } from "react-icons/hi";
 import { SiDinersclub, SiDiscover, SiJcb, SiMastercard, SiPaypal, SiStripe, SiVisa } from "react-icons/si";
-import { useQueryClient } from "react-query";
 
 const FIRST_WORD_CHAR_REGEX = /^\w/;
 
@@ -154,7 +154,7 @@ function BillingCycleContent({
     setChangeDonationModalOpen
 }: {
     isLoading: boolean;
-    data?: ApiV1UsersMeBillingGetResponse;
+    data: ApiV1UsersMeBillingGetResponse | null;
     totalAmount: string;
     basePrice: number;
     setChangeDonationModalOpen: (open: boolean) => void;
@@ -257,16 +257,19 @@ function PremiumGuildSelect({
 
     const editGuildPremium = useCallback(
         (guildId: string, action: "add" | "remove") => {
-            queryClient.setQueryData<ApiV1GuildsGetResponse | undefined>(`/guilds/${guildId}`, (guild) => {
-                if (!guild) return guild;
+            queryClient.setQueryData<ApiV1GuildsGetResponse | undefined>(
+                [`/guilds/${guildId}`],
+                (old) => {
+                    if (!old) return old;
 
-                return {
-                    ...guild,
-                    flags: action === "add"
-                        ? ((guild?.flags || 0) | GuildFlags.Premium)
-                        : ((guild?.flags || 0) & ~GuildFlags.Premium)
-                } satisfies ApiV1GuildsGetResponse;
-            });
+                    return {
+                        ...old,
+                        flags: action === "add"
+                            ? ((old.flags || 0) | GuildFlags.Premium)
+                            : ((old.flags || 0) & ~GuildFlags.Premium)
+                    } satisfies ApiV1GuildsGetResponse;
+                }
+            );
         },
         [queryClient]
     );

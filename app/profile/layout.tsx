@@ -7,15 +7,13 @@ import { MetricCard, Metrics } from "@/components/metric-card";
 import { ScreenMessage } from "@/components/screen-message";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cacheOptions, getData } from "@/lib/api";
+import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGetResponse } from "@/typings";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { Suspense } from "react";
 import CountUp from "react-countup";
 import { HiCreditCard, HiCubeTransparent, HiFire, HiHome, HiPhotograph, HiTranslate } from "react-icons/hi";
-import { useQuery } from "react-query";
 
 export default function RootLayout({
     children
@@ -28,31 +26,10 @@ export default function RootLayout({
     if (!session) redirect("/login?callback=/profile");
 
     const user = userStore((u) => u);
+    const { data, error } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
 
-    const url = "/users/@me" as const;
-
-    const { data, error } = useQuery(
-        url,
-        () => getData<ApiV1UsersMeGetResponse>(url),
-        {
-            enabled: Boolean(user?.id),
-            onSuccess: (d) => userStore.setState({
-                ...user,
-                extended: "status" in d ? undefined : d
-            }),
-            ...cacheOptions
-        }
-    );
-
-    if (error || (data && "message" in data)) {
-        return (
-            <ScreenMessage
-                description={
-                    (data && "message" in data ? data.message : `${error}`)
-                    || "An unknown error occurred."
-                }
-            />
-        );
+    if (error) {
+        return <ScreenMessage description={error || "An unknown error occurred."} />;
     }
 
     return (
@@ -89,7 +66,7 @@ export default function RootLayout({
                                         variant="flat"
                                     >
                                         <HiFire />
-                                        {user.extended?.voteCount} VOTE{user.extended?.voteCount === 1 ? "" : "S"}
+                                        {data?.voteCount} VOTE{data?.voteCount === 1 ? "" : "S"}
                                     </Badge>
                                 </Link>
                             </div>
@@ -102,53 +79,51 @@ export default function RootLayout({
                     </div>
 
                     <Metrics>
-                        <MetricCard name="Messages" isLoading={!user?.extended}>
-                            <CountUp className="text-2xl dark:text-neutral-100 text-neutral-900 font-medium" duration={4} end={user?.extended?.activity?.messages || 0} />
+                        <MetricCard name="Messages" isLoading={!data}>
+                            <CountUp className="text-2xl dark:text-neutral-100 text-neutral-900 font-medium" duration={4} end={data?.activity?.messages || 0} />
                         </MetricCard>
-                        <MetricCard name="Invites" isLoading={!user?.extended}>
-                            <CountUp className="text-2xl dark:text-neutral-100 text-neutral-900 font-medium" duration={4} end={user?.extended?.activity?.invites || 0} />
+                        <MetricCard name="Invites" isLoading={!data}>
+                            <CountUp className="text-2xl dark:text-neutral-100 text-neutral-900 font-medium" duration={4} end={data?.activity?.invites || 0} />
                         </MetricCard>
-                        <MetricCard name="Voice" isLoading={!user?.extended}>
-                            <span className="text-2xl dark:text-neutral-100 text-neutral-900 font-medium">{user?.extended?.activity?.formattedVoicetime}</span>
+                        <MetricCard name="Voice" isLoading={!data}>
+                            <span className="text-2xl dark:text-neutral-100 text-neutral-900 font-medium">{data?.activity?.formattedVoicetime}</span>
                         </MetricCard>
                     </Metrics>
                 </div>
             </div>
 
-            <Suspense>
-                <ListTab
-                    tabs={[
-                        {
-                            name: "Overview",
-                            value: "/",
-                            icon: <HiHome />
-                        },
-                        {
-                            name: "Rank",
-                            value: "/rank",
-                            icon: <HiPhotograph />
-                        },
-                        {
-                            name: "Text to Speech",
-                            value: "/text-to-speech",
-                            icon: <HiTranslate />
-                        },
-                        {
-                            name: "Connections",
-                            value: "/connections",
-                            icon: <HiCubeTransparent />
-                        },
-                        {
-                            name: "Billing",
-                            value: "/billing",
-                            icon: <HiCreditCard />
-                        }
-                    ]}
-                    url="/profile"
-                />
-            </Suspense>
+            <ListTab
+                tabs={[
+                    {
+                        name: "Overview",
+                        value: "/",
+                        icon: <HiHome />
+                    },
+                    {
+                        name: "Rank",
+                        value: "/rank",
+                        icon: <HiPhotograph />
+                    },
+                    {
+                        name: "Text to Speech",
+                        value: "/text-to-speech",
+                        icon: <HiTranslate />
+                    },
+                    {
+                        name: "Connections",
+                        value: "/connections",
+                        icon: <HiCubeTransparent />
+                    },
+                    {
+                        name: "Billing",
+                        value: "/billing",
+                        icon: <HiCreditCard />
+                    }
+                ]}
+                url="/profile"
+            />
 
-            {user?.id ? children : <></>}
+            {children}
         </div>
     );
 }

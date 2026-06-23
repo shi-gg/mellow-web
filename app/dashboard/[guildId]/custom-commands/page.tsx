@@ -11,10 +11,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cacheOptions, getData } from "@/lib/api";
 import { Permissions } from "@/lib/discord/enum/permissions";
 import type { ApiV1GuildsModulesTagsGetResponse } from "@/typings";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
 import { HiViewGridAdd } from "react-icons/hi";
-import { useQuery, useQueryClient } from "react-query";
 
 import { CreateTag, Style } from "./create.component";
 import { DeleteTag } from "./delete.component";
@@ -31,14 +31,12 @@ export default function Home() {
 
     const url = `/guilds/${params.guildId}/modules/tags` as const;
 
-    const { data, isLoading, error } = useQuery(
-        url,
-        () => getData<ApiV1GuildsModulesTagsGetResponse[]>(url),
-        {
-            enabled: Boolean(params.guildId),
-            ...cacheOptions
-        }
-    );
+    const { data, isLoading, error } = useQuery({
+        queryKey: [url],
+        queryFn: () => getData<ApiV1GuildsModulesTagsGetResponse[]>(url),
+        enabled: Boolean(params.guildId),
+        ...cacheOptions
+    });
 
     const id = search.get("id");
     const tag = (Array.isArray(data) ? data : []).find((t) => t.id === id);
@@ -79,21 +77,21 @@ export default function Home() {
     const editTag = <T extends keyof ApiV1GuildsModulesTagsGetResponse>(k: keyof ApiV1GuildsModulesTagsGetResponse, value: ApiV1GuildsModulesTagsGetResponse[T]) => {
         if (!tag) return;
 
-        queryClient.setQueryData<ApiV1GuildsModulesTagsGetResponse[]>(url, () => [
+        queryClient.setQueryData<ApiV1GuildsModulesTagsGetResponse[]>([url], () => [
             ...(data?.filter((t) => t.id !== tag.id) || []),
             { ...tag, [k]: value }
         ]);
     };
 
     const addTag = (tag: ApiV1GuildsModulesTagsGetResponse) => {
-        queryClient.setQueryData<ApiV1GuildsModulesTagsGetResponse[]>(url, () => [
+        queryClient.setQueryData<ApiV1GuildsModulesTagsGetResponse[]>([url], () => [
             ...(data || []),
             tag
         ]);
     };
 
     const removeTag = (id: string) => {
-        queryClient.setQueryData<ApiV1GuildsModulesTagsGetResponse[]>(url, () => (
+        queryClient.setQueryData<ApiV1GuildsModulesTagsGetResponse[]>([url], () => (
             data?.filter((t) => t.id !== id) || []
         ));
     };

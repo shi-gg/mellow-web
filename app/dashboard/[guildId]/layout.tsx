@@ -10,13 +10,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cacheOptions, getData } from "@/lib/api";
 import type { ApiV1GuildsChannelsGetResponse, ApiV1GuildsEmojisGetResponse, ApiV1GuildsGetResponse, ApiV1GuildsRolesGetResponse } from "@/typings";
 import { intl } from "@/utils/numbers";
+import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { Suspense, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { HiBell, HiChartBar, HiChevronLeft, HiCode, HiEye, HiHome, HiPaperAirplane, HiStar, HiUserAdd, HiUsers, HiViewGridAdd } from "react-icons/hi";
-import { useQuery } from "react-query";
 
 import { PremiumReminder } from "./premium-reminder.component";
 
@@ -25,19 +25,30 @@ function useGuildData<T extends unknown[]>(
     guildId: string | string[] | undefined,
     onLoad: (data: T, error: boolean) => void
 ) {
-    return useQuery(
-        url,
-        () => getData<T>(url),
-        {
-            enabled: Boolean(guildId),
-            onSettled: (data) => {
-                const isError = !data || "message" in data;
-                onLoad(isError ? [] as unknown as T : data, isError);
-            },
-            ...cacheOptions,
-            refetchOnMount: true
+    const onLoadRef = useRef(onLoad);
+
+    useEffect(() => {
+        onLoadRef.current = onLoad;
+    });
+
+    const result = useQuery({
+        queryKey: [url],
+        queryFn: () => getData<T>(url),
+        enabled: Boolean(guildId),
+        ...cacheOptions,
+        refetchOnMount: true
+    });
+
+    const { data, status, error } = result;
+
+    useEffect(() => {
+        if (status === "success" || status === "error") {
+            const isError = status === "error" || !data || "message" in data;
+            onLoadRef.current(isError ? [] as unknown as T : data, isError);
         }
-    );
+    }, [status, data, error]);
+
+    return result;
 }
 
 export default function RootLayout({
@@ -57,38 +68,30 @@ export default function RootLayout({
 
     const url = `/guilds/${params.guildId}` as const;
 
-    const { data, isLoading } = useQuery(
-        url,
-        () => getData<ApiV1GuildsGetResponse>(url),
-        {
-            enabled: Boolean(params.guildId),
-            ...cacheOptions,
-            refetchOnMount: true
-        }
-    );
+    const { data, isLoading } = useQuery({
+        queryKey: [url],
+        queryFn: () => getData<ApiV1GuildsGetResponse>(url),
+        enabled: Boolean(params.guildId),
+        ...cacheOptions,
+        refetchOnMount: true
+    });
 
     useGuildData<ApiV1GuildsChannelsGetResponse[]>(
         `${url}/channels`,
         params.guildId,
-        (data) => {
-            guildStore.setState((state) => ({ ...state, channels: data }));
-        }
+        (data) => guildStore.setState((state) => ({ ...state, channels: data }))
     );
 
     useGuildData<ApiV1GuildsRolesGetResponse[]>(
         `${url}/roles`,
         params.guildId,
-        (data) => {
-            guildStore.setState((state) => ({ ...state, roles: data }));
-        }
+        (data) => guildStore.setState((state) => ({ ...state, roles: data }))
     );
 
     useGuildData<ApiV1GuildsEmojisGetResponse[]>(
         `${url}/emojis`,
         params.guildId,
-        (data) => {
-            guildStore.setState((state) => ({ ...state, emojis: data }));
-        }
+        (data) => guildStore.setState((state) => ({ ...state, emojis: data }))
     );
 
     const isLoaded = guild?.id && "channels" in guild && "roles" in guild && "emojis" in guild;
@@ -149,59 +152,56 @@ export default function RootLayout({
 
             {user?.premium !== 0 && guild && <PremiumReminder guild={guild} />}
 
-            <Suspense>
-                <ListTab
-                    tabs={[
-                        {
-                            name: "Overview",
-                            value: "/",
-                            icon: <HiHome />
-                        },
-                        {
-                            name: "Leaderboards",
-                            value: "/leaderboards",
-                            icon: <HiChartBar />
-                        },
-                        {
-                            name: "Greetings",
-                            value: "/greeting",
-                            icon: <HiUserAdd />
-                        },
-                        {
-                            name: "Starboard",
-                            value: "/starboard",
-                            icon: <HiStar />
-                        },
-                        {
-                            name: "Notifications",
-                            value: "/notifications",
-                            icon: <HiBell />
-                        },
-                        {
-                            name: "Dailyposts",
-                            value: "/dailyposts",
-                            icon: <HiPaperAirplane className="rotate-45" />
-                        },
-                        {
-                            name: "Moderation",
-                            value: "/moderation",
-                            icon: <HiEye />
-                        },
-                        {
-                            name: "Custom Commands",
-                            value: "/custom-commands",
-                            icon: <HiCode />
-                        }
-                    ]}
-                    url={`/dashboard/${params.guildId}`}
-                    disabled={isTabsDisabled}
-                />
-            </Suspense>
+            <ListTab
+                tabs={[
+                    {
+                        name: "Overview",
+                        value: "/",
+                        icon: <HiHome />
+                    },
+                    {
+                        name: "Leaderboards",
+                        value: "/leaderboards",
+                        icon: <HiChartBar />
+                    },
+                    {
+                        name: "Greetings",
+                        value: "/greeting",
+                        icon: <HiUserAdd />
+                    },
+                    {
+                        name: "Starboard",
+                        value: "/starboard",
+                        icon: <HiStar />
+                    },
+                    {
+                        name: "Notifications",
+                        value: "/notifications",
+                        icon: <HiBell />
+                    },
+                    {
+                        name: "Dailyposts",
+                        value: "/dailyposts",
+                        icon: <HiPaperAirplane className="rotate-45" />
+                    },
+                    {
+                        name: "Moderation",
+                        value: "/moderation",
+                        icon: <HiEye />
+                    },
+                    {
+                        name: "Custom Commands",
+                        value: "/custom-commands",
+                        icon: <HiCode />
+                    }
+                ]}
+                url={`/dashboard/${params.guildId}`}
+                disabled={isTabsDisabled}
+            />
 
             <DashboardBody error={error} isLoaded={Boolean(isLoaded)}>
                 {children}
             </DashboardBody>
-
         </div>
     );
 }

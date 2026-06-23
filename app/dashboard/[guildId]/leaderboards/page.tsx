@@ -33,7 +33,7 @@ export default function Home() {
         return (
             <ScreenMessage
                 top="0rem"
-                description={error}
+                description={error || "Something went wrong.."}
                 href={`/dashboard/${guild?.id}`}
                 button="Go back to overview"
                 icon={<HiViewGridAdd />}

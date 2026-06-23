@@ -7,10 +7,10 @@ import { editApiCache, useApi } from "@/lib/api/hook";
 import type { ApiV1GuildsGetResponse, ApiV1UsersMeBillingGetResponse } from "@/typings";
 import { GuildFlags } from "@/typings";
 import { isActive, MAX_PREMIUM_GUILDS } from "@/utils/premium";
+import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { HiLightningBolt } from "react-icons/hi";
-import { useQueryClient } from "react-query";
 
 const WIDTH_THRESHOLD = 768;
 
