@@ -11,7 +11,7 @@ interface Props {
 export const revalidate = 3_600;
 
 const fonts = {
-    regular: await readFile(new URL("../../../../assets/Poppins-Regular.ttf", import.meta.url)),
+    medium: await readFile(new URL("../../../../assets/Poppins-Medium.ttf", import.meta.url)),
     extraBold: await readFile(new URL("../../../../assets/Poppins-ExtraBold.ttf", import.meta.url)),
     lexend: await readFile(new URL("../../../../assets/Lexend-Bold.ttf", import.meta.url))
 };
@@ -63,8 +63,8 @@ export async function GET(_request: NextRequest, { params }: Props) {
                 <div tw="flex mb-5 items-center">
                     {icon}
                     <div
-                        tw="ml-8"
-                        style={{ fontWeight: 800, fontSize: "5rem" }}
+                        tw="ml-8 font-extrabold"
+                        style={{ fontSize: "5rem" }}
                     >
                         {nameWithoutIcon}
                     </div>
@@ -90,9 +90,9 @@ export async function GET(_request: NextRequest, { params }: Props) {
             fonts: [
                 {
                     name: "Poppins",
-                    data: fonts.regular,
+                    data: fonts.medium,
                     style: "normal",
-                    weight: 400
+                    weight: 500
                 },
                 {
                     name: "Poppins",
