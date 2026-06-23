@@ -1,26 +1,29 @@
-import { type User, userStore } from "@/common/user";
-import { type ApiError, type ApiV1UsersMeGetResponse, UserFlags } from "@/typings";
-import { Bitfield } from "@/utils/bitfields";
+"use client";
+
+import { ScreenMessage } from "@/components/screen-message";
+import { useApi } from "@/lib/api/hook";
+import type { ApiV1UsersMeGetResponse } from "@/typings";
+import { UserFlags } from "@/typings";
+import { transformer } from "@/utils/bitfields";
 import { cn } from "@/utils/cn";
-import { deepMerge } from "@/utils/deep-merge";
 import { useState } from "react";
 
-export default function LeaderboardStyle() {
-    const user = userStore((s) => s);
+export function LeaderboardStyle() {
+    const { data, isLoading, error, edit } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
 
-    const flags = new Bitfield(user?.extended?.flags || 0);
-    const enabled = flags.has(UserFlags.LeaderboardAlternateStyle);
+    const [err, setErr] = useState<string | null>(null);
 
-    const [error, setError] = useState<string | null>(null);
+    if (isLoading) return null;
+    if (!data || error) {
+        return <ScreenMessage description={error || "An unknown error occurred."} />;
+    }
 
-    if (user?.id && !user.extended) return <></>;
+    const enabled = (data.flags & UserFlags.LeaderboardAlternateStyle) !== 0;
 
     async function update(alternateLeaderboardStyle: boolean) {
-        setError(null);
+        setErr(null);
 
-        const flags = new Bitfield(user?.extended?.flags || 0);
-        if (alternateLeaderboardStyle) flags.add(UserFlags.LeaderboardAlternateStyle);
-        else flags.remove(UserFlags.LeaderboardAlternateStyle);
+        const flags = transformer(alternateLeaderboardStyle, data!.flags, UserFlags.LeaderboardAlternateStyle);
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API}/users/@me`, {
             method: "PATCH",
@@ -28,24 +31,17 @@ export default function LeaderboardStyle() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ flags: flags.get() })
+            body: JSON.stringify({ flags })
         })
             .then((r) => r.json())
-            .catch(() => null) as ApiV1UsersMeGetResponse["rank"] | ApiError | null;
+            .catch(() => null) as ApiV1UsersMeGetResponse | null;
 
-        if (!res || "message" in res) {
-            setError(res && "message" in res
-                ? res.message
-                : "Failed to update"
-            );
+        if (!res) {
+            setErr("Failed to update");
             return;
         }
 
-        userStore.setState({
-            ...deepMerge<User>(user, {
-                extended: { rank: res, flags: flags.get() }
-            })
-        });
+        edit("flags", flags);
     }
 
     return (<>
@@ -126,9 +122,9 @@ export default function LeaderboardStyle() {
         </div>
 
         <div className="flex">
-            {error && (
+            {err && (
                 <div className="ml-auto text-red-500 text-sm">
-                    {error}
+                    {err}
                 </div>
             )}
         </div>

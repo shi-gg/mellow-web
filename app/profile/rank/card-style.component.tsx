@@ -1,12 +1,13 @@
-import { type User, userStore } from "@/common/user";
+"use client";
+
 import Box from "@/components/box";
+import { ScreenMessage } from "@/components/screen-message";
 import { Shiggy } from "@/components/shiggy";
 import { Button } from "@/components/ui/button";
-import type { ApiV1UsersMeRankEmojiDeleteResponse, ApiV1UsersMeRankEmojiPutResponse } from "@/typings";
+import { useApi } from "@/lib/api/hook";
+import type { ApiV1UsersMeGetResponse, ApiV1UsersMeRankEmojiDeleteResponse, ApiV1UsersMeRankEmojiPutResponse } from "@/typings";
 import { cn } from "@/utils/cn";
-import { deepMerge } from "@/utils/deep-merge";
 import sleep from "@/utils/sleep";
-import type { ApiError } from "next/dist/server/api-utils";
 import Image from "next/image";
 import { type ChangeEvent, useRef, useState } from "react";
 import { HiUpload } from "react-icons/hi";
@@ -17,21 +18,22 @@ enum State {
     Success = 3
 }
 
-export default function CardSyle() {
-    const user = userStore((s) => s);
+export function CardSyle() {
+    const { data, isLoading, error, edit } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
     const ref = useRef<HTMLInputElement | null>(null);
 
     const [state, setState] = useState<State>(State.Idle);
-    const [error, setError] = useState<string | null>(null);
+    const [err, setErr] = useState<string | null>(null);
 
-    if (user?.id && !user.extended) return <></>;
+    if (isLoading) return null;
+    if (!data || error) {
+        return <ScreenMessage description={error || "An unknown error occurred."} />;
+    }
 
-    // TODO: Confetti & rainbow animation
-    // TODO: Image replace animation(?)
     // TODO: Better error message
 
     async function upload(e: ChangeEvent<HTMLInputElement>) {
-        setError(null);
+        setErr(null);
 
         const file = e.target.files?.[0];
         if (!file) return;
@@ -47,30 +49,25 @@ export default function CardSyle() {
             body: formData
         })
             .then((r) => r.json())
-            .catch(() => null) as ApiV1UsersMeRankEmojiPutResponse | ApiError | null;
+            .catch(() => null) as ApiV1UsersMeRankEmojiPutResponse | null;
 
-        if (!res || "message" in res) {
+        if (!res) {
             setState(State.Idle);
-            setError(
-                res && "message" in res
-                    ? res.message
-                    : "Failed to update"
-            );
+            setErr("Failed to update");
             return;
         }
 
         await sleep(1_000 * 3);
         setState(State.Success);
 
-        userStore.setState({
-            ...deepMerge<User>(user, {
-                extended: { rank: { emoji: res.id } }
-            })
+        edit("rank", {
+            ...data!.rank,
+            emoji: res.id
         });
     }
 
     async function remove() {
-        setError(null);
+        setErr(null);
         setState(State.Loading);
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API}/users/@me/rank/emoji`, {
@@ -78,24 +75,19 @@ export default function CardSyle() {
             credentials: "include"
         })
             .then((r) => r.json())
-            .catch(() => null) as ApiV1UsersMeRankEmojiDeleteResponse | ApiError | null;
+            .catch(() => null) as ApiV1UsersMeRankEmojiDeleteResponse | null;
 
-        if (!res || "message" in res) {
+        if (!res) {
             setState(State.Idle);
-            setError(
-                res && "message" in res
-                    ? res.message
-                    : "Failed to remove"
-            );
+            setErr("Failed to remove");
             return;
         }
 
         setState(State.Idle);
 
-        userStore.setState({
-            ...deepMerge<User>(user, {
-                extended: { rank: { emoji: null } }
-            })
+        edit("rank", {
+            ...data!.rank,
+            emoji: null
         });
     }
 
@@ -132,14 +124,14 @@ export default function CardSyle() {
                                 : "Upload Emoji"
                             }
                         </Button>
-                        {user?.extended?.rank?.emoji && (
+                        {data.rank?.emoji && (
                             <button
                                 onClick={() => remove()}
                                 className="text-red-400 hover:underline md:text-sm w-fit mt-1"
                             >
                                 Remove
                             </button>
-                        ) }
+                        )}
                     </div>
                 </div>
 
@@ -148,7 +140,7 @@ export default function CardSyle() {
                         <Emoji
                             key={`emoji-${i + 1}`}
                             index={i}
-                            emojiId={user?.extended?.rank?.emoji || null}
+                            emojiId={data.rank?.emoji || null}
                         />
                     )}
                 </div>
@@ -156,9 +148,9 @@ export default function CardSyle() {
             </Box>
 
             <div className="flex">
-                {error && (
+                {err && (
                     <div className="ml-auto text-red-500 text-sm">
-                        {error}
+                        {err}
                     </div>
                 )}
             </div>

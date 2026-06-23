@@ -1,18 +1,22 @@
 "use client";
 
-import { type User, userStore } from "@/common/user";
 import { InputSelect } from "@/components/inputs/select-menu";
 import { InputSwitch } from "@/components/inputs/switch";
+import { ScreenMessage } from "@/components/screen-message";
 import { TTSFaq } from "@/components/tts-faq";
+import { useApi } from "@/lib/api/hook";
+import type { ApiV1UsersMeGetResponse } from "@/typings";
 import { UserFlags } from "@/typings";
 import { transformer } from "@/utils/bitfields";
-import { deepMerge } from "@/utils/deep-merge";
-import { type actor, getVoices, voices } from "@/utils/tts";
+import { getVoices, voices } from "@/utils/tts";
 
 export default function Home() {
-    const user = userStore((s) => s!);
+    const { data, isLoading, error, edit } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
 
-    if (user.id && !user.extended) return <></>;
+    if (isLoading) return null;
+    if (!data || error) {
+        return <ScreenMessage description={error || "An unknown error occurred."} />;
+    }
 
     return (
         <div>
@@ -27,10 +31,8 @@ export default function Home() {
                             name: getVoices(voice)[0],
                             value: voice
                         }))}
-                        defaultState={user?.extended?.voice}
-                        onSave={(value) => {
-                            userStore.setState(deepMerge<User>(user, { extended: { voice: value as keyof typeof actor } }));
-                        }}
+                        defaultState={data.voice}
+                        onSave={(value) => edit("voice", value!)}
                     />
                     <InputSwitch
                         label="Chat to Speech"
@@ -38,11 +40,9 @@ export default function Home() {
                         inverted
                         endpoint="/users/@me"
                         k="flags"
-                        defaultState={(user.extended!.flags & UserFlags.ChatToSpeechIgnore) !== 0}
-                        transform={(value) => transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnore)}
-                        onSave={(value) => {
-                            userStore.setState(deepMerge<User>(user, { extended: { flags: transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnore) } }));
-                        }}
+                        defaultState={(data.flags & UserFlags.ChatToSpeechIgnore) !== 0}
+                        transform={(value) => transformer(value, data.flags, UserFlags.ChatToSpeechIgnore)}
+                        onSave={(value) => edit("flags", transformer(value, data.flags, UserFlags.ChatToSpeechIgnore))}
                     />
                     <InputSwitch
                         label="Markdown features"
@@ -50,16 +50,14 @@ export default function Home() {
                         inverted
                         endpoint="/users/@me"
                         k="flags"
-                        defaultState={(user.extended!.flags & UserFlags.ChatToSpeechIgnoreWeirdMarkdown) !== 0}
-                        transform={(value) => transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnoreWeirdMarkdown)}
-                        onSave={(value) => {
-                            userStore.setState(deepMerge<User>(user, { extended: { flags: transformer(value, user.extended!.flags, UserFlags.ChatToSpeechIgnoreWeirdMarkdown) } }));
-                        }}
+                        defaultState={(data.flags & UserFlags.ChatToSpeechIgnoreWeirdMarkdown) !== 0}
+                        transform={(value) => transformer(value, data.flags, UserFlags.ChatToSpeechIgnoreWeirdMarkdown)}
+                        onSave={(value) => edit("flags", transformer(value, data.flags, UserFlags.ChatToSpeechIgnoreWeirdMarkdown))}
                     />
                 </div>
 
                 <TTSFaq />
             </div>
-        </div>
+        </div >
     );
 }

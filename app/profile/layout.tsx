@@ -7,9 +7,8 @@ import { MetricCard, Metrics } from "@/components/metric-card";
 import { ScreenMessage } from "@/components/screen-message";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cacheOptions, getData } from "@/lib/api";
+import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGetResponse } from "@/typings";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useCookies } from "next-client-cookies";
@@ -29,23 +28,11 @@ export default function RootLayout({
 
     const user = userStore((u) => u);
 
-    const url = "/users/@me" as const;
-    const { data, error } = useQuery({
-        queryKey: [url],
-        queryFn: () => getData<ApiV1UsersMeGetResponse>(url),
-        enabled: Boolean(user?.id),
-        ...cacheOptions
-    });
+    const { data, isLoading, error } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
 
-    if (error || (data && "message" in data)) {
-        return (
-            <ScreenMessage
-                description={
-                    (data && "message" in data ? data.message : `${error}`)
-                    || "An unknown error occurred."
-                }
-            />
-        );
+    if (isLoading) return null;
+    if (error) {
+        return <ScreenMessage description={error || "An unknown error occurred."} />;
     }
 
     return (
@@ -141,7 +128,7 @@ export default function RootLayout({
                 />
             </Suspense>
 
-            {user?.id ? children : <></>}
+            {children}
         </div>
     );
 }

@@ -1,19 +1,24 @@
 "use client";
 
-import { type User, userStore } from "@/common/user";
 import { InputColor } from "@/components/inputs/color-input";
 import { InputImageUrl } from "@/components/inputs/image-url-input";
 import { InputSelect } from "@/components/inputs/select-menu";
+import { ScreenMessage } from "@/components/screen-message";
 import { Section } from "@/components/section";
+import { useApi } from "@/lib/api/hook";
+import type { ApiV1UsersMeGetResponse } from "@/typings";
 import { deepMerge } from "@/utils/deep-merge";
 
-import CardSyle from "./card-style.component";
-import LeaderboardStyle from "./leaderboard-style.component";
+import { CardSyle } from "./card-style.component";
+import { LeaderboardStyle } from "./leaderboard-style.component";
 
 export default function Home() {
-    const user = userStore((s) => s);
+    const { data, isLoading, error, edit } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
 
-    if (user?.id && !user.extended) return <></>;
+    if (isLoading) return null;
+    if (!data || error) {
+        return <ScreenMessage description={error || "An unknown error occurred."} />;
+    }
 
     return (<>
         <div className="lg:flex gap-3">
@@ -42,10 +47,8 @@ export default function Home() {
                             error: "Not done yet"
                         }
                     ]}
-                    defaultState={user?.extended?.rank?.subText?.type}
-                    onSave={(value) => {
-                        userStore.setState(deepMerge<User>(user, { extended: { rank: { subText: { type: Number(value) as 0 | 1 | 2 | 3 } } } }));
-                    }}
+                    defaultState={data.rank?.subText?.type}
+                    onSave={(value) => edit("rank", deepMerge(data.rank, { subText: { type: Number(value) as 0 } }))}
                 />
             </div>
 
@@ -56,10 +59,8 @@ export default function Home() {
                         endpoint="/users/@me/rank"
                         k="textColor"
                         description="Color used for your username."
-                        defaultState={user?.extended?.rank?.textColor ?? 0}
-                        onSave={(value) => {
-                            userStore.setState(deepMerge<User>(user, { extended: { rank: { textColor: Number(value) } } }));
-                        }}
+                        defaultState={data.rank?.textColor ?? 0}
+                        onSave={(value) => edit("rank", deepMerge(data.rank, { textColor: Number(value) }))}
                     />
                 </div>
                 <div className="w-1/2">
@@ -68,10 +69,8 @@ export default function Home() {
                         endpoint="/users/@me/rank"
                         k="barColor"
                         description="Color used for the progress bar."
-                        defaultState={user?.extended?.rank?.barColor ?? 0}
-                        onSave={(value) => {
-                            userStore.setState(deepMerge<User>(user, { extended: { rank: { barColor: Number(value) } } }));
-                        }}
+                        defaultState={data.rank?.barColor ?? 0}
+                        onSave={(value) => edit("rank", deepMerge(data.rank, { barColor: Number(value) }))}
                     />
                 </div>
             </div>
@@ -83,10 +82,8 @@ export default function Home() {
             ratio="aspect-4/1"
             k="background"
             description="Enter a url which should be the background of your /rank card. The recommended resolution is 906x256px."
-            defaultState={user?.extended?.rank?.background || ""}
-            onSave={(value) => {
-                userStore.setState(deepMerge<User>(user, { extended: { rank: { background: value } } }));
-            }}
+            defaultState={data.rank?.background || ""}
+            onSave={(value) => edit("rank", deepMerge(data.rank, { background: value }))}
         />
 
         <Section
