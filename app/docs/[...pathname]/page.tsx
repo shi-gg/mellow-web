@@ -21,9 +21,10 @@ export default async function Home({ params }: Props) {
     if (!markdown || !meta) {
         return (
             <ScreenMessage
+                className="w-full lg:w-3/4"
                 top="6rem"
-                title="Sadly, this page can not be found.."
-                description="Seems like you got a little lost here? Here's wumpus for now!"
+                title="Sadly, this docs does not exist.."
+                description="Seems like you got a little lost here?"
             />
         );
     }

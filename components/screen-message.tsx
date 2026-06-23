@@ -1,6 +1,4 @@
-import SadWumpusPic from "@/public/sad-wumpus.gif";
 import { cn } from "@/utils/cn";
-import Image from "next/image";
 import Link from "next/link";
 import { BsDiscord } from "react-icons/bs";
 import { HiHome } from "react-icons/hi";
@@ -8,6 +6,7 @@ import { HiHome } from "react-icons/hi";
 import { Button } from "./ui/button";
 
 interface Props {
+    className?: string;
     title?: string;
     description?: string;
     top?: string;
@@ -21,9 +20,10 @@ interface Props {
 }
 
 export function ScreenMessage({
+    className,
     title,
     description,
-    top = "30vh",
+    top = "35vh",
 
     icon,
     button,
@@ -33,15 +33,14 @@ export function ScreenMessage({
         <HomeButton />
         <SupportButton />
     </>),
-    children = <Image src={SadWumpusPic} alt="" height={141 * 1.5} width={124 * 1.5} />
+    children
 }: Props) {
 
     return (
         <div
-            className="w-full h-full flex justify-center gap-8"
+            className={cn("w-full h-full flex justify-center gap-8", className)}
             style={{ marginTop: top }}
         >
-
             {children && (
                 <div className={cn("relative bottom-8", buttons ? "ml-8" : "ml-4")}>
                     {children}
@@ -50,8 +49,8 @@ export function ScreenMessage({
 
             <div>
                 <div className="mb-8">
-                    <h2 className="text-4xl dark:text-neutral-100 text-neutral-900 font-semibold">{title || "Something strange happened..."}</h2>
-                    <h3 className="text-lg dark:text-neutral-400 text-neutral-600 font-semibold max-w-xl mt-1">{description || "Some error has occurred, but no worries, we're fixing it!"}</h3>
+                    <h2 className="text-4xl dark:text-neutral-100 text-neutral-900 font-semibold text-balance">{title || "Something strange happened…"}</h2>
+                    <h3 className="text-lg max-w-2xl mt-1">{description || "Some error has occurred, but no worries, we're fixing it!"}</h3>
                 </div>
 
                 {button && href &&
