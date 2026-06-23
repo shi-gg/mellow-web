@@ -27,10 +27,8 @@ export default function RootLayout({
     if (!session) redirect("/login?callback=/profile");
 
     const user = userStore((u) => u);
+    const { data, error } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
 
-    const { data, isLoading, error } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
-
-    if (isLoading) return null;
     if (error) {
         return <ScreenMessage description={error || "An unknown error occurred."} />;
     }
@@ -95,38 +93,36 @@ export default function RootLayout({
                 </div>
             </div>
 
-            <Suspense>
-                <ListTab
-                    tabs={[
-                        {
-                            name: "Overview",
-                            value: "/",
-                            icon: <HiHome />
-                        },
-                        {
-                            name: "Rank",
-                            value: "/rank",
-                            icon: <HiPhotograph />
-                        },
-                        {
-                            name: "Text to Speech",
-                            value: "/text-to-speech",
-                            icon: <HiTranslate />
-                        },
-                        {
-                            name: "Connections",
-                            value: "/connections",
-                            icon: <HiCubeTransparent />
-                        },
-                        {
-                            name: "Billing",
-                            value: "/billing",
-                            icon: <HiCreditCard />
-                        }
-                    ]}
-                    url="/profile"
-                />
-            </Suspense>
+            <ListTab
+                tabs={[
+                    {
+                        name: "Overview",
+                        value: "/",
+                        icon: <HiHome />
+                    },
+                    {
+                        name: "Rank",
+                        value: "/rank",
+                        icon: <HiPhotograph />
+                    },
+                    {
+                        name: "Text to Speech",
+                        value: "/text-to-speech",
+                        icon: <HiTranslate />
+                    },
+                    {
+                        name: "Connections",
+                        value: "/connections",
+                        icon: <HiCubeTransparent />
+                    },
+                    {
+                        name: "Billing",
+                        value: "/billing",
+                        icon: <HiCreditCard />
+                    }
+                ]}
+                url="/profile"
+            />
 
             {children}
         </div>
