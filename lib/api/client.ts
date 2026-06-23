@@ -3,7 +3,7 @@ import type { ApiError } from "@/typings";
 type Body = undefined | FormData | Record<string, unknown>;
 
 export class ApiClient {
-    constructor(private baseUrl: string) { }
+    constructor(private baseUrl: string) {}
 
     private async request<T extends object>(method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE", path: string, body?: Body): Promise<{ data: T; error: null; } | { data: null; error: string; }> {
         const headers: Record<string, string> = {};
