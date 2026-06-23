@@ -12,7 +12,6 @@ import type { ApiV1UsersMeGetResponse } from "@/typings";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { Suspense } from "react";
 import CountUp from "react-countup";
 import { HiCreditCard, HiCubeTransparent, HiFire, HiHome, HiPhotograph, HiTranslate } from "react-icons/hi";
 
