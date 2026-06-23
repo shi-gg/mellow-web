@@ -4,6 +4,7 @@ import Box from "@/components/box";
 import { ScreenMessage } from "@/components/screen-message";
 import { Shiggy } from "@/components/shiggy";
 import { Button } from "@/components/ui/button";
+import { client } from "@/lib/api";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGetResponse, ApiV1UsersMeRankEmojiDeleteResponse, ApiV1UsersMeRankEmojiPutResponse } from "@/typings";
 import { cn } from "@/utils/cn";
@@ -43,17 +44,13 @@ export function CardSyle() {
         const formData = new FormData();
         formData.append("file[0]", file);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API}/users/@me/rank/emoji`, {
-            method: "PUT",
-            credentials: "include",
+        const res = await client.put<ApiV1UsersMeRankEmojiPutResponse>("/users/@me/rank/emoji", {
             body: formData
-        })
-            .then((r) => r.json())
-            .catch(() => null) as ApiV1UsersMeRankEmojiPutResponse | null;
+        });
 
-        if (!res) {
+        if (res.error || !res.data) {
             setState(State.Idle);
-            setErr("Failed to update");
+            setErr(res.error || "Failed to update");
             return;
         }
 
@@ -62,7 +59,7 @@ export function CardSyle() {
 
         edit("rank", {
             ...data!.rank,
-            emoji: res.id
+            emoji: res.data.id
         });
     }
 
@@ -70,16 +67,11 @@ export function CardSyle() {
         setErr(null);
         setState(State.Loading);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API}/users/@me/rank/emoji`, {
-            method: "DELETE",
-            credentials: "include"
-        })
-            .then((r) => r.json())
-            .catch(() => null) as ApiV1UsersMeRankEmojiDeleteResponse | null;
+        const res = await client.delete<ApiV1UsersMeRankEmojiDeleteResponse>("/users/@me/rank/emoji");
 
-        if (!res) {
+        if (res.error || !res.data) {
             setState(State.Idle);
-            setErr("Failed to remove");
+            setErr(res.error || "Failed to remove");
             return;
         }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { ScreenMessage } from "@/components/screen-message";
+import { client } from "@/lib/api";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGetResponse } from "@/typings";
 import { UserFlags } from "@/typings";
@@ -23,25 +24,16 @@ export function LeaderboardStyle() {
     async function update(alternateLeaderboardStyle: boolean) {
         setErr(null);
 
-        const flags = transformer(alternateLeaderboardStyle, data!.flags, UserFlags.LeaderboardAlternateStyle);
+        const res = await client.patch<ApiV1UsersMeGetResponse>("/users/@me", {
+            flags: transformer(alternateLeaderboardStyle, data!.flags, UserFlags.LeaderboardAlternateStyle)
+        });
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API}/users/@me`, {
-            method: "PATCH",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ flags })
-        })
-            .then((r) => r.json())
-            .catch(() => null) as ApiV1UsersMeGetResponse | null;
-
-        if (!res) {
-            setErr("Failed to update");
+        if (res.error || !res.data) {
+            setErr(res.error || "Failed to update");
             return;
         }
 
-        edit("flags", flags);
+        edit("flags", res.data.flags);
     }
 
     return (<>

@@ -1,5 +1,7 @@
 import type { ApiError, ApiV1GuildsGetResponse } from "@/typings";
 
+import { ApiClient } from "./client";
+
 export interface ApiRequestOptions {
     force?: boolean;
 }
@@ -15,6 +17,7 @@ export const defaultFetchOptions = {
     next: { revalidate: 60 * 60 }
 };
 
+/* @deprecated Use `client.get` instead */
 export async function getData<T>(path: string) {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API}${path}`, {
         credentials: "include"
@@ -22,6 +25,8 @@ export async function getData<T>(path: string) {
 
     return response.json() as Promise<T | ApiError>;
 }
+
+export const client = new ApiClient(process.env.NEXT_PUBLIC_API!);
 
 export async function getGuild(guildId?: string | null, options?: ApiRequestOptions): Promise<ApiV1GuildsGetResponse | ApiError | undefined> {
     if (!guildId) return;
