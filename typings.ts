@@ -302,21 +302,31 @@ export enum UserFlags {
     LeaderboardAlternateStyle = 1 << 5
 }
 
+export enum RankSubTextType {
+    Off = 0,
+    Date = 1,
+    RelativeDate = 2,
+    Custom = 3
+}
+
 export interface ApiV1UsersMeGetResponse {
     flags: UserFlags;
-    voteCount?: number;
-    rank?: {
+    voteCount: number;
+    rank: {
         background?: string | null;
         emoji?: string | null;
         textColor?: number;
         barColor?: number;
         subText?: {
-            type: 0 | 1 | 2 | 3; // 0: off, 1: date, 2: relative, 3: custom
+            type: RankSubTextType;
             content?: string;
         };
     };
-    voice?: keyof typeof actor;
-    activity?: {
+    voice: {
+        default: keyof typeof actor;
+        overrides: Record<string, keyof typeof actor>;
+    };
+    activity: {
         messages: number;
         voiceminutes: number;
         invites: number;
