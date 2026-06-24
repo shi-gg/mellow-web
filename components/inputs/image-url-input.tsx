@@ -45,7 +45,8 @@ export function InputImageUrl({
         state,
         error,
         update,
-        save
+        save,
+        isDirty
     } = useInput({
         endpoint,
         k,
@@ -100,13 +101,12 @@ export function InputImageUrl({
 
     const handleImageLoad = () => {
         setImageState(ImageState.Success);
-        // Image loaded successfully, now save
+        if (!isDirty) return;
         void save();
     };
 
     const handleImageError = () => {
         setImageState(ImageState.Errored);
-        // Don't save - image failed to load
     };
 
     const isDisabled = state === InputState.Loading || disabled;
