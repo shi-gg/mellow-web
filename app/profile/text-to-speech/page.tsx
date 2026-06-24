@@ -7,7 +7,6 @@ import Notice from "@/components/notice";
 import { ScreenMessage } from "@/components/screen-message";
 import { TTSFaq } from "@/components/tts-faq";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { ApiEdit } from "@/lib/api/hook";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGetResponse, ApiV1UsersMeGuildsGetResponse } from "@/typings";
