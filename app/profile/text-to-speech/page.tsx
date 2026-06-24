@@ -104,18 +104,7 @@ function GuildSelect({
     guildId: string | undefined;
     onSelect: (guildId: string) => void;
 }) {
-    const { isLoading, data, error } = useApi<ApiV1UsersMeGuildsGetResponse[]>("/users/@me/guilds");
-
-    if (isLoading) {
-        return (
-            <div className="w-full flex flex-col gap-2 mt-2">
-                <Skeleton className="w-32 h-5 rounded-lg" />
-                <Skeleton className="w-full h-12" />
-                <Skeleton className="w-full h-5 rounded-lg" />
-            </div>
-        );
-    }
-
+    const { data, error } = useApi<ApiV1UsersMeGuildsGetResponse[]>("/users/@me/guilds");
     if (error) return <Notice message={error} />;
 
     return (
