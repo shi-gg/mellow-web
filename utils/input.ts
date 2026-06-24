@@ -64,10 +64,12 @@ export function useInput<T>(options: InputOptions<T>) {
     const save = useCallback(
         async (val?: T) => {
             const valueToSave = val === undefined ? value : val;
-            onSave?.(valueToSave);
-            setSavedValue(valueToSave);
 
-            if (!endpoint || !k) return;
+            if (!endpoint || !k) {
+                setSavedValue(valueToSave);
+                onSave?.(valueToSave);
+                return;
+            }
 
             if (timeout.current) {
                 clearTimeout(timeout.current);
@@ -106,6 +108,8 @@ export function useInput<T>(options: InputOptions<T>) {
                 return;
             }
 
+            setSavedValue(valueToSave);
+            onSave?.(valueToSave);
             setState(InputState.Success);
             timeout.current = setTimeout(() => setState(InputState.Idle), 1_000 * 8);
         },
