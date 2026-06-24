@@ -7,6 +7,7 @@ import { ScreenMessage } from "@/components/screen-message";
 import { Section } from "@/components/section";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGetResponse } from "@/typings";
+import { RankSubTextType } from "@/typings";
 import { deepMerge } from "@/utils/deep-merge";
 
 import { CardSyle } from "./card-style.component";
@@ -31,24 +32,24 @@ export default function Home() {
                     items={[
                         {
                             name: "None",
-                            value: 0
+                            value: RankSubTextType.Off
                         },
                         {
                             name: "ETA to next milestone reach date",
-                            value: 1
+                            value: RankSubTextType.Date
                         },
                         {
                             name: "ETA to next milestone reach relative date",
-                            value: 2
+                            value: RankSubTextType.RelativeDate
                         },
                         {
                             name: "Custom text",
-                            value: 3,
+                            value: RankSubTextType.Custom,
                             error: "Not done yet"
                         }
                     ]}
                     defaultState={data.rank?.subText?.type}
-                    onSave={(value) => edit("rank", deepMerge(data.rank, { subText: { type: Number(value) as 0 } }))}
+                    onSave={(value) => edit("rank", deepMerge(data.rank, { subText: { type: value! } })!)}
                 />
             </div>
 
@@ -60,7 +61,7 @@ export default function Home() {
                         k="textColor"
                         description="Color used for your username."
                         defaultState={data.rank?.textColor ?? 0}
-                        onSave={(value) => edit("rank", deepMerge(data.rank, { textColor: Number(value) }))}
+                        onSave={(value) => edit("rank", deepMerge(data.rank, { textColor: value })!)}
                     />
                 </div>
                 <div className="w-1/2">
@@ -70,7 +71,7 @@ export default function Home() {
                         k="barColor"
                         description="Color used for the progress bar."
                         defaultState={data.rank?.barColor ?? 0}
-                        onSave={(value) => edit("rank", deepMerge(data.rank, { barColor: Number(value) }))}
+                        onSave={(value) => edit("rank", deepMerge(data.rank, { barColor: value })!)}
                     />
                 </div>
             </div>
@@ -83,7 +84,7 @@ export default function Home() {
             k="background"
             description="Enter a url which should be the background of your /rank card. The recommended resolution is 906x256px."
             defaultState={data.rank?.background || ""}
-            onSave={(value) => edit("rank", deepMerge(data.rank, { background: value }))}
+            onSave={(value) => edit("rank", deepMerge(data.rank, { background: value })!)}
         />
 
         <Section

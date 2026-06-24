@@ -298,7 +298,7 @@ function PremiumGuildSelect({
                     icon: (
                         <ImageReduceMotion
                             alt={guild.name}
-                            className="rounded-md size-6 relative right-2"
+                            className="rounded-md size-6"
                             url={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}`}
                             size={32}
                         />
@@ -307,7 +307,7 @@ function PremiumGuildSelect({
                     value: guild.id
                 }))
             }
-            description="Select guilds where you want to enable premium features."
+            description="Select servers where you want to enable premium features."
             defaultState={guildIds}
             max={MAX_PREMIUM_GUILDS}
             onSave={(newGuildIds) => {
