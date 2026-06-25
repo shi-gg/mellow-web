@@ -27,9 +27,6 @@ export function Node({ index, node }: { index: number; node: ApiNode; }) {
                 <Row name="memory">
                     {node.memory}mb
                 </Row>
-                <Row name="usage">
-                    {node.usage}%
-                </Row>
                 <Row name="streams">
                     {node.players}
                 </Row>

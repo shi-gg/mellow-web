@@ -15,7 +15,6 @@ export interface ApiNode {
     id: string;
     uptime: string;
     memory: number;
-    usage: number;
     players: number;
 }
 
