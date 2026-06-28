@@ -25,7 +25,7 @@ export function ClientCountUp(props: Omit<CountUpProps, "duration">) {
         if (node) observer.observe(node);
 
         return () => {
-            if (node) observer.unobserve(node);
+            observer.disconnect();
         };
     }, [handleIntersection]);
 
@@ -52,7 +52,7 @@ export function StatsBar(options: Options) {
     const ref = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        ref.current = setInterval(() => setWidth(window.innerWidth), 1_000);
+        ref.current = setInterval(setWidth, 1_000, window.innerWidth);
         return () => {
             if (ref.current) clearInterval(ref.current);
         };

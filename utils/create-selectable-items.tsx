@@ -19,6 +19,8 @@ function parsePermissions(permissions: number, required: PermissionNames[]) {
         .filter(Boolean);
 }
 
+const collator = new Intl.Collator();
+
 export function createSelectableItems<T extends Item>(
     items: T[] | undefined,
     requiredPermissions?: (PermissionNames | null)[],
@@ -31,7 +33,7 @@ export function createSelectableItems<T extends Item>(
     }
 
     return items
-        .sort((a, b) => a.name.localeCompare(b.name))
+        .sort((a, b) => collator.compare(a.name, b.name))
         .filter((item) => "type" in item ? allowedTypes.includes(item.type) : true)
         .map((item) => ({
             icon: getIconByType("type" in item ? item.type : -1),
@@ -49,7 +51,7 @@ export function createSelectableEmojiItems(emojis: ApiV1GuildsEmojisGetResponse[
         { icon: "👋", name: "Wave", value: "👋" },
         { icon: "☕", name: "Coffee", value: "☕" },
         ...emojis
-            .sort((a, b) => a.name.localeCompare(b.name))
+            .sort((a, b) => collator.compare(a.name, b.name))
             .map((c) => ({
                 icon: <Image
                     src={`https://cdn.discordapp.com/emojis/${c.id}.webp?size=64&quality=lossless`}

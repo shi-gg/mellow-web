@@ -141,7 +141,7 @@ export default function MessageCreatorEmbed({
     useEffect(() => {
         if (state !== State.Success) return;
 
-        const timeout = setTimeout(() => setState(State.Idle), SAVE_SUCCESS_TIMEOUT);
+        const timeout = setTimeout(setState, SAVE_SUCCESS_TIMEOUT, State.Idle);
         return () => clearTimeout(timeout);
     }, [state]);
 
