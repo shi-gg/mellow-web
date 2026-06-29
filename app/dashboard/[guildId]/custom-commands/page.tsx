@@ -96,10 +96,12 @@ export default function Home() {
         ));
     };
 
+    const collator = new Intl.Collator();
+
     return (<>
         <div className="flex flex-wrap items-center gap-2 -mt-2 mb-5">
             {data
-                .sort((a, b) => a.name.localeCompare(b.name))
+                .sort((a, b) => collator.compare(a.name, b.name))
                 .map((tag) => (
                     <Button
                         key={"guildTags-" + tag.id}
@@ -189,7 +191,7 @@ export default function Home() {
                         label="Permissions"
                         endpoint={url + "/" + tag.id}
                         items={
-                            Permissions.sort((a, b) => a.localeCompare(b)).map((p) => (
+                            Permissions.sort((a, b) => collator.compare(a, b)).map((p) => (
                                 { name: convertCamelCaseToSpaced(p), value: p }
                             )) || []
                         }

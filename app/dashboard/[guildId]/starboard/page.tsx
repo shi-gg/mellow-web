@@ -47,6 +47,8 @@ export default function Home() {
         </div>
     );
 
+    const collator = new Intl.Collator();
+
     return (<>
         <div className="flex justify-between relative bottom-2 mb-3">
             <Button
@@ -161,7 +163,7 @@ export default function Home() {
                     items={[
                         { icon: "⭐", name: "Star", value: "⭐" },
                         { icon: "✨", name: "Sparkles", value: "✨" },
-                        ...guild?.emojis?.sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({
+                        ...guild?.emojis?.sort((a, b) => collator.compare(a.name, b.name)).map((c) => ({
                             icon: (
                                 <Image
                                     src={`https://cdn.discordapp.com/emojis/${c.id}.webp?size=64&quality=lossless`}

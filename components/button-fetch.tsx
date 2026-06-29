@@ -46,12 +46,12 @@ export default function Fetch({
 
         if (res.status === 429) {
             setState(State.Ratelimited);
-            setTimeout(() => setState(State.Idle), 6 * 1_000);
+            setTimeout(setState, 6 * 1_000, State.Idle);
         }
 
         if (res.ok) {
             setState(State.Success);
-            setTimeout(() => setState(State.Idle), 6 * 1_000);
+            setTimeout(setState, 6 * 1_000, State.Idle);
             return;
         }
 

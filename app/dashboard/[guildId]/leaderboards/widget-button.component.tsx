@@ -37,7 +37,7 @@ export default function DiscordWidgetButton({
 
         if (res.status === 429) {
             setState(State.Ratelimited);
-            setTimeout(() => setState(State.Idle), 6 * 1_000);
+            setTimeout(setState, 6 * 1_000, State.Idle);
         } else setState(State.Idle);
 
         if (res.ok) {

@@ -28,7 +28,7 @@ export function CopyToClipboardButton({
         setSaved(true);
 
         if (timeoutRef.current) clearInterval(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => setSaved(false), 1_000 * 2);
+        timeoutRef.current = setTimeout(setSaved, 1_000 * 2, false);
     }
 
     return (

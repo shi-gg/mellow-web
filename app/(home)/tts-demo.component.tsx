@@ -69,7 +69,7 @@ function TTSDemoInterface() {
         () => {
             if (phase === AnimationPhase.Speaking) {
                 const speakDuration = 2_000 + currentMessage.length * 30;
-                const timeout = setTimeout(() => setPhase(AnimationPhase.Pausing), speakDuration);
+                const timeout = setTimeout(setPhase, speakDuration, AnimationPhase.Pausing);
 
                 return () => clearTimeout(timeout);
             }

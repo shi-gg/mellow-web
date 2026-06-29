@@ -111,7 +111,7 @@ export function useInput<T>(options: InputOptions<T>) {
             setSavedValue(valueToSave);
             onSave?.(valueToSave);
             setState(InputState.Success);
-            timeout.current = setTimeout(() => setState(InputState.Idle), 1_000 * 8);
+            timeout.current = setTimeout(setState, 1_000 * 8, InputState.Idle);
         },
         [onSave, endpoint, k, transform, value]
     );
@@ -127,7 +127,7 @@ export function useInput<T>(options: InputOptions<T>) {
             }
 
             if (debounceMs) {
-                debounceRef.current = setTimeout(() => save(val), debounceMs);
+                debounceRef.current = setTimeout(save, debounceMs, val);
             } else {
                 void save(val);
             }

@@ -58,7 +58,7 @@ export default function UpdatingLeaderboardCard({
         { name: "None", value: null }
     ];
 
-    const { locale } = Intl.DateTimeFormat().resolvedOptions();
+    const { locale } = new Intl.DateTimeFormat().resolvedOptions();
     const time = new Intl.DateTimeFormat(locale, {
         year: "numeric",
         month: "2-digit",
