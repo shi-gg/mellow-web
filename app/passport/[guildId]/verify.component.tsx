@@ -2,7 +2,6 @@
 
 import { userStore } from "@/common/user";
 import ImageReduceMotion from "@/components/image-reduce-motion";
-import { Spinner } from "@/components/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { ApiV1GuildsGetResponse } from "@/typings";
