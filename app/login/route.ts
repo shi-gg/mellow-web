@@ -113,7 +113,7 @@ function parseRedirectUrlFromState(state: string | null) {
     if (!state) return "/";
 
     const path = decodeURIComponent(state);
-    if (path.includes("://")) return "/";
+    if (!path.startsWith("/") || path.startsWith("//")) return "/";
 
     return path || "/";
 }
