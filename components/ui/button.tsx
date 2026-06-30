@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import * as React from "react";
 
-import { LoadingCircle } from "../loading-circle";
+import { Spinner } from "../spinner";
 
 const buttonVariants = cva(
     "inline-flex justify-center items-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 [&>svg]:size-5",
@@ -55,7 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 ref={ref}
                 {...props}
             >
-                {loading ? <LoadingCircle /> : icon}
+                {loading ? <Spinner /> : icon}
                 <Slottable>{children}</Slottable>
             </Comp>
         );

@@ -27,6 +27,8 @@ import {
 } from "react";
 import { HiMiniPause, HiMiniPlay } from "react-icons/hi2";
 
+import { Spinner } from "../spinner";
+
 enum ReadyState {
     HAVE_NOTHING = 0,
     HAVE_METADATA = 1,
@@ -398,25 +400,6 @@ export const AudioPlayerDuration = ({
         </span>
     );
 };
-
-interface SpinnerProps {
-    className?: string;
-}
-
-function Spinner({ className }: SpinnerProps) {
-    return (
-        <div
-            className={cn(
-                "border-muted border-t-foreground size-3.5 animate-spin rounded-full border-2",
-                className
-            )}
-            role="status"
-            aria-label="Loading"
-        >
-            <span className="sr-only">Loading...</span>
-        </div>
-    );
-}
 
 interface PlayButtonProps extends React.ComponentProps<typeof Button> {
     playing: boolean;

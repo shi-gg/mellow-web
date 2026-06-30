@@ -10,7 +10,6 @@ import { cn } from "@/utils/cn";
 import Link from "next/link";
 import { BsDiscord } from "react-icons/bs";
 import { HiExclamation, HiFingerPrint, HiLockClosed } from "react-icons/hi";
-import { TailSpin } from "react-loading-icons";
 
 interface Props {
     guild: ApiV1GuildsGetResponse;
@@ -27,12 +26,12 @@ export function Verify({ guild, isLoggedIn }: Props) {
         <div className="flex flex-col gap-3 w-full mt-4">
 
             {isLoggedIn && (
-                <Badge className="relative top-[3px] ml-0.5 w-fit h-6" radius="rounded">
+                <Badge className="relative top-1 ml-0.5 w-fit h-6" radius="rounded">
                     <ImageReduceMotion
-                        className="rounded-full size-5 relative right-1 -ml-[5px]"
+                        className="rounded-full size-5 relative right-1 -ml-1"
                         alt="your avatar"
-                        url={`https://cdn.discordapp.com/avatars/${user?.id}/${user?.avatar}`}
-                        size={24}
+                        url={`https://cdn.discordapp.com/avatars/${user?.id}/${user?.avatar}?size=32`}
+                        size={32}
                     />
                     {user?.username}
                 </Badge>
@@ -51,11 +50,9 @@ export function Verify({ guild, isLoggedIn }: Props) {
                     variant={state === State.Success ? "success" : "secondary"}
                     className={cn(error && "cursor-not-allowed", state === State.Success && "cursor-not-allowed", "font-medium w-full")}
                     disabled={Boolean(error) || state === State.Success}
+                    loading={state === State.Loading}
+                    icon={<HiFingerPrint />}
                 >
-                    {state === State.Loading
-                        ? <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
-                        : <HiFingerPrint />
-                    }
                     {state === State.Success
                         ? "Verification successful"
                         : "Complete verification"

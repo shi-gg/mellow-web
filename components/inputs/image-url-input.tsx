@@ -4,8 +4,8 @@ import { cn } from "@/utils/cn";
 import { type InputProps, InputState, useInput } from "@/utils/input";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { TailSpin } from "react-loading-icons";
 
+import { Spinner } from "../spinner";
 import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 
@@ -125,7 +125,7 @@ export function InputImageUrl({
                 )}
 
                 {state === InputState.Loading && (
-                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                    <Spinner className="size-4 mt-0.5" />
                 )}
             </div>
 
@@ -156,22 +156,24 @@ export function InputImageUrl({
 
                 <div className="lg:max-w-1/2 w-full mt-2 lg:mt-0">
                     {debouncedUrl && imageState !== ImageState.Errored ? (
-                        <div className="relative">
+                        <div className="relative bg-wamellow rounded-lg">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={debouncedUrl}
-                                alt="Preview"
+                                alt=""
                                 className={cn(
-                                    "rounded-lg w-full h-full object-cover",
+                                    "w-full h-full object-cover",
                                     ratio,
                                     imageState === ImageState.Loading && "opacity-50"
                                 )}
+                                loading="lazy"
+                                decoding="async"
                                 onError={handleImageError}
                                 onLoad={handleImageLoad}
                             />
                             {imageState === ImageState.Loading && (
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="h-8 w-8" />
+                                    <Spinner className="h-8 w-8" />
                                 </div>
                             )}
                         </div>

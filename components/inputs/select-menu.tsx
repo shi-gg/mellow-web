@@ -4,8 +4,8 @@ import { cn } from "@/utils/cn";
 import { type InputProps, InputState, useInput } from "@/utils/input";
 import Link from "next/link";
 import { HiCheck, HiChevronDown, HiExclamationCircle, HiX } from "react-icons/hi";
-import { TailSpin } from "react-loading-icons";
 
+import { Spinner } from "../spinner";
 import { Badge } from "../ui/badge";
 import {
     DropdownMenu,
@@ -92,7 +92,7 @@ export function InputSelect<T extends string | number>({
                 )}
 
                 {state === InputState.Loading && (
-                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                    <Spinner className="size-4 mt-0.5" />
                 )}
             </div>
 

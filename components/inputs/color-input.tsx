@@ -6,8 +6,8 @@ import { AnimatePresence, motion } from "motion/react";
 import Link from "next/link";
 import { useId, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
-import { TailSpin } from "react-loading-icons";
 
+import { Spinner } from "../spinner";
 import { Badge } from "../ui/badge";
 
 interface Props {
@@ -74,7 +74,7 @@ export function InputColor({
                 )}
 
                 {state === InputState.Loading && (
-                    <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                    <Spinner className="size-4 mt-0.5" />
                 )}
 
                 {resetState !== undefined && resetState !== value && (
