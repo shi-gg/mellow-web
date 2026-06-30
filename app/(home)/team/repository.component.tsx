@@ -27,17 +27,11 @@ export async function Repository({
                     <span className="text-lg text-neutral-200 font-medium -mb-0.5">
                         {repo.full_name}
                     </span>
-                    <Badge
-                        variant="flat"
-                        radius="rounded"
-                    >
+                    <Badge radius="rounded">
                         <HiStar />
                         {repo.stargazers_count}
                     </Badge>
-                    <Badge
-                        variant="flat"
-                        radius="rounded"
-                    >
+                    <Badge radius="rounded">
                         <HiBeaker />
                         {repo.language}
                     </Badge>
