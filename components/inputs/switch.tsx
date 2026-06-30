@@ -1,8 +1,8 @@
 import { cn } from "@/utils/cn";
 import { type InputProps, InputState, useInput } from "@/utils/input";
 import Link from "next/link";
-import { TailSpin } from "react-loading-icons";
 
+import { Spinner } from "../spinner";
 import { Badge } from "../ui/badge";
 import { Checkbox } from "../ui/checkbox";
 import { Switch } from "../ui/switch";
@@ -68,7 +68,7 @@ export function InputSwitch({
                     }
 
                     {state === InputState.Loading &&
-                        <TailSpin stroke="#d4d4d4" strokeWidth={8} className="relative h-3 w-3 overflow-visible" />
+                        <Spinner className="h-3 w-3" />
                     }
                 </div>
 
