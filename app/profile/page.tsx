@@ -201,13 +201,24 @@ function Guild({
 }
 
 function InviteButton({ guildId }: { guildId: string; }) {
+    const url = new URL("/login", process.env.NEXT_PUBLIC_BASE_URL);
+
+    url.searchParams.set("invite", "true");
+    url.searchParams.set("guild_id", guildId);
+
+    const searchParams = useSearchParams();
+    const to = searchParams.get("to");
+    const callback = to ? `/dashboard/${guildId}/${to}` : null;
+
+    if (callback) url.searchParams.set("callback", callback);
+
     return (
         <Button
             asChild
             className="h-8"
         >
             <Link
-                href={`/login?invite=true&guild_id=${guildId}`}
+                href={url.toString()}
                 prefetch={false}
             >
                 <HiUserAdd />
