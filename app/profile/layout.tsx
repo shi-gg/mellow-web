@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useApi } from "@/lib/api/hook";
 import type { ApiV1UsersMeGetResponse } from "@/typings";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import CountUp from "react-countup";
 import { HiCreditCard, HiCubeTransparent, HiFire, HiHome, HiPhotograph, HiTranslate } from "react-icons/hi";
@@ -22,8 +22,14 @@ export default function RootLayout({
 }) {
     const cookies = useCookies();
     const session = cookies.get("session");
+    const pathname = usePathname();
+    const params = useSearchParams();
 
-    if (!session) redirect("/login?callback=/profile");
+    if (!session) {
+        const url = new URL("/login", process.env.NEXT_PUBLIC_BASE_URL);
+        url.searchParams.set("callback", `${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
+        redirect(url.toString());
+    }
 
     const user = userStore((u) => u);
     const { data, error } = useApi<ApiV1UsersMeGetResponse>("/users/@me");
@@ -73,7 +79,7 @@ export default function RootLayout({
                             :
                             <div className="flex flex-col mt-2">
                                 <Skeleton className="rounded-xl w-32 h-5 mb-2" />
-                                <Skeleton className="rounded-md w-[90px] h-7" />
+                                <Skeleton className="rounded-md w-22.5 h-7" />
                             </div>
                         }
                     </div>

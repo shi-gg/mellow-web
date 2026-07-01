@@ -13,9 +13,9 @@ import { intl } from "@/utils/numbers";
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
-import { redirect, useParams } from "next/navigation";
+import { redirect, useParams, usePathname } from "next/navigation";
 import { useCookies } from "next-client-cookies";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { HiBell, HiChartBar, HiChevronLeft, HiCode, HiEye, HiHome, HiPaperAirplane, HiStar, HiUserAdd, HiUsers, HiViewGridAdd } from "react-icons/hi";
 
 import { PremiumReminder } from "./premium-reminder.component";
@@ -57,14 +57,18 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     const cookies = useCookies();
+    const session = cookies.get("session");
+    const pathname = usePathname();
     const params = useParams();
+
+    if (!session) {
+        const url = new URL("/login", process.env.NEXT_PUBLIC_BASE_URL);
+        url.searchParams.set("callback", `${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
+        redirect(url.toString());
+    }
 
     const guild = guildStore();
     const user = userStore();
-
-    const session = useMemo(() => cookies.get("session"), [cookies]);
-
-    if (!session) redirect(`/login?callback=/dashboard/${params.guildId}`);
 
     const url = `/guilds/${params.guildId}` as const;
 

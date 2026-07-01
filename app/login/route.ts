@@ -36,7 +36,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const jar = await cookies();
 
-    const logout = searchParams.get("logout");
+    const logout = Boolean(searchParams.get("logout"));
 
     if (logout) {
         jar.set(
@@ -51,13 +51,13 @@ export async function GET(request: Request) {
         redirect("/");
     }
 
-    const guildId = searchParams.get("guild_id");
-    const invite = Boolean(searchParams.get("invite"));
     const code = searchParams.get("code");
 
     if (!code) {
-        const callback = searchParams.get("callback");
+        const invite = Boolean(searchParams.get("invite"));
+        const callback = decodeURIComponent(searchParams.get("callback") || "");
         const lastpage = jar.get("lastpage");
+        const guildId = searchParams.get("guild_id");
 
         const url = generateOauthUrl(invite, callback || lastpage?.value, guildId);
         redirect(url);
@@ -93,7 +93,7 @@ function generateOauthUrl(invite: boolean, redirectUrl: string | undefined, guil
     params.append("response_type", "code");
     params.append("state", encodeURIComponent(redirectUrl || "/"));
 
-    if (invite) params.append("scope", "identify guilds bot");
+    if (invite) params.append("scope", "identify guilds email bot");
     else params.append("scope", "identify guilds email");
 
     if (guildId) params.append("guild_id", guildId);
@@ -105,7 +105,11 @@ function getRedirectUrl(searchParams: URLSearchParams) {
     const redirectUrl = parseRedirectUrlFromState(searchParams.get("state"));
     const guildId = searchParams.get("guild_id");
 
-    if (guildId) return `/dashboard/${guildId}${redirectUrl}`;
+    if (guildId) {
+        if (redirectUrl.startsWith(`/dashboard/${guildId}`)) return redirectUrl;
+        return `/dashboard/${guildId}`;
+    }
+
     return redirectUrl;
 }
 
