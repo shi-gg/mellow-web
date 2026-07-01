@@ -13,7 +13,7 @@ import { intl } from "@/utils/numbers";
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 import Link from "next/link";
-import { redirect, useParams, usePathname } from "next/navigation";
+import { redirect, useParams, usePathname, useSearchParams } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import { useEffect, useRef } from "react";
 import { HiBell, HiChartBar, HiChevronLeft, HiCode, HiEye, HiHome, HiPaperAirplane, HiStar, HiUserAdd, HiUsers, HiViewGridAdd } from "react-icons/hi";
@@ -59,14 +59,15 @@ export default function RootLayout({
     const cookies = useCookies();
     const session = cookies.get("session");
     const pathname = usePathname();
-    const params = useParams();
+    const search = useSearchParams();
 
     if (!session) {
         const url = new URL("/login", process.env.NEXT_PUBLIC_BASE_URL);
-        url.searchParams.set("callback", `${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
+        url.searchParams.set("callback", `${pathname}${search.toString() ? `?${search.toString()}` : ""}`);
         redirect(url.toString());
     }
 
+    const params = useParams();
     const guild = guildStore();
     const user = userStore();
 

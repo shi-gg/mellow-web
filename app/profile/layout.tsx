@@ -23,11 +23,11 @@ export default function RootLayout({
     const cookies = useCookies();
     const session = cookies.get("session");
     const pathname = usePathname();
-    const params = useSearchParams();
+    const search = useSearchParams();
 
     if (!session) {
         const url = new URL("/login", process.env.NEXT_PUBLIC_BASE_URL);
-        url.searchParams.set("callback", `${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
+        url.searchParams.set("callback", `${pathname}${search.toString() ? `?${search.toString()}` : ""}`);
         redirect(url.toString());
     }
 
