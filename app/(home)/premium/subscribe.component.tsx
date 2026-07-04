@@ -2,6 +2,7 @@
 import { userStore } from "@/common/user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { GradientButton } from "@/components/ui/gradient-button";
 import { InputBase, InputBaseAdornment, InputBaseAdornmentButton, InputBaseControl, InputBaseInput } from "@/components/ui/input-base";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/utils/cn";
@@ -44,6 +45,12 @@ export function Subscribe({ header }: { header?: boolean; }) {
     const prices = period === "year" ? YEARLY_PRICES : MONTHLY_PRICES;
     const currentPrice = basePrice + donation;
 
+    const checkoutParams = new URLSearchParams({
+        donation: donation.toString(),
+        gift: search.get("gift") || "",
+        period
+    });
+
     return (
         <div className="w-full space-y-2">
             {header && (
@@ -58,25 +65,18 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 </div>
             )}
 
-            <div className="w-full relative overflow-hidden rounded-lg border border-border group p-px h-fit">
-                <span className="absolute inset-[-1000%] animate-[spin_5s_linear_infinite_reverse] bg-[conic-gradient(from_90deg_at_0%_50%,#8b5cf6_50%,hsl(var(--input)/30)_7%)]" />
-                <Button
-                    asChild
-                    className='w-full px-2 backdrop-blur-xs backdrop-brightness-50 md:backdrop-brightness-25 bg-none rounded-md hover:bg-[#8b5cf6]/50'
+            <GradientButton
+                className="w-full flex items-center gap-2"
+                asChild
+            >
+                <Link
+                    prefetch={false}
+                    href={`/premium/checkout?${checkoutParams.toString()}`}
                 >
-                    <Link
-                        prefetch={false}
-                        href={`/premium/checkout?${new URLSearchParams({
-                            donation: donation.toString(),
-                            gift: search.get("gift") || "",
-                            period
-                        }).toString()}`}
-                    >
-                        <HiLightningBolt />
-                        Subscribe
-                    </Link>
-                </Button>
-            </div>
+                    <HiLightningBolt />
+                    Subscribe
+                </Link>
+            </GradientButton>
 
             <div className="w-full flex justify-center">
                 <span className="text-muted-foreground font-medium text-xs uppercase">choose what to pay</span>
