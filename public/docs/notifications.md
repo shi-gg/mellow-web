@@ -84,7 +84,10 @@ The following values are matched against:
 - `insult|badword` will not post anything that includes either `insult` or `badword`.
 - `^(?!support$).+$` will only post that are `support`. (useful for Reddit flairs)
 
-### Delete after stream
+### 🖱️ Show button row
+By default, social notifications show a row of buttons bellow the message to: View the post on the original platform, or perform actions on the post (e.g. like, repost, etc.).
+
+### <:BocchiTrash:1062816221831114792>  Delete after stream
 <mark>
     Delete after stream currently only works with Twitch
 </mark>
@@ -141,6 +144,14 @@ In addition to the overall limit of 30 notifications per server (1,000 with [pre
 - **Twitch**: 30 channels maximum (1,000 with [premium](/premium))
 - **Bluesky**: 30 users maximum (100 with [premium](/premium))
 - **Reddit**: 4 subreddits maximum (10 with [premium](/premium))
+<br />
+<br />
+
+Please note that posts, videos or streams marked as adult content may only be sent into age-restricted Discord channels. You will need to mark the channel as Age-Restricted within the channel settings. [Learn more here](https://support.discord.com/hc/en-us/articles/115000084051-Age-Restricted-Channels-and-Content).
+<br />
+<br />
+
+![mark discord channel as age-restricted](https://media.wamellow.com/nsfw.gif)
 
 ## Placeholders
 Placeholders allow you to use variables that change from message to message, for example to display information about the uploaded video or creator. They are always enclosed in curly braces, such as `{creator.name}`.
@@ -300,6 +311,11 @@ Placeholders allow you to use variables that change from message to message, for
             <td>Post text</td>
         </tr>
         <tr>
+            <td><code>post.raw_text</code></td>
+            <td>“sorry I don’t listen to music, the songs aren’t FOSS”</td>
+            <td>Post text</td>
+        </tr>
+        <tr>
             <td><code>post.image</code>**</td>
             <td></td>
             <td>Post image (hyper)link</td>
@@ -446,7 +462,7 @@ Placeholders allow you to use variables that change from message to message, for
             <td>Notify members</td>
         </tr>
         <tr>
-            <td><code>creator.name</code></td>
+        <td><code>creator.name</code></td>
             <td>Linus Tech Tips</td>
             <td>Creator username</td>
         </tr>
