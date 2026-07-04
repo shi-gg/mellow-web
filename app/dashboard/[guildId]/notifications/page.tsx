@@ -110,7 +110,7 @@ export default function Home() {
                                     width={46}
                                     height={46}
                                 />
-                                : <div className="size-[46px] flex items-center justify-center bg-wamellow rounded-full select-none font-medium text-lg text-neutral-200">
+                                : <div className="size-11.5 flex items-center justify-center bg-wamellow rounded-full select-none font-medium text-lg text-neutral-200">
                                     {item.creator.username.slice(0, 2)}
                                 </div>
                             }
@@ -261,7 +261,7 @@ export default function Home() {
         )}
 
         <InputSwitch
-            className="mt-2"
+            className="mt-6"
             label="Inverted regex (blacklist)"
             endpoint={url + "/" + item.id}
             k="flags"
@@ -270,9 +270,17 @@ export default function Home() {
             onSave={(value) => editItem("flags", transformer(value, item.flags, NotificationFlags.MustNotMatchRegex))}
         />
 
+        <InputSwitch
+            label="Show button row"
+            endpoint={url + "/" + item.id}
+            k="flags"
+            defaultState={(item.flags & NotificationFlags.ShowActionRow) !== 0}
+            transform={(value) => transformer(value, item.flags, NotificationFlags.ShowActionRow)}
+            onSave={(value) => editItem("flags", transformer(value, item.flags, NotificationFlags.ShowActionRow))}
+        />
+
         {item.type === NotificationType.Twitch && (
             <InputSwitch
-                className="mt-2"
                 label="Delete after stream ends"
                 endpoint={url + "/" + item.id}
                 k="flags"

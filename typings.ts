@@ -437,7 +437,8 @@ export enum NotificationType {
 
 export enum NotificationFlags {
     DeleteAfterStream = 1 << 4,
-    MustNotMatchRegex = 1 << 8
+    MustNotMatchRegex = 1 << 8,
+    ShowActionRow = 1 << 9
 }
 
 export enum BlueskyNotificationFlags {
