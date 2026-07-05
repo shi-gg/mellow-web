@@ -3,7 +3,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { HiExclamationCircle, HiSparkles } from "react-icons/hi2";
+import { HiExclamation, HiSparkles } from "react-icons/hi";
 
 import { getGift } from "./api";
 
@@ -29,8 +29,8 @@ async function InnerGiftBanner({ giftId }: { giftId: string; }) {
 
     if (!gift || "message" in gift) {
         return (
-            <Alert className="my-3" variant="destructive">
-                <HiExclamationCircle className="size-4" />
+            <Alert className="my-3" variant="secondary">
+                <HiExclamation className="size-4 mt-0.5" />
 
                 <AlertTitle>
                     {gift?.message || "Someone else already claimed this gift."}

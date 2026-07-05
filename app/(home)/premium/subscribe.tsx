@@ -3,26 +3,21 @@ import { userStore } from "@/common/user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { GradientButton } from "@/components/ui/gradient-button";
-import { InputBase, InputBaseAdornment, InputBaseAdornmentButton, InputBaseControl, InputBaseInput } from "@/components/ui/input-base";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/utils/cn";
+import { MONTHLY_PRICES, PERIODS, PremiumPeriod, YEARLY_PRICES } from "@/utils/premium";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { type HTMLProps, useState } from "react";
-import { HiArrowDown, HiArrowUp, HiLightningBolt, HiOutlineInformationCircle } from "react-icons/hi";
+import { useState } from "react";
+import { HiLightningBolt } from "react-icons/hi";
 
 const FIRST_WORD_CHAR_REGEX = /^\w/;
 
-export const MONTHLY_PRICES = [4, 8, 12, 18, 25] as const;
-export const YEARLY_PRICES = [40, 50, 60, 80, 100] as const;
-const PERIODS = ["month", "year"] as const;
-
-export function Subscribe({ header }: { header?: boolean; }) {
+export function Subscribe() {
     const search = useSearchParams();
 
     const premium = userStore((user) => user?.premium && user.premium > 0);
     const [donation, setDonation] = useState(0);
-    const [period, setPeriod] = useState<"month" | "year">("month");
+    const [period, setPeriod] = useState<PremiumPeriod>(PremiumPeriod.Month);
 
     if (premium) {
         return (
@@ -53,18 +48,6 @@ export function Subscribe({ header }: { header?: boolean; }) {
 
     return (
         <div className="w-full space-y-2">
-            {header && (
-                <div className="flex gap-2 justify-center">
-                    <span className="dark:text-neutral-200 text-neutral-800 font-medium text-sm">Upgrade your experience further!</span>
-                    <Badge
-                        variant="flat"
-                        radius="rounded"
-                    >
-                        €{currentPrice} /{period}
-                    </Badge>
-                </div>
-            )}
-
             <GradientButton
                 className="w-full flex items-center gap-2"
                 asChild
@@ -135,63 +118,5 @@ export function Subscribe({ header }: { header?: boolean; }) {
                 ))}
             </div>
         </div>
-    );
-}
-
-interface DonationProps extends HTMLProps<HTMLDivElement> {
-    donation: number;
-    setDonation: (value: number) => void;
-}
-
-export function DonationSelect({ donation, setDonation, ...props }: DonationProps) {
-    return (
-        <InputBase {...props}>
-            <InputBaseAdornment className="flex">
-                <div className="relative right-1.5 flex gap-1">
-                    <Button
-                        className={cn("h-7", donation === 0 && "animate-bounce transition-all duration-800")}
-                        size="icon"
-                        onClick={() => setDonation(Math.min(donation + 1, 100))}
-                        disabled={donation >= 100}
-                    >
-                        <HiArrowUp className="size-3! " />
-                    </Button>
-                    <Button
-                        className="h-7"
-                        size="icon"
-                        onClick={() => setDonation(Math.max(donation - 1, 0))}
-                        disabled={donation <= 0}
-                    >
-                        <HiArrowDown className="size-3!" />
-                    </Button>
-                </div>
-                €
-            </InputBaseAdornment>
-            <InputBaseControl>
-                <InputBaseInput
-                    placeholder="extra donation"
-                    defaultValue={0}
-                    onChange={(e) => {
-                        const num = Number(e.target.value);
-                        if (Number.isNaN(num)) return;
-
-                        setDonation(Math.max(Math.min(num, 100), 0));
-                    }}
-                    value={donation}
-                />
-            </InputBaseControl>
-            <Tooltip>
-                <InputBaseAdornment>
-                    <InputBaseAdornmentButton asChild>
-                        <TooltipTrigger>
-                            <HiOutlineInformationCircle />
-                        </TooltipTrigger>
-                    </InputBaseAdornmentButton>
-                </InputBaseAdornment>
-                <TooltipContent>
-                    <p>Extra donation</p>
-                </TooltipContent>
-            </Tooltip>
-        </InputBase>
     );
 }
