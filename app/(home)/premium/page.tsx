@@ -51,7 +51,7 @@ const premiumFeatures: Feature[] = [
     { label: "Unlimited Text to Speech", icon: <HiVolumeUp /> },
     { label: "Unlimited notifications", icon: <HiBell /> },
     { label: "Unlimited custom commands", icon: <HiTemplate /> },
-    { label: "Unlimited transcribtions", icon: <HiChat /> },
+    { label: "Unlimited transcriptions", icon: <HiChat /> },
     { label: "Customize Avatar, Banner & Bio", icon: <HiColorSwatch /> },
     { label: "Customize Notification Avatar & Banner", icon: <HiCog /> },
     { label: "Notification crosspost", icon: <HiSwitchHorizontal /> },
