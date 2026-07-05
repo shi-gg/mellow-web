@@ -1,0 +1,195 @@
+@property --color-1 {
+    syntax: "<color>";
+    initial-value: #000;
+    inherits: false;
+}
+
+@property --color-2 {
+    syntax: "<color>";
+    initial-value: #10002b;
+    inherits: false;
+}
+
+@property --color-3 {
+    syntax: "<color>";
+    initial-value: #3b1470;
+    inherits: false;
+}
+
+@property --color-4 {
+    syntax: "<color>";
+    initial-value: #5c2d82;
+    inherits: false;
+}
+
+@property --color-5 {
+    syntax: "<color>";
+    initial-value: #8b3a6e;
+    inherits: false;
+}
+
+@property --stop-1 {
+    syntax: "<percentage>";
+    initial-value: 37.35%;
+    inherits: false;
+}
+
+@property --stop-2 {
+    syntax: "<percentage>";
+    initial-value: 61.36%;
+    inherits: false;
+}
+
+@property --stop-3 {
+    syntax: "<percentage>";
+    initial-value: 78.42%;
+    inherits: false;
+}
+
+@property --stop-4 {
+    syntax: "<percentage>";
+    initial-value: 89.52%;
+    inherits: false;
+}
+
+@property --stop-5 {
+    syntax: "<percentage>";
+    initial-value: 100%;
+    inherits: false;
+}
+
+@property --pos-x {
+    syntax: "<percentage>";
+    initial-value: 11.14%;
+    inherits: false;
+}
+
+@property --pos-y {
+    syntax: "<percentage>";
+    initial-value: 140%;
+    inherits: false;
+}
+
+@property --spread-x {
+    syntax: "<percentage>";
+    initial-value: 150%;
+    inherits: false;
+}
+
+@property --spread-y {
+    syntax: "<percentage>";
+    initial-value: 180.06%;
+    inherits: false;
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 20deg;
+    inherits: true;
+}
+
+@property --border-color-1 {
+    syntax: "<color>";
+    initial-value: hsla(270, 75%, 60%, .2);
+    inherits: true;
+}
+
+@property --border-color-2 {
+    syntax: "<color>";
+    initial-value: hsla(270, 75%, 40%, .75);
+    inherits: true;
+}
+
+.gradient-button {
+    position: relative;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: radial-gradient(var(--spread-x) var(--spread-y) at var(--pos-x) var(--pos-y), var(--color-1) var(--stop-1), var(--color-2) var(--stop-2), var(--color-3) var(--stop-3), var(--color-4) var(--stop-4), var(--color-5) var(--stop-5));
+    transition: --pos-x .5s, --pos-y .5s, --spread-x .5s, --spread-y .5s, --color-1 .5s, --color-2 .5s, --color-3 .5s, --color-4 .5s, --color-5 .5s, --border-angle .5s, --border-color-1 .5s, --border-color-2 .5s, --stop-1 .5s, --stop-2 .5s, --stop-3 .5s, --stop-4 .5s, --stop-5 .5s;
+    animation: gradient-pulse 4s ease-in-out infinite;
+}
+
+.gradient-button:hover {
+    animation: gradient-hover .5s ease forwards;
+}
+
+@keyframes gradient-pulse {
+    0%, 100% {
+        --pos-x: 11.14%;
+        --pos-y: 140%;
+        --spread-x: 150%;
+        --spread-y: 180.06%;
+        --color-1: #000;
+        --color-2: #10002b;
+        --color-3: #3b1470;
+        --color-4: #5c2d82;
+        --color-5: #8b3a6e;
+        --border-angle: 20deg;
+        --border-color-1: hsla(270, 75%, 60%, .2);
+        --border-color-2: hsla(270, 75%, 40%, .75);
+        --stop-1: 37.35%;
+        --stop-2: 61.36%;
+        --stop-3: 78.42%;
+        --stop-4: 89.52%;
+        --stop-5: 100%;
+    }
+    50% {
+        --pos-x: 6%;
+        --pos-y: 120%;
+        --spread-x: 135%;
+        --spread-y: 150%;
+        --color-1: #0a0020;
+        --color-2: #261052;
+        --color-3: #4d2078;
+        --color-4: #6e3488;
+        --color-5: #8b3a6e;
+        --border-angle: 40deg;
+        --border-color-1: hsla(270, 75%, 65%, .25);
+        --border-color-2: hsla(270, 75%, 50%, .8);
+        --stop-1: 30%;
+        --stop-2: 52%;
+        --stop-3: 70%;
+        --stop-4: 85%;
+        --stop-5: 95%;
+    }
+}
+
+@keyframes gradient-hover {
+    to {
+        --pos-x: 0%;
+        --pos-y: 91.51%;
+        --spread-x: 120.24%;
+        --spread-y: 103.18%;
+        --color-1: #a855f4;
+        --color-2: #8b5cf6;
+        --color-3: #a346a8;
+        --color-4: #2a0e3a;
+        --color-5: #000;
+        --border-angle: 190deg;
+        --border-color-1: hsla(270, 78%, 90%, .1);
+        --border-color-2: hsla(270, 75%, 90%, .6);
+        --stop-1: 0%;
+        --stop-2: 8.8%;
+        --stop-3: 21.44%;
+        --stop-4: 71.34%;
+        --stop-5: 85.76%;
+    }
+}
+
+.gradient-button:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(var(--border-angle), var(--border-color-1), var(--border-color-2));
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}

@@ -118,7 +118,7 @@ function GuildSelect({
                             alt={guild.name}
                             className="rounded-md size-6"
                             url={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}`}
-                            size={32}
+                            size={96}
                         />
                     ),
                     name: guild.name,

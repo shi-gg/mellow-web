@@ -58,9 +58,7 @@ export default function RootLayout({
             {" status"}
         </h1>
 
-        <div
-            className="text-lg font-medium mb-6"
-        >
+        <div className="text-lg font-medium mb-6">
             Double check if we just didn&apos;t mess up something.
         </div>
 

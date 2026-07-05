@@ -1,6 +1,5 @@
 "use client";
 
-import { DonationSelect, MONTHLY_PRICES, YEARLY_PRICES } from "@/app/(home)/premium/subscribe.component";
 import { userStore } from "@/common/user";
 import Box from "@/components/box";
 import ImageReduceMotion from "@/components/image-reduce-motion";
@@ -9,19 +8,24 @@ import { InputSwitch } from "@/components/inputs/switch";
 import Modal from "@/components/modal";
 import Notice from "@/components/notice";
 import { OverviewLink } from "@/components/overview-link";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { InputBase, InputBaseAdornment, InputBaseAdornmentButton, InputBaseControl, InputBaseInput } from "@/components/ui/input-base";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Anchor } from "@/components/ui/typography";
 import { type ApiEdit, editApiCache, useApi } from "@/lib/api/hook";
 import { type ApiV1GuildsGetResponse, type ApiV1UsersMeBillingGetResponse, type ApiV1UsersMeGuildsGetResponse, GuildFlags } from "@/typings";
-import { isActive, MAX_PREMIUM_GUILDS } from "@/utils/premium";
+import { cn } from "@/utils/cn";
+import { isActive, MAX_PREMIUM_GUILDS, MONTHLY_PRICES, YEARLY_PRICES } from "@/utils/premium";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { GrAmex } from "react-icons/gr";
-import { HiCreditCard, HiLightningBolt } from "react-icons/hi";
+import { HiArrowDown, HiArrowUp, HiCreditCard, HiExclamation, HiLightningBolt, HiOutlineInformationCircle } from "react-icons/hi";
 import { SiDinersclub, SiDiscover, SiJcb, SiMastercard, SiPaypal, SiStripe, SiVisa } from "react-icons/si";
 
 const FIRST_WORD_CHAR_REGEX = /^\w/;
@@ -38,7 +42,7 @@ export default function Home() {
     const period = useMemo(() => data?.priceId.startsWith("monthly_") ? "month" : "year", [data?.priceId]);
     const basePrice = useMemo(() => period === "year" ? YEARLY_PRICES[0] : MONTHLY_PRICES[0], [period]);
 
-    if ((isLoading && user?.premium === 0) || (!isLoading && !data) || (data && !isActive(data.status))) {
+    if ((isLoading && !user?.premium) || (!isLoading && !data) || (data && !isActive(data.status))) {
         return (
             <div className="space-y-4">
                 {error && error !== "Not Found" && <Notice message={error} />}
@@ -67,7 +71,17 @@ export default function Home() {
     return (
         <div className="space-y-4">
             {data?.status === "past_due" && (
-                <Notice message={`Your renewal is overdue! Please check your emails to renew your subscription or contact support. Your subscription will be canceled ${periodEndsIn}.`} />
+                <Alert variant="secondary">
+                    <HiExclamation className="size-4 mt-0.5" />
+
+                    <AlertTitle>
+                        Your renewal is overdue!
+                    </AlertTitle>
+
+                    <AlertDescription>
+                        Please check your emails to renew your subscription, or contact <Anchor href="mailto:billing@wamellow.com">billing@wamellow.com</Anchor>. Your subscription will be canceled {periodEndsIn}.
+                    </AlertDescription>
+                </Alert>
             )}
 
             <Box className="md:flex justify-between items-center" small>
@@ -85,11 +99,7 @@ export default function Home() {
                     </p>
                 </div>
                 <div className="flex gap-1 mt-4 md:mt-0">
-                    {isLoading || !data ? (
-                        <Skeleton className="h-10 w-full md:w-20" />
-                    ) : (
-                        <PortalButton data={data} />
-                    )}
+                    <PortalButton data={data} />
                 </div>
             </Box>
 
@@ -97,7 +107,6 @@ export default function Home() {
                 <Box className="lg:w-1/2 text-sm" small>
                     <h2 className="font-semibold text-xl text-neutral-300 mb-2">Billing Cycle</h2>
                     <BillingCycleContent
-                        isLoading={isLoading}
                         data={data}
                         totalAmount={totalAmount}
                         basePrice={basePrice}
@@ -106,20 +115,9 @@ export default function Home() {
                 </Box>
                 <Box className="lg:w-1/2" small>
                     <h2 className="font-semibold text-xl text-neutral-300 mb-2">Payment Method</h2>
-                    {isLoading || !data?.portalUrl ? (
-                        <Skeleton className="h-12 w-full" />
-                    ) : (
-                        <div className="flex gap-2 items-center bg-wamellow-100 px-4 py-2 rounded-lg">
-                            <PaymentMethodIcon method={data.paymentMethod} />
-                            <span className="text-neutral-200">{getPaymentMethodInfo(data.paymentMethod)}</span>
-
-                            <Button asChild className="ml-auto" variant="link">
-                                <Link href={data.portalUrl}>
-                                    Change
-                                </Link>
-                            </Button>
-                        </div>
-                    )}
+                    <PaymentMethodContent
+                        data={data}
+                    />
                 </Box>
             </div>
 
@@ -147,20 +145,18 @@ export default function Home() {
 }
 
 function BillingCycleContent({
-    isLoading,
     data,
     totalAmount,
     basePrice,
     setChangeDonationModalOpen
 }: {
-    isLoading: boolean;
     data: ApiV1UsersMeBillingGetResponse | null;
     totalAmount: string;
     basePrice: number;
     setChangeDonationModalOpen: (open: boolean) => void;
 }) {
-    if (isLoading || !data) {
-        return <Skeleton className="h-12 w-full" />;
+    if (!data) {
+        return <Skeleton className="h-10 w-full" />;
     }
 
     if (data.cancelAtPeriodEnd) {
@@ -200,7 +196,11 @@ function getPeriodEndsIn(endsAt: number, nowInSeconds: number) {
     return `in ${days} days`;
 }
 
-function PortalButton({ data }: { data: ApiV1UsersMeBillingGetResponse; }) {
+function PortalButton({ data }: { data: ApiV1UsersMeBillingGetResponse | null; }) {
+    if (!data) {
+        return <Skeleton className="h-10 w-full md:w-19" />;
+    }
+
     const path = getPortalPath(data);
     const label = path?.split("/").pop()?.replace(FIRST_WORD_CHAR_REGEX, (c) => c.toUpperCase()) || "Manage";
 
@@ -216,6 +216,27 @@ function PortalButton({ data }: { data: ApiV1UsersMeBillingGetResponse; }) {
 function getPortalPath(data: ApiV1UsersMeBillingGetResponse) {
     if (data.cancelAtPeriodEnd) return `subscriptions/${data.subscriptionId}/reactivate`;
     return `subscriptions/${data.subscriptionId}/cancel`;
+}
+
+function PaymentMethodContent({ data }: { data: ApiV1UsersMeBillingGetResponse | null; }) {
+    if (!data) {
+        return <Skeleton className="h-10 w-full" />;
+    }
+
+    return (
+        <div className="flex gap-2 items-center bg-wamellow-100 pl-4 rounded-lg">
+            <PaymentMethodIcon method={data.paymentMethod} />
+            <span className="text-neutral-200"> {getPaymentMethodInfo(data.paymentMethod)}</span>
+
+            {data.portalUrl && (
+                <Button asChild className="ml-auto" variant="link">
+                    <Link href={data.portalUrl}>
+                        Change
+                    </Link>
+                </Button>
+            )}
+        </div>
+    );
 }
 
 function PaymentMethodIcon({ method }: { method?: ApiV1UsersMeBillingGetResponse["paymentMethod"]; }) {
@@ -289,7 +310,7 @@ function PremiumGuildSelect({
     return (
         <InputMultiSelect
             className="w-full md:w-1/2 lg:w-1/3"
-            label="Premium Guilds"
+            label="Premium Servers"
             endpoint="/users/@me/billing/premium-guilds"
             k="guildIds"
             items={(data || [])
@@ -298,9 +319,9 @@ function PremiumGuildSelect({
                     icon: (
                         <ImageReduceMotion
                             alt={guild.name}
-                            className="rounded-md size-6"
+                            className="rounded-md size-6 relative right-1.5"
                             url={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}`}
-                            size={32}
+                            size={96}
                         />
                     ),
                     name: guild.name,
@@ -380,9 +401,8 @@ function ChangeDonationAmountModal({
             </p>
 
             <DonationSelect
-                className="w-full"
                 donation={donation}
-                setDonation={setDonation}
+                onDonationChange={setDonation}
             />
 
             <div className="mt-8 space-y-4">
@@ -437,5 +457,64 @@ function ChangeDonationAmountModal({
                 ref={captcha}
             />
         </Modal>
+    );
+}
+
+export function DonationSelect({
+    donation,
+    onDonationChange
+}: {
+    donation: number;
+    onDonationChange: (value: number) => void;
+}) {
+    return (
+        <InputBase className="w-full">
+            <InputBaseAdornment className="flex">
+                <div className="relative right-1.5 flex gap-1">
+                    <Button
+                        className={cn("h-7", donation === 0 && "animate-bounce transition-all duration-800")}
+                        size="icon"
+                        onClick={() => onDonationChange(Math.min(donation + 1, 100))}
+                        disabled={donation >= 100}
+                    >
+                        <HiArrowUp className="size-3! " />
+                    </Button>
+                    <Button
+                        className="h-7"
+                        size="icon"
+                        onClick={() => onDonationChange(Math.max(donation - 1, 0))}
+                        disabled={donation <= 0}
+                    >
+                        <HiArrowDown className="size-3!" />
+                    </Button>
+                </div>
+                €
+            </InputBaseAdornment>
+            <InputBaseControl>
+                <InputBaseInput
+                    placeholder="extra donation"
+                    defaultValue={0}
+                    onChange={(e) => {
+                        const num = Number(e.target.value);
+                        if (Number.isNaN(num)) return;
+
+                        onDonationChange(Math.max(Math.min(num, 100), 0));
+                    }}
+                    value={donation}
+                />
+            </InputBaseControl>
+            <Tooltip>
+                <InputBaseAdornment>
+                    <InputBaseAdornmentButton asChild>
+                        <TooltipTrigger>
+                            <HiOutlineInformationCircle />
+                        </TooltipTrigger>
+                    </InputBaseAdornmentButton>
+                </InputBaseAdornment>
+                <TooltipContent>
+                    <p>Extra donation</p>
+                </TooltipContent>
+            </Tooltip>
+        </InputBase>
     );
 }
