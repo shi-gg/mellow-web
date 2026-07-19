@@ -21,7 +21,7 @@ export async function authorize({
         .then((res) => res.json())
         .catch(() => null) as User | ApiError | null;
 
-    if (res && "status" in res && res.status.toString().startsWith("4")) {
+    if (res && "status" in res && (res.status === 401 || res.status === 403)) {
         window.location.href = "/login";
         return null;
     }
