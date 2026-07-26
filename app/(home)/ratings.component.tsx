@@ -1,12 +1,12 @@
 import StarIcon from "@/components/icons/star";
-import { getReviews } from "@/lib/topgg";
+import { getTopggBot } from "@/lib/topgg";
 import TopggIcon from "@/public/icons/topgg.webp";
 import Image from "next/image";
 import Link from "next/link";
 
 export async function Ratings() {
-    const reviews = await getReviews();
-    const score = Math.round(reviews.averageScore);
+    const bot = await getTopggBot();
+    const score = Math.round(bot.review_score);
     const filledStars = Array.from({ length: Math.max(score, 0) }, (_, star) => star + 1);
     const emptyStars = Array.from({ length: Math.max(5 - score, 0) }, (_, star) => score + star + 1);
 
@@ -15,7 +15,8 @@ export async function Ratings() {
             className="flex gap-2 items-center w-fit h-6!"
             href={`https://top.gg/bot/${process.env.NEXT_PUBLIC_CLIENT_ID}`}
             target="_blank"
-            title={`Average review score of ${reviews.averageScore}/5 based on ${reviews.count} reviews`}
+            title={`Average review score of ${bot.review_score}/5 based on ${bot.review_count} reviews`}
+            aria-label={`Average review score of ${bot.review_score}/5 based on ${bot.review_count} reviews on Top.gg`}
         >
             <div className="flex gap-1">
                 {score ?
@@ -41,7 +42,7 @@ export async function Ratings() {
                 on
                 <Image
                     alt="Top.gg"
-                    className="ml-1.5 h-3.5 relative top-[5px] rounded-xs"
+                    className="ml-1.5 h-3.5 relative top-1.25 rounded-xs"
                     height={230 / 16.428}
                     src={TopggIcon}
                     width={338 / 16.428}
