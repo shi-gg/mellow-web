@@ -1,25 +1,23 @@
+// https://docs.top.gg/api/v1/projects
 export interface TopggBot {
-    reviews: {
-        averageScore: number;
-        count: number;
-    };
+    review_score: number;
+    review_count: number;
 }
 
-export async function getReviews() {
-    const res = await fetch(`https://top.gg/api/bots/${process.env.NEXT_PUBLIC_CLIENT_ID}`, {
+export async function getTopggBot() {
+    const res = await fetch("https://top.gg/api/v1/projects/@me", {
         headers: {
-            authorization: process.env.TOPGG_TOKEN!
+            authorization: "Bearer " + process.env.TOPGG_TOKEN!
         },
         next: { revalidate: 60 * 60 }
     });
 
     if (!res.ok) {
         return {
-            averageScore: 5,
-            count: 1
+            review_score: 5,
+            review_count: 1
         };
     }
 
-    const bot = await res.json() as TopggBot;
-    return bot.reviews;
+    return res.json() as Promise<TopggBot>;
 }
