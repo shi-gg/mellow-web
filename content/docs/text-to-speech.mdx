@@ -1,0 +1,268 @@
+---
+title: 🔊 Text to Speech
+description: Convert conversational text to human-like speech in voice channels.
+permissions:
+    bot:
+        - Connect
+        - Speak
+        - View Channel
+        - Send Messages
+        - Embed Links
+    user:
+        - View Channel
+        - Send Messages
+        - Use Application Commands
+---
+
+It's absolutely crucial for people with speech impairments like aphonia or dysphonia. It ensures inclusivity and allows everyone to participate fully, promoting accessibility and community engagement.
+
+<iframe src="https://www.youtube.com/embed/NS5fZ1ltovE" height="513" frameborder="0" allow="autoplay"></iframe>
+
+## Setup
+
+1. Install Wamellow on your server by going to [wamellow.com/add](https://wamellow.com/add).
+2. Head to the dashboard by going to [wamellow.com/dashboard](https://wamellow.com/dashboard).
+3. **🎉 Done!** Use the commands `/tts voice` to talk inside voice channels.
+
+**Chat to Speech** *(optional)*
+
+3. Select a channel to be used in the "Text to Speech" section on the website
+4. Join any voice channel in your Server (be sure Wamellow can join and talk in it).
+5. **🎉 Done!** Start writing messages in the selected channel for Wamellow to speak!
+
+To get a quick **.mp3 file** of your message, use `/tts file` in any text channel. You can also [generate Text to Speech files online](/text-to-speech).
+
+### 📑 Usage logs
+
+Pick a channel where any Text to Speech events from your server should be logged, mainly for moderation purposes.
+
+**Note:** This does not log any `/tts file` command usage.
+
+### 😷 Priority role
+
+Pick a role that lets users override other messages that are currently being spoken. This lets users start talking right away without the "please wait..." message popping up. It's a good idea to give this role to people who are actually disabled.
+
+### 🤚 Blacklist role
+
+If you want to prevent certain users from using text or chat to speech, you can use Discord's channel, integration permission system ([watch a tutorial](/disable-commands)), or configure a blacklist role in the wamellow dashboard.
+
+### 🔉 Announce user
+
+Wamellow will announce which user is currently talking through it. If a user says "hello there", the bot will speak "Luna says: hello there"
+
+**Note:** This feature is experimental. Please note that usernames written in languages other than the actual written message will cause the Text to Speech to fail.
+
+### 🛒 Message queue
+
+Queue up sent chat to speech messages, to be spoken in the order they were sent. This is useful for long conversations or when multiple users want to speak at once and will prevent any messages from being skipped and Wamellow returning an error stating that someone else's message is still being spoken.
+
+Messages can be skipped by moderators with the `Mute Members` permission and by the user whose message is currently being spoken using the `/tts skip` command.
+
+### 🤖 Allow bots, apps and webhooks
+
+Enable other bots, apps, and webhooks to use Wamellow's Text-to-Speech. When enabled, messages posted by those integrations will be spoken aloud in Chat-to-Speech channels. [Learn more on how to change the voice for bots and apps](#voices).
+
+**Note:** Messages from other bots, apps, or webhooks will not make Wamellow join a voice channel automatically. Please ensure Wamellow is already connected to the correct voice channel.
+
+### 🔏 Max message length
+
+Set a maximum length for messages to avoid spamming.
+
+Discord Nitro members can send messages with up to 4,000 characters, while non-Nitro members can only send 2,000. This is a Discord limitation.
+
+While this feature is free, we would be grateful if you could consider [shooting us a donation](/premium) or [voting on top.gg](/vote). Please note that messages longer than 300 characters are vote locked. Unfortunately, money and growth (sadly) don't grow on trees (money isn't exactly normal paper).
+
+## Moderation
+
+You can use Wamellow's native **AutoMod** to block certain words or phrases for Text-to-Speech by [setting up rules on your server's Moderation tab](/profile?to=moderation).
+Separate words or phrases with a comma (e.g., `dog, cat, tiger`) or a new line. For each word, use an asterisk (`*`) at the beginning, end, or both for partial matching.
+
+Members with `Manage Server` or `Administrator` permissions will bypass AutoMod. Separate whitelisted roles and channels can also be added to bypass AutoMod in the moderation settings.
+
+**Note:** For `/tts` commands, only Wamellow's native AutoMod can block messages. Chat-to-Speech messages can also be blocked by Discord's native AutoMod — and all other bots that rely on it — in addition to Wamellow's own. If you're using a third-party moderation system, such as other bots, that only delete messages after they were sent, rather than blocking them directly, will not be able to block messages for Text-to-Speech.
+
+## Avoiding Chat-to-Speech
+
+To prevent Wamellow from speaking your messages inside of Chat to Speech channels, simply take the following actions:
+
+- Just add some special characters at the start of your message, like `!`, `?`, `>`, `.`, `,` and so on.
+- If you're not connected to any voice channels, those messages will also be ignored.
+- If you want to disable it permanently, you can use `/tts set chat-to-speech`.
+
+If you only want to skip specific parts of your message — such as multiline code blocks, spoilers, or emojis — run `/tts set markdown state:Skip`. To have those parts read aloud again, run `/tts set markdown state:Speak out loud`.
+
+**Note:** Any of those methods only apply to you and your own messages, and not to anyone else using chat to speech.
+If you want to disable it for everyone, [read the setup section of these docs](#setup).
+
+## Voice filters
+
+Filters are a way to tamper with the voices when using Wamellow in VCs, they can be toggled using `/tts set filter` by VC moderators with the `Mute Members` permission. This setting applies to anyone currently using Wamellow in the VC, all filters will be removed once Wamellow leaves.
+
+Some filters can be enabled and used at the same time. Pitch and speed may not be used with other filters. Choosing a filter may override the pitch and speed settings.
+
+All currently available filters:
+
+- `Vaporwave`
+- `Nightcore`
+- `Rotation`
+- `Tremolo`
+- `Vibrato`
+- `LowPass`
+- `Pitch` (customizable between 0% and 100%; default 50%)
+- `Speed` (customizable between 1% and 100%; default 50%)
+
+To change the volume of the TTS or mute it entirely for yourself,
+
+- **(desktop)** Right-click Wamellow, and set the "User Volume" slider.
+- **(mobile)** Open Wamellows' profile, and set the "Volume" slider.
+
+![how to change the volume of Wamellow TTS](/docs-assets/tts-volume.webp)
+
+## Voices
+
+You can change your default language and voice either by running `/tts set speaker` or by [setting it on the dashboard](/profile/text-to-speech).
+
+### 🪚 Overrides
+
+Your default voice can be permanently overridden for a specific server by using the `scope` option:
+`/tts set speaker voice:en_female_samc scope:Current Server (takes precedence over global)`
+
+Voices can be overridden on a per-message basis by setting the `voice` option when using `/tts file` or `/tts voice`, e.g.: `/tts voice text:Hello World voice:en_female_samc`. This can also be combined with the auto translate flag.
+
+### 🤖 Other Bots and Apps
+
+To change the voice for another bot or app, users with the `Mute Members` permission can use `/tts set speaker` with the `bot` option, for example: `/tts set speaker voice:en_female_samc bot:@PluralKit#4020`.
+
+Before this works, make sure **Allow bots, apps and webhooks** is enabled in your server dashboard. Before setting a voice for a bot, ensure [Allow bots, apps and webhooks](#allow-bots,-apps-and-webhooks) is enabled in your server dashboard.
+
+### 🌎 Auto Translate
+
+Automatically translate messages from any language to match your current voice's language for free.
+
+- **For Commands**: Set the `translate` option to `yes` (i.e.: `/tts voice text:Hallo Welt translate:yes`)
+- **For Chat to Speech**: Append `-tr` to the end of your message (i.e.: `Hallo Welt -tr`)
+
+### 🗣️ List of Available Voices
+
+| Language | Name | Preview |
+| -------- | ---- | ------- |
+| 🇺🇸 English (us) | Jessie **(TikTok, default until September 2025)** | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_001.mp3" /> |
+| 🇺🇸 English (us) | Joey | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_006.mp3" /> |
+| 🇺🇸 English (us) | Professor | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_007.mp3" /> |
+| 🇺🇸 English (us) | Scientist | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_009.mp3" /> |
+| 🇺🇸 English (us) | Confidence | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_010.mp3" /> |
+| 🇺🇸 English (us) | Emotional | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_emotional.mp3" /> |
+| 🇺🇸 English (us) | Empathetic **(default)** | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_samc.mp3" /> |
+| 🇺🇸 English (us) | Serious | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_cody.mp3" /> |
+| 🇺🇸 English (us) | Narration | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_narration.mp3" /> |
+| 🇺🇸 English (us) | Funny | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_funny.mp3" /> |
+| 🇺🇸 English (us) | Alfred | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_jarvis.mp3" /> |
+| 🇺🇸 English (us) | Narration Santa | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_santa_narration.mp3" /> |
+| 🇺🇸 English (us) | Bae | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_betty.mp3" /> |
+| 🇺🇸 English (us) | Beauty Guru | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_makeup.mp3" /> |
+| 🇺🇸 English (us) | Bestie | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_richgirl.mp3" /> |
+| 🇺🇸 English (us) | Cupid | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_cupid.mp3" /> |
+| 🇺🇸 English (us) | Debutante | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_shenna.mp3" /> |
+| 🇺🇸 English (us) | Grandma | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_grandma.mp3" /> |
+| 🇺🇸 English (us) | Lord Cringe | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_ukneighbor.mp3" /> |
+| 🇺🇸 English (us) | Wizard | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_wizard.mp3" /> |
+| 🇺🇸 English (us) | Marty | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_trevor.mp3" /> |
+| 🇺🇸 English (us) | Mr. Meticulous | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_ukbutler.mp3" /> |
+| 🇺🇸 English (us) | Santa | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_santa.mp3" /> |
+| 🇺🇸 English (us) | Santa (w/ effect) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_santa_effect.mp3" /> |
+| 🇺🇸 English (us) | Jomboy | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_jomboy.mp3" /> |
+| 🇺🇸 English (us) | Ashmagic | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_ashmagic.mp3" /> |
+| 🇺🇸 English (us) | Olantekkers | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_olantekkers.mp3" /> |
+| 🇺🇸 English (us) | Varsity | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_pansino.mp3" /> |
+| 🇬🇧 English (uk) | Narrator | <audio controls src="https://r2.wamellow.com/tts-preview/en_uk_001.mp3" /> |
+| 🇬🇧 English (uk) | Male | <audio controls src="https://r2.wamellow.com/tts-preview/en_uk_003.mp3" /> |
+| 🇦🇺 English (au) | Metro | <audio controls src="https://r2.wamellow.com/tts-preview/en_au_001.mp3" /> |
+| 🇦🇺 English (au) | Smooth | <audio controls src="https://r2.wamellow.com/tts-preview/en_au_002.mp3" /> |
+| 🇫🇷 French (fr) | Male 1 | <audio controls src="https://r2.wamellow.com/tts-preview/fr_001.mp3" /> |
+| 🇫🇷 French (fr) | Male 2 | <audio controls src="https://r2.wamellow.com/tts-preview/fr_002.mp3" /> |
+| 🇩🇪 German (de) | Female | <audio controls src="https://r2.wamellow.com/tts-preview/de_001.mp3" /> |
+| 🇩🇪 German (de) | Male | <audio controls src="https://r2.wamellow.com/tts-preview/de_002.mp3" /> |
+| 🇪🇸 Spanish (es) | Male | <audio controls src="https://r2.wamellow.com/tts-preview/es_002.mp3" /> |
+| 🇪🇸 Spanish (es) | Julio | <audio controls src="https://r2.wamellow.com/tts-preview/es_male_m3.mp3" /> |
+| 🇪🇸 Spanish (es) | Alejandra | <audio controls src="https://r2.wamellow.com/tts-preview/es_female_f6.mp3" /> |
+| 🇪🇸 Spanish (es) | Mariana | <audio controls src="https://r2.wamellow.com/tts-preview/es_female_fp1.mp3" /> |
+| 🇪🇸 Spanish (mx) | Male | <audio controls src="https://r2.wamellow.com/tts-preview/es_mx_002.mp3" /> |
+| 🇪🇸 Spanish (mx) | Super Mamá | <audio controls src="https://r2.wamellow.com/tts-preview/es_mx_female_supermom.mp3" /> |
+| 🇧🇷 Portuguese (br) | Female | <audio controls src="https://r2.wamellow.com/tts-preview/br_003.mp3" /> |
+| 🇧🇷 Portuguese (br) | Male | <audio controls src="https://r2.wamellow.com/tts-preview/br_005.mp3" /> |
+| 🇵🇹 Portuguese (pt) | Lhays Macedo | <audio controls src="https://r2.wamellow.com/tts-preview/pt_female_lhays.mp3" /> |
+| 🇵🇹 Portuguese (pt) | Laizza | <audio controls src="https://r2.wamellow.com/tts-preview/pt_female_laizza.mp3" /> |
+| 🇵🇹 Portuguese (pt) | Galvão Bueno | <audio controls src="https://r2.wamellow.com/tts-preview/pt_male_bueno.mp3" /> |
+| 🇮🇩 Indonesian (id) | Female | <audio controls src="https://r2.wamellow.com/tts-preview/id_001.mp3" /> |
+| 🇮🇩 Indonesian (id) | Darma | <audio controls src="https://r2.wamellow.com/tts-preview/id_male_darma.mp3" /> |
+| 🇮🇩 Indonesian (id) | Icha | <audio controls src="https://r2.wamellow.com/tts-preview/id_female_icha.mp3" /> |
+| 🇮🇩 Indonesian (id) | Putra | <audio controls src="https://r2.wamellow.com/tts-preview/id_male_putra.mp3" /> |
+| 🇮🇹 Italian (it) | male | <audio controls src="https://r2.wamellow.com/tts-preview/it_male_m18.mp3" /> |
+| 🇯🇵 Japanese (jp) | Female 1 | <audio controls src="https://r2.wamellow.com/tts-preview/jp_001.mp3" /> |
+| 🇯🇵 Japanese (jp) | Female 2 | <audio controls src="https://r2.wamellow.com/tts-preview/jp_003.mp3" /> |
+| 🇯🇵 Japanese (jp) | Female 3 | <audio controls src="https://r2.wamellow.com/tts-preview/jp_005.mp3" /> |
+| 🇯🇵 Japanese (jp) | Male | <audio controls src="https://r2.wamellow.com/tts-preview/jp_006.mp3" /> |
+| 🇯🇵 Japanese (jp) | Fujicochan | <audio controls src="https://r2.wamellow.com/tts-preview/jp_female_fujicochan.mp3" /> |
+| 🇯🇵 Japanese (jp) | Hasegawariona | <audio controls src="https://r2.wamellow.com/tts-preview/jp_female_hasegawariona.mp3" /> |
+| 🇯🇵 Japanese (jp) | Keiichinakano | <audio controls src="https://r2.wamellow.com/tts-preview/jp_male_keiichinakano.mp3" /> |
+| 🇯🇵 Japanese (jp) | Oomaeaika | <audio controls src="https://r2.wamellow.com/tts-preview/jp_female_oomaeaika.mp3" /> |
+| 🇯🇵 Japanese (jp) | Morisuke | <audio controls src="https://r2.wamellow.com/tts-preview/jp_male_osada.mp3" /> |
+| 🇯🇵 Japanese (jp) | Matsuo | <audio controls src="https://r2.wamellow.com/tts-preview/jp_male_matsuo.mp3" /> |
+| 🇯🇵 Japanese (jp) | Machikoriiita | <audio controls src="https://r2.wamellow.com/tts-preview/jp_female_machikoriiita.mp3" /> |
+| 🇯🇵 Japanese (jp) | Matsudake | <audio controls src="https://r2.wamellow.com/tts-preview/jp_male_matsudake.mp3" /> |
+| 🇯🇵 Japanese (jp) | Shuichiro | <audio controls src="https://r2.wamellow.com/tts-preview/jp_male_shuichiro.mp3" /> |
+| 🇯🇵 Japanese (jp) | Maruyama Rei | <audio controls src="https://r2.wamellow.com/tts-preview/jp_female_rei.mp3" /> |
+| 🇯🇵 Japanese (jp) | Hikakin | <audio controls src="https://r2.wamellow.com/tts-preview/jp_male_hikakin.mp3" /> |
+| 🇯🇵 Japanese (jp) | Yagi Saki | <audio controls src="https://r2.wamellow.com/tts-preview/jp_female_yagishaki.mp3" /> |
+| 🇰🇷 Korean (kr) | Female | <audio controls src="https://r2.wamellow.com/tts-preview/kr_003.mp3" /> |
+| 🇰🇷 Korean (kr) | Male 1 | <audio controls src="https://r2.wamellow.com/tts-preview/kr_002.mp3" /> |
+| 🇰🇷 Korean (kr) | Male 2 | <audio controls src="https://r2.wamellow.com/tts-preview/kr_004.mp3" /> |
+| 🇺🇸 English (scream) | Ghostface | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_ghostface.mp3" /> |
+| 🇺🇸 English (star wars) | Chewbacca | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_chewbacca.mp3" /> |
+| 🇺🇸 English (star wars) | C3PO | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_c3po.mp3" /> |
+| 🇺🇸 English (star wars) | Stormtrooper | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_stormtrooper.mp3" /> |
+| 🇺🇸 English (lilo & stitch) | Stitch | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_stitch.mp3" /> |
+| 🇺🇸 English (GotG) | Rocket | <audio controls src="https://r2.wamellow.com/tts-preview/en_us_rocket.mp3" /> |
+| 🇺🇸 English (disney) | Madame Leota | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_madam_leota.mp3" /> |
+| 🇺🇸 English (deadpool) | Mr. GoodGuy | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_deadpool.mp3" /> |
+| 🇺🇸 English (grinch) | Trickster | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_grinch.mp3" /> |
+| 🇺🇸 English (disney) | Ghost Host | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_ghosthost.mp3" /> |
+| 🇺🇸 English (disney) | Pirate | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_pirate.mp3" /> |
+| 🇺🇸 English (singing) | Alto (Female) | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_f08_salut_damour.mp3" /> |
+| 🇺🇸 English (singing) | Warmy Breeze (Female) | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_f08_warmy_breeze.mp3" /> |
+| 🇺🇸 English (singing) | Glorious (Female) | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_ht_f08_glorious.mp3" /> |
+| 🇺🇸 English (singing) | Dramatic (Female) | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_ht_f08_wonderful_world.mp3" /> |
+| 🇺🇸 English (singing) | Tenor (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_m03_lobby.mp3" /> |
+| 🇺🇸 English (singing) | Sunshine Soon (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_m03_sunshine_soon.mp3" /> |
+| 🇺🇸 English (singing) | Chipmunk (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_sing_funny_it_goes_up.mp3" /> |
+| 🇺🇸 English (singing) | It Goes Up (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_m2_xhxs_m03_silly.mp3" /> |
+| 🇺🇸 English (singing) | Caroler (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_sing_deep_jingle.mp3" /> |
+| 🇺🇸 English (singing) | Classic Electric (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_m03_classical.mp3" /> |
+| 🇺🇸 English (singing) | Cozy (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_m2_xhxs_m03_christmas.mp3" /> |
+| 🇺🇸 English (singing) | Halloween (Female) | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_ht_f08_halloween.mp3" /> |
+| 🇺🇸 English (singing) | NYE 2023 (Female) | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_ht_f08_newyear.mp3" /> |
+| 🇺🇸 English (singing) | Thanksgiving (Male) | <audio controls src="https://r2.wamellow.com/tts-preview/en_male_sing_funny_thanksgiving.mp3" /> |
+| 🇺🇸 English (singing) | Pop Lullaby (Female) | <audio controls src="https://r2.wamellow.com/tts-preview/en_female_f08_twinkle.mp3" /> |
+
+## Server nodes & regions
+
+For optimal latency and performance when using Text to Speech in voice channels, Wamellow has multiple server nodes in different regions.
+A list of available nodes and regions can be found [on the status page](/status).
+
+If the voice channel's *Region Override* is set to `Automatic`, it will default to a node with the lowest resource usage.
+If an override is set, it will use the selected region if it is available.
+
+If Text to Speech is not used for more than ten minutes, or all non-bot users have left the voice channel, Wamellow will automatically disconnect from the voice channel. Servers with [Wamellow Premium](/premium) will not be affected by the 10-minute disconnect limit and will remain connected forever, as long as non-bot users are still in the voice channel.
+
+## Troubleshooting
+
+If Wamellow joins the voice channel but doesn't speak, check that it has the `Connect` and `Speak` permissions in the channel settings. If it does, [please report the issue to us](/support).
+
+If Wamellow says that someone else's message is still being spoken, but it's not talking, use `/tts stop`.
+You can also use this or `/tts skip` to stop any message that is currently being spoken (i.e.: because of spam).
+
+## Privacy
+
+**We do not scan your Text-to-Speech requests**, nor do we perform any any moderation on the content you generate. No Text-to-Speech data is logged in a manner that is accessible to the Wamellow team. Please note that while Wamellow does not log your requests, server administrators may choose to log bot usage within their own servers [using Wamellow's usage logs](#usage-logs).
+
+**Wamellow does not "listen" to you**. The bot is hardcoded to join voice channels in a deafened state, meaning it cannot receive or process any audio from other users. Your microphone is never accessed. You can verify these privacy protections yourself by reviewing the [linkdave source code](https://github.com/shi-gg/linkdave).

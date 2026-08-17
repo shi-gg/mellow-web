@@ -1,7 +1,7 @@
-import BeautifyMarkdown from "@/components/markdown";
 import { getBaseUrl, getCanonicalUrl } from "@/utils/urls";
-import { readFile } from "fs/promises";
 import type { Metadata } from "next";
+
+import { LegalMarkdown } from "../../../../components/legal-markdown";
 
 export const revalidate = false;
 
@@ -34,9 +34,6 @@ export const generateMetadata = (): Metadata => {
     };
 };
 
-const PATH = `${process.cwd()}/public/legal/payment-terms.md` as const;
-
-export default async function Home() {
-    const terms = await readFile(PATH, { encoding: "utf-8" });
-    return <BeautifyMarkdown markdown={terms} />;
+export default function Home() {
+    return <LegalMarkdown file="payment.mdx" />;
 }

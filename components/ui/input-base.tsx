@@ -71,11 +71,10 @@ function InputBase({
                 data-slot="input-base"
                 onClick={handleClick}
                 className={cn(
-                    "border-input dark:bg-input/30 flex min-h-9 cursor-text items-center gap-2 rounded-lg border bg-transparent px-3 py-1 text-base shadow-2xs transition-[color,box-shadow] outline-hidden md:text-sm",
+                    "bg-wamellow flex min-h-9 cursor-text items-center gap-2 rounded-lg px-3 py-1 text-base shadow-2xs transition-[color,box-shadow] outline-hidden md:text-sm",
                     disabled && "pointer-events-none cursor-not-allowed opacity-50",
                     focused && "border-ring ring-ring/50 ring-[3px]",
-                    error &&
-                    "ring-destructive/20 dark:ring-destructive/40 border-destructive",
+                    error && "ring-destructive/20 dark:ring-destructive/40 border-destructive",
                     className
                 )}
                 {...props}

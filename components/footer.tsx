@@ -172,7 +172,7 @@ function Links() {
                 </Link>
                 <Link
                     className="text-primary/75 hover:text-primary/65 duration-200 flex items-center gap-2"
-                    href="/docs/index"
+                    href="/docs"
                 >
                     <HiBookOpen />
                     Documentation

@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import react from "@eslint-react/eslint-plugin";
 
 export default tseslint.config(
-    { ignores: ['dist/**', 'eslint.config.mjs', 'node_modules', '.next', '**/gt4.ts', 'next-env.d.ts', 'postcss.config.js'] },
+    { ignores: ['dist/**', 'eslint.config.mjs', 'node_modules', '.next', '.source', '**/gt4.ts', 'next-env.d.ts', 'postcss.config.js'] },
     base,
     recommended,
     {
