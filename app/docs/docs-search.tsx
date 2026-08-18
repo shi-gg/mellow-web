@@ -14,7 +14,10 @@ export function DocsSearch() {
     const { setOpenSearch, hotKey } = useSearchContext();
 
     return (
-        <InputBase className="w-full cursor-pointer ring-0">
+        <InputBase
+            className="w-full cursor-pointer ring-0"
+            onClick={() => setOpenSearch(true)}
+        >
             <InputBaseAdornment>
                 <HiSearch />
             </InputBaseAdornment>
@@ -22,7 +25,6 @@ export function DocsSearch() {
                 <InputBaseInput
                     readOnly
                     placeholder="Search docs…"
-                    onClick={() => setOpenSearch(true)}
                     className="cursor-pointer"
                 />
             </InputBaseControl>
