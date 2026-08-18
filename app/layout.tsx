@@ -199,7 +199,7 @@ async function NavBar({ className }: { className?: string; }) {
                     size="sm"
                     variant="ghost"
                 >
-                    <Link href="/docs/index">
+                    <Link href="/docs">
                         Documentation
                     </Link>
                 </Button>
