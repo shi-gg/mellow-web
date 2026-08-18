@@ -209,6 +209,22 @@ div[id="bg"] {
     background-image: linear-gradient(175deg, rgb(66, 42, 126) 0%, var(--background-rgb) 75%);
 }
 
+.prose h2 {
+    margin-bottom: 0.8rem;
+}
+
+.prose h3 {
+    margin-bottom: 0.4rem;
+}
+
+.prose li {
+    margin: 0.1em 0;
+}
+
+.prose ul {
+    margin-top: -0.5rem;
+}
+
 article iframe {
     width: 100%;
     aspect-ratio: 16 / 9;
