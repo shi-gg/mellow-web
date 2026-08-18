@@ -1,20 +1,20 @@
 "use client";
 
-import { cn } from "@/utils/cn";
-import type { Root } from "fumadocs-core/page-tree";
 import {
-    SidebarFolder,
-    SidebarFolderContent,
-    SidebarFolderLink,
-    SidebarFolderTrigger,
-    SidebarItem,
-    SidebarProvider,
-    SidebarSeparator,
-    useFolderDepth
-} from "fumadocs-ui/components/sidebar/base";
-import { createPageTreeRenderer } from "fumadocs-ui/components/sidebar/page-tree";
-import { TreeContextProvider } from "fumadocs-ui/contexts/tree";
-import type { ReactNode } from "react";
+    SidebarContent,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarProvider
+} from "@/components/ui/sidebar";
+import { cn } from "@/utils/cn";
+import * as Collapsible from "@radix-ui/react-collapsible";
+import type { Folder, Item, Node, Root } from "fumadocs-core/page-tree";
+import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { type ReactNode, useState } from "react";
 
 function SplitName({ children }: { children: ReactNode; }) {
     let name: string | undefined;
@@ -38,63 +38,118 @@ function SplitName({ children }: { children: ReactNode; }) {
     );
 }
 
-const ITEM_CLASS = "inline-flex items-center gap-2 rounded-lg text-sm font-medium transition-colors w-full justify-start h-9 px-4 whitespace-nowrap text-accent-foreground/85 hover:bg-wamellow hover:text-accent-foreground data-[active=true]:bg-wamellow-200 data-[active=true]:text-primary-foreground [&_svg]:size-4 [&_svg]:shrink-0";
+function isActive(url: string, pathname: string) {
+    const href = url.length > 1 && url.endsWith("/") ? url.slice(0, -1) : url;
+    const path = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
 
-const ITEM_INDENT = 16;
-const ITEM_PADDING = 16;
+    return href === path;
+}
 
-const SidebarPageTree = createPageTreeRenderer({
-    SidebarFolder,
-    SidebarFolderContent,
-    SidebarFolderLink: function StyledFolderLink({ className, style, children, ...props }) {
-        const depth = useFolderDepth();
-        return (
-            <SidebarFolderLink
-                className={cn(ITEM_CLASS, className)}
-                style={{ paddingInlineStart: (depth - 1) * ITEM_INDENT + ITEM_PADDING, ...style }}
-                {...props}
-            >
-                <SplitName>{children}</SplitName>
-            </SidebarFolderLink>
-        );
-    },
-    SidebarFolderTrigger: function StyledFolderTrigger({ className, style, children, ...props }) {
-        const depth = useFolderDepth();
-        return (
-            <SidebarFolderTrigger
-                className={cn(ITEM_CLASS, className)}
-                style={{ paddingInlineStart: (depth - 1) * ITEM_INDENT + ITEM_PADDING, ...style }}
-                {...props}
-            >
-                <SplitName>{children}</SplitName>
-            </SidebarFolderTrigger>
-        );
-    },
-    SidebarItem: function StyledItem({ className, style, children, ...props }) {
-        const depth = useFolderDepth();
-        return (
-            <SidebarItem
-                className={cn(ITEM_CLASS, className)}
-                style={{ paddingInlineStart: depth * ITEM_INDENT + ITEM_PADDING, ...style }}
-                {...props}
-            >
-                <SplitName>{children}</SplitName>
-            </SidebarItem>
-        );
-    },
-    SidebarSeparator
-});
+function folderActive(folder: Folder, pathname: string): boolean {
+    if (folder.index && isActive(folder.index.url, pathname)) return true;
 
-export function DocsNav({
-    tree
-}: {
-    tree: Root;
-}) {
+    return folder.children.some((child) => nodeActive(child, pathname));
+}
+
+function nodeActive(node: Node, pathname: string): boolean {
+    if (node.type === "page") return isActive(node.url, pathname);
+    if (node.type === "folder") return folderActive(node, pathname);
+
+    return false;
+}
+
+function ItemNode({ item }: { item: Item; }) {
+    const pathname = usePathname();
+
     return (
-        <TreeContextProvider tree={tree}>
-            <SidebarProvider>
-                <SidebarPageTree />
-            </SidebarProvider>
-        </TreeContextProvider>
+        <SidebarMenuItem>
+            <SidebarMenuButton
+                asChild
+                isActive={isActive(item.url, pathname)}
+            >
+                <Link href={item.url}>
+                    <SplitName>{item.name}</SplitName>
+                </Link>
+            </SidebarMenuButton>
+        </SidebarMenuItem>
+    );
+}
+
+function FolderNode({ item, children }: { item: Folder; children: ReactNode; }) {
+    const pathname = usePathname();
+    const indexActive = item.index ? isActive(item.index.url, pathname) : false;
+    const active = folderActive(item, pathname);
+    const [open, setOpen] = useState(active);
+    const [prevPathname, setPrevPathname] = useState(pathname);
+
+    if (prevPathname !== pathname) {
+        setPrevPathname(pathname);
+        setOpen(active);
+    }
+
+    return (
+        <Collapsible.Root open={open} onOpenChange={setOpen}>
+            <SidebarMenuItem>
+                <div className="flex w-full items-center">
+                    {item.index ? (
+                        <SidebarMenuButton
+                            asChild
+                            isActive={indexActive}
+                            className="min-w-0 flex-1"
+                        >
+                            <Link href={item.index.url}>
+                                <SplitName>{item.name}</SplitName>
+                                <ChevronDown
+                                    className={cn("size-4 transition-transform duration-200 -rotate-90 ml-auto", open && "rotate-0")}
+                                />
+                            </Link>
+                        </SidebarMenuButton>
+                    ) : (
+                        <SidebarMenuButton
+                            isActive={indexActive}
+                            className="min-w-0 flex-1"
+                            onClick={() => setOpen((value) => !value)}
+                        >
+                            <SplitName>{item.name}</SplitName>
+                        </SidebarMenuButton>
+                    )}
+                </div>
+                <Collapsible.Content className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+                    <SidebarMenuSub>
+                        {children}
+                    </SidebarMenuSub>
+                </Collapsible.Content>
+            </SidebarMenuItem>
+        </Collapsible.Root>
+    );
+}
+
+function renderNodes(nodes: Node[]): ReactNode {
+    return nodes.map((node) => {
+        if (node.type === "folder") {
+            return (
+                <FolderNode key={node.$id} item={node}>
+                    {renderNodes(node.children)}
+                </FolderNode>
+            );
+        }
+
+        if (node.type === "separator") {
+            return null;
+        }
+
+        return <ItemNode key={node.$id} item={node} />;
+    });
+}
+
+export function DocsNav({ tree }: { tree: Root; }) {
+    return (
+        <SidebarProvider className="min-h-fit">
+            <SidebarContent>
+                <SidebarMenu>
+                    {renderNodes(tree.children)}
+                </SidebarMenu>
+            </SidebarContent>
+        </SidebarProvider>
     );
 }
