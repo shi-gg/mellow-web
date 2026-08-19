@@ -1,0 +1,16 @@
+{
+    "title": "Documentation",
+    "pages": [
+        "index",
+        "greetings",
+        "passport",
+        "farewell",
+        "starboard",
+        "text-to-speech",
+        "dailyposts",
+        "notifications",
+        "bluesky",
+        "custom-commands",
+        "miscs"
+    ]
+}

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import metadata from "@/public/docs/meta.json";
+import { source } from "@/lib/source";
 import { readFile } from "fs/promises";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
@@ -29,16 +29,17 @@ export async function GET(_request: NextRequest, { params }: Props) {
         return new Response("Not Found", { status: 404 });
     }
 
-    const meta = metadata.pages.find((page) => page.file === `${pathname.slice(0, -".png".length)}.md`);
+    const slug = pathname.slice(0, -".png".length);
+    const page = source.getPage(slug.split("/").filter(Boolean));
 
-    const title = meta?.file === "index.md"
+    const title = slug === "index" || slug === ""
         ? "Documentation"
-        : meta?.name || "Documentation";
+        : page?.data.title || "Documentation";
 
-    const description = meta?.description || "Your portal to the extensive and detailed Wamellow documentation!";
+    const description = page?.data.description || "Your portal to the extensive and detailed Wamellow documentation!";
 
-    const icon = meta?.name?.split(" ").shift() || "";
-    const nameWithoutIcon = meta?.name?.replace(icon, "").trim() || title;
+    const icon = page?.data.title?.split(" ").shift() || "";
+    const nameWithoutIcon = page?.data.title?.replace(icon, "").trim() || title;
 
     return new ImageResponse(
         (

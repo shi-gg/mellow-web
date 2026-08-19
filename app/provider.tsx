@@ -4,6 +4,7 @@ import { guildStore } from "@/common/guilds";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/utils/cn";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RootProvider as FumadocsProvider } from "fumadocs-ui/provider/next";
 import { usePathname } from "next/navigation";
 import { useCookies } from "next-client-cookies";
 import { useEffect } from "react";
@@ -35,12 +36,21 @@ export function Provider({ children, className }: Props) {
     }, [path, cookies]);
 
     return (
-        <TooltipProvider>
-            <QueryClientProvider client={queryClient}>
-                <main className={cn("text-neutral-400 flex flex-col items-center justify-between md:p-5 p-3 w-full max-w-7xl mt-2 md:mt-10", className)}>
-                    {children}
-                </main>
-            </QueryClientProvider>
-        </TooltipProvider>
+        <FumadocsProvider
+            theme={{ enabled: false }}
+            search={{
+                options: {
+                    api: "/api/search"
+                }
+            }}
+        >
+            <TooltipProvider>
+                <QueryClientProvider client={queryClient}>
+                    <main className={cn("text-neutral-400 flex flex-col items-center justify-between md:p-5 p-3 w-full max-w-7xl mt-2 md:mt-10", className)}>
+                        {children}
+                    </main>
+                </QueryClientProvider>
+            </TooltipProvider>
+        </FumadocsProvider>
     );
 }

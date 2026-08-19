@@ -10,7 +10,7 @@ This is the official web application for the Mellow Discord bot. It includes the
 
 * [Home](https://wamellow.com)
 * [Invite Wamellow](https://wamellow.com/invite)
-* [Documentation](https://wamellow.com/docs/index)
+* [Documentation](https://wamellow.com/docs)
 * [Profile](https://wamellow.com/profile)
 * [Dashboard](https://wamellow.com/dashboard)
 

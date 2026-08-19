@@ -1,10 +1,12 @@
 import { withSentryConfig } from "@sentry/nextjs";
+import { createMDX } from "fumadocs-mdx/next";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     allowedDevOrigins: ["local.wamellow.com"],
     output: "standalone",
     reactStrictMode: true,
+    staticPageGenerationTimeout: 600,
     experimental: {
         turbopackFileSystemCacheForDev: true,
         optimizePackageImports: [
@@ -138,7 +140,9 @@ const nextConfig: NextConfig = {
     }
 };
 
-export default withSentryConfig(
+const withMDX = createMDX();
+
+export default withMDX(withSentryConfig(
     nextConfig,
     {
         org: "wamellow-kc",
@@ -148,4 +152,4 @@ export default withSentryConfig(
         disableLogger: true,
         automaticVercelMonitors: true
     }
-);
+));

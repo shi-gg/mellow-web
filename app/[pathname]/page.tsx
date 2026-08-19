@@ -17,7 +17,7 @@ export default async function Home({ params }: Props) {
         case "get": return redirect("/login?invite=true");
         case "logout": return redirect("/login?logout=true");
         case "docs":
-        case "guides": return redirect("/docs/index");
+        case "guides": return redirect("/docs");
         case "tts": return redirect("https://youtube.com/watch?v=NS5fZ1ltovE");
         case "disable-commands": return redirect("https://youtube.com/watch?v=ehc0_whydu8");
         case "youtube": return redirect("https://www.youtube.com/channel/UClWBeVcz5LUmcCN1gHG_GCg");

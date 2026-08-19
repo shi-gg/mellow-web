@@ -125,7 +125,7 @@ function Dropdown({ user }: { user: User; }) {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                        <Link href="/docs/index">
+                        <Link href="/docs">
                             <HiBookOpen />
                             Documentation
                         </Link>
