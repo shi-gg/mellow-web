@@ -2,6 +2,7 @@
 import { guildStore } from "@/common/guilds";
 import DiscordMessage from "@/components/discord/message";
 import { ControlledInput } from "@/components/inputs/controlled-input";
+import { InputSelect } from "@/components/inputs/select-menu";
 import Modal from "@/components/modal";
 import { Section } from "@/components/section";
 import { UserAvatar } from "@/components/ui/avatar";
@@ -14,9 +15,35 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { HiOutlineUpload, HiPencil, HiX } from "react-icons/hi";
 
 const FILTERED_CHARS_REGEX = /@|#|:|```|discord|clyde/i;
+const STYLE_NAME_REGEX = /([a-z])(?=[A-Z])/g;
 
 const ALLOWED_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp", "image/gif", "image/apng"];
 const MAX_FILE_SIZE = 8 * 1_024 * 1_024;
+
+export enum DisplayNameFont {
+    GgSans = 11,
+    Tempo = 12,
+    Sakura = 3,
+    Jellybean = 4,
+    Modern = 6,
+    Medieval = 7,
+    EightBit = 8,
+    Vampyre = 10,
+    MonkeyBars = 13,
+    MainFrame = 14,
+    HeadBang = 15,
+    Journal = 16
+}
+
+export enum DisplayNameEffect {
+    Solid = 1,
+    Gradient = 2,
+    Neon = 3,
+    Toon = 4,
+    Pop = 5,
+    Gummy = 8,
+    Prism = 7
+}
 
 export function BotStyle() {
     const guild = guildStore((g) => g!);
@@ -150,9 +177,14 @@ export function ChangeStyleModal({
     onEdit
 }: Props) {
     const [name, setName] = useState(username);
+    const [fontId, setFontId] = useState<DisplayNameFont>(DisplayNameFont.GgSans);
+    const [effectId, setEffectId] = useState<DisplayNameEffect>(DisplayNameEffect.Solid);
+
     const [bio, setBio] = useState<string | null>(null);
-    const [avatar, setAvatar] = useState<ArrayBuffer | string | null>(avatarUrl);
-    const [banner, setBanner] = useState<ArrayBuffer | string | null>(bannerUrl);
+
+    const [avatar, setAvatar] = useState<File | string | null>(avatarUrl);
+    const [banner, setBanner] = useState<File | string | null>(bannerUrl);
+
     const [error, setError] = useState<string | null>(null);
 
     const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
@@ -166,9 +198,9 @@ export function ChangeStyleModal({
     }
 
     const render = useCallback(
-        (buf: ArrayBuffer | string | null) => !buf || typeof buf === "string"
-            ? buf
-            : URL.createObjectURL(new Blob([buf])),
+        (buf: File | string | null) => buf instanceof File
+            ? URL.createObjectURL(buf)
+            : buf,
         []
     );
 
@@ -188,9 +220,16 @@ export function ChangeStyleModal({
                 if (name && !valid) return new Error("Invalid name");
 
                 const formData = new FormData();
-                formData.append("json_payload", JSON.stringify({ username: name || null, bio }));
-                if (avatar && typeof avatar !== "string") formData.append("file[0]", new Blob([avatar]), "avatar");
-                if (banner && typeof banner !== "string") formData.append("file[1]", new Blob([banner]), "banner");
+
+                formData.append("json_payload", JSON.stringify({
+                    username: name || null,
+                    bio,
+                    displayNameFontId: fontId,
+                    displayNameEffectId: effectId
+                }));
+
+                if (avatar instanceof File) formData.append("file[0]", avatar, "avatar");
+                if (banner instanceof File) formData.append("file[1]", banner, "banner");
 
                 return fetch(`${process.env.NEXT_PUBLIC_API}/guilds/${guildId}/style`, {
                     method: "PATCH",
@@ -206,11 +245,59 @@ export function ChangeStyleModal({
         >
             <ControlledInput
                 label="Username"
-                placeholder="DarkViperAU"
+                placeholder="Wamellow"
                 value={name}
                 setValue={setName}
                 max={32}
             />
+
+            <div className="flex gap-2">
+                <InputSelect
+                    label="Font"
+                    items={
+                        Object
+                            .entries(DisplayNameFont)
+                            .filter(([_, value]) => typeof value === "number")
+                            .map(([key, value]) => ({
+                                icon: (
+                                    <Image
+                                        alt={key}
+                                        className="rounded-md h-6 w-9 relative"
+                                        src={`https://media.wamellow.com/assets/docs/customization/font/${key.toLowerCase()}.webp`}
+                                        width={146}
+                                        height={96}
+                                    />
+                                ),
+                                name: key.toString().replace(STYLE_NAME_REGEX, "$1 "),
+                                value
+                            }))}
+                    onSave={(fontId) => setFontId(fontId as DisplayNameFont)}
+                    defaultValue={fontId}
+                />
+
+                <InputSelect
+                    label="Style"
+                    items={
+                        Object
+                            .entries(DisplayNameEffect)
+                            .filter(([_, value]) => typeof value === "number")
+                            .map(([key, value]) => ({
+                                icon: (
+                                    <Image
+                                        alt={key}
+                                        className="rounded-md h-6 w-9 relative"
+                                        src={`https://media.wamellow.com/assets/docs/customization/effect/${key.toLowerCase()}.webp`}
+                                        width={146}
+                                        height={96}
+                                    />
+                                ),
+                                name: key.toString().replace(STYLE_NAME_REGEX, "$1 "),
+                                value
+                            }))}
+                    onSave={(effectId) => setEffectId(effectId as DisplayNameEffect)}
+                    defaultValue={effectId}
+                />
+            </div>
 
             <ControlledInput
                 label="Bio"
@@ -224,12 +311,16 @@ export function ChangeStyleModal({
             <div className="space-y-2">
                 <FileUpload
                     name="Avatar"
+                    hasFile={avatar instanceof File}
                     onUpload={setAvatar}
+                    onRemove={() => setAvatar(avatarUrl)}
                 />
 
                 <FileUpload
                     name="Banner"
+                    hasFile={banner instanceof File}
                     onUpload={setBanner}
+                    onRemove={() => setBanner(bannerUrl)}
                 />
             </div>
 
@@ -257,9 +348,9 @@ export function ChangeStyleModal({
                     <Image
                         alt="Guild Banner"
                         src={renderableBanner}
-                        className="w-full h-auto aspect-599/251 object-cover rounded-lg mt-4"
-                        width={599}
-                        height={251}
+                        className="w-full h-auto aspect-17/6 object-cover rounded-lg mt-4"
+                        width={680 * 2}
+                        height={240 * 2}
                     />
                 )}
             </Section>
@@ -270,14 +361,17 @@ export function ChangeStyleModal({
 
 function FileUpload({
     name,
-    onUpload
+    hasFile,
+    onUpload,
+    onRemove
 }: {
     name?: string;
-    onUpload: (buffer: ArrayBuffer | null) => void;
+    hasFile: boolean;
+    onUpload: (file: File) => void;
+    onRemove: () => void;
 }) {
     const ref = useRef<HTMLInputElement | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [buf, setBuf] = useState<ArrayBuffer | null>(null);
 
     return (<>
         <input
@@ -285,7 +379,6 @@ function FileUpload({
             className="hidden"
             onChange={(e) => {
                 setError(null);
-                setBuf(null);
 
                 const file = e.target.files?.[0];
                 if (!file) return;
@@ -300,12 +393,7 @@ function FileUpload({
                     return;
                 }
 
-                void file
-                    .arrayBuffer()
-                    .then((buffer) => {
-                        setBuf(buffer);
-                        onUpload(buffer);
-                    });
+                onUpload(file);
             }}
             ref={ref}
             type="file"
@@ -316,13 +404,13 @@ function FileUpload({
                 <HiOutlineUpload />
                 Upload {name}
             </Button>
-            {buf && (
+            {hasFile && (
                 <Button
                     className="text-red-400"
                     variant="link"
                     onClick={() => {
-                        setBuf(null);
-                        onUpload(null);
+                        if (ref.current) ref.current.value = "";
+                        onRemove();
                     }}
                 >
                     <HiX />
