@@ -87,6 +87,12 @@ const nextConfig: NextConfig = {
                 port: "",
                 pathname: "/**"
             },
+            {
+                protocol: "https",
+                hostname: "media.wamellow.com",
+                port: "",
+                pathname: "/assets/**"
+            },
 
             {
                 protocol: "https",
