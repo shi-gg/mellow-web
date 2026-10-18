@@ -15,6 +15,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { HiOutlineUpload, HiPencil, HiX } from "react-icons/hi";
 
 const FILTERED_CHARS_REGEX = /@|#|:|```|discord|clyde/i;
+const STYLE_NAME_REGEX = /([a-z])(?=[A-Z])/g;
 
 const ALLOWED_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp", "image/gif", "image/apng"];
 const MAX_FILE_SIZE = 8 * 1_024 * 1_024;
@@ -267,7 +268,7 @@ export function ChangeStyleModal({
                                         height={96}
                                     />
                                 ),
-                                name: key.toString().replace(/([a-z])(?=[A-Z])/g, "$1 "),
+                                name: key.toString().replace(STYLE_NAME_REGEX, "$1 "),
                                 value
                             }))}
                     onSave={(fontId) => setFontId(fontId as DisplayNameFont)}
@@ -290,7 +291,7 @@ export function ChangeStyleModal({
                                         height={96}
                                     />
                                 ),
-                                name: key.toString().replace(/([a-z])(?=[A-Z])/g, "$1 "),
+                                name: key.toString().replace(STYLE_NAME_REGEX, "$1 "),
                                 value
                             }))}
                     onSave={(effectId) => setEffectId(effectId as DisplayNameEffect)}
