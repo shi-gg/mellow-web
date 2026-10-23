@@ -294,9 +294,8 @@ export default function Home() {
 
                     <div className="flex items-center gap-1">
                         <span className="font-bold flex items-center">
-                            <Emoji emoji={data.emoji} /> 9
+                            <Emoji emoji={data.emoji} /> 9 •
                         </span>
-                        |
                         <span className="text-blue-500 hover:underline cursor-pointer">
                             #lounge
                         </span>
