@@ -2,6 +2,7 @@ import { type Guild, guildStore } from "@/common/guilds";
 import { InputNumber } from "@/components/inputs/number-input";
 import { InputSelect } from "@/components/inputs/select-menu";
 import { InputSwitch } from "@/components/inputs/switch";
+import { InputTabSwitch } from "@/components/inputs/tab-switch";
 import { TTSFaq } from "@/components/tts-faq";
 import { GuildFlags } from "@/typings";
 import { transformer } from "@/utils/bitfields";
@@ -101,6 +102,16 @@ export function TTSSettings() {
                     defaultState={guild?.tts.maxLength || 4_000}
                     max={4_000}
                     onSave={(value) => edit("maxLength", value)}
+                />
+                <InputTabSwitch
+                    label="Inactivity leave timeout"
+                    description="Inactivity time before Wamellow leaves the VC."
+                    link="/premium"
+                    badge="Premium"
+                    tabOff="10min"
+                    tabOn="Never"
+                    defaultState={(guild!.flags & GuildFlags.Premium) !== 0}
+                    disabled={true}
                 />
             </div>
 
