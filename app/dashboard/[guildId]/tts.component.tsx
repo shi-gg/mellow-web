@@ -111,7 +111,6 @@ export function TTSSettings() {
                     tabOff="10min"
                     tabOn="Never"
                     defaultState={(guild!.flags & GuildFlags.Premium) !== 0}
-                    onSave={() => window.open("/premium")}
                     disabled={true}
                 />
             </div>
