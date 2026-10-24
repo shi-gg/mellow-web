@@ -9,7 +9,6 @@ import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 interface Props {
     link: string;
     badge: string;
-    inverted: boolean;
     tabOn: string;
     tabOff: string;
 }
@@ -21,7 +20,6 @@ export function InputTabSwitch({
     link,
     badge,
     description,
-    inverted,
     disabled,
 
     endpoint,
@@ -74,10 +72,7 @@ export function InputTabSwitch({
 
                 <Tabs
                     value={value ? "on" : "off"}
-                    onValueChange={(v) => {
-                        const newValue = v === "on";
-                        update(inverted ? !newValue : newValue);
-                    }}
+                    onValueChange={(v) => update(v === "on")}
                 >
                     <TabsList className={cn(disabled && "cursor-not-allowed")}>
                         <TabsTrigger
