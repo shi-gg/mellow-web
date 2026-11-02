@@ -78,6 +78,7 @@ const data = [
                     src="https://www.youtube.com/embed/NS5fZ1ltovE?si=uODiGspuNGKPRQKp"
                     title="Wamellow Text to Speech tutorial"
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                    loading="lazy"
                 />
             </div>
         )
@@ -112,6 +113,7 @@ const data = [
                     src="https://www.youtube.com/embed/ehc0_whydu8?si=uODiGspuNGKPRQKp"
                     title="How to disable slash commands from bots and apps in discord"
                     allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                    loading="lazy"
                 />
             </div>
         )

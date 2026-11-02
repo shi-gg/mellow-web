@@ -31,6 +31,7 @@ export async function Person({
                 height={48}
                 src={avatarUrl}
                 width={48}
+                loading="lazy"
             />
         );
     }
@@ -50,6 +51,7 @@ export async function Person({
                 height={48}
                 src={avatarUrl}
                 width={48}
+                loading="lazy"
             />
 
             <div className="mr-2">

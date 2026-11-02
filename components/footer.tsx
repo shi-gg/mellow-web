@@ -59,6 +59,7 @@ export async function Footer(props: HTMLProps<HTMLDivElement>) {
                                             width={18}
                                             height={18}
                                             className="rounded-full relative right-1.5 px-px"
+                                            loading="lazy"
                                         />
                                         {dev?.username}
                                     </Badge>
