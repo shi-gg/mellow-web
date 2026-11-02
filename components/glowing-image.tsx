@@ -25,7 +25,7 @@ export function GlowingImage({
                     width={width}
                     height={height}
                     className="w-full h-full object-cover blur-3xl scale-105"
-                    loading="lazy"
+                    fetchPriority="high"
                     decoding="async"
                 />
             </div>
@@ -37,6 +37,7 @@ export function GlowingImage({
                     width={width}
                     height={height}
                     className="rounded-xl"
+                    fetchPriority="low"
                     loading="lazy"
                     decoding="async"
                 />
