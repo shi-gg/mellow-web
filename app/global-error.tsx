@@ -1,3 +1,5 @@
+"use client";
+
 import NextError from "next/error";
 
 export default function GlobalError() {
