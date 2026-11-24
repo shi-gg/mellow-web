@@ -1,4 +1,3 @@
-import { withSentryConfig } from "@sentry/nextjs";
 import { createMDX } from "fumadocs-mdx/next";
 import type { NextConfig } from "next";
 
@@ -148,14 +147,4 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX();
 
-export default withMDX(withSentryConfig(
-    nextConfig,
-    {
-        org: "wamellow-kc",
-        project: "web",
-        silent: !process.env.CI,
-        widenClientFileUpload: true,
-        disableLogger: true,
-        automaticVercelMonitors: true
-    }
-));
+export default withMDX(nextConfig);
