@@ -9,9 +9,9 @@
         "lint": "eslint ."
     },
     "engines": {
-        "bun": ">=1.3.14"
+        "bun": ">=1.4.5"
     },
-    "packageManager": "bun@1.3.14",
+    "packageManager": "bun@1.4.5",
     "dependencies": {
         "@discordjs/collection": "^2.1.1",
         "@discordjs/rest": "^2.6.3",
